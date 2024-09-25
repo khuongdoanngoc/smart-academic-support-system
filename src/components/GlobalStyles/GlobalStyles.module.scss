@@ -1,0 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    font-family: "Montserrat";
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+:root {
+    --font-family-main: "Montserrat";
+    --font-family-secondary: "Plus Jakarta Sans";
+    --main-color: #eb2930;
+    --button-background-color: #dc4342;
+    --button-background-hover-color: #eb2930;
+    --button-background-secondary-color: #bd282e;
+}
