@@ -1,7 +1,7 @@
 export default function HomeView() {
     return (
         <main>
-            <h1>Homepage</h1>
+            <h1 style={{ height: "300px" }}>Homepage</h1>
         </main>
     );
 }
