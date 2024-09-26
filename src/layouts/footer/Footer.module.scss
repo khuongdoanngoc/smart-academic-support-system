@@ -1,0 +1,91 @@
+footer {
+    width: 100%;
+    background-color: #b3000080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > .footer-content {
+        width: 100%;
+        margin: 53px 83px;
+        background-color: #d9d9d933;
+        display: flex;
+        flex-direction: column;
+
+        & > .footer-top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 45px 50px;
+            & > .document {
+                width: 33%;
+                display: flex;
+                flex-direction: column;
+                gap: 23px;
+                & > h1 {
+                    font-family: var(--font-family-secondary);
+                    color: var(--button-background-secondary-color);
+                    font-weight: 800;
+                    font-size: 40px;
+                    line-height: 21px;
+                    letter-spacing: 18px;
+                }
+
+                & > h2 {
+                    font-family: var(--font-family-secondary);
+                    color: white;
+                    font-weight: 700;
+                    font-size: 20px;
+                    line-height: 24px;
+                    letter-spacing: 23px;
+                }
+
+                & > p {
+                    color: white;
+                    font-weight: 400;
+                    font-size: 16px;
+                    line-height: 19.52px;
+                    letter-spacing: 5%;
+                    text-align: justify;
+                }
+            }
+            & > .list-items {
+                width: 33%;
+                display: flex;
+                flex-direction: column;
+                gap: 13px;
+                align-items: center;
+                & > h2 {
+                    font-family: var(--font-family-secondary);
+                    font-weight: 600px;
+                    font-size: 24px;
+                    line-height: 24px;
+                    color: #ffffff;
+                    margin-bottom: 16px;
+                }
+                & > a {
+                    text-decoration: none;
+                    color: #ffffff;
+                }
+            }
+        }
+        & > hr {
+            border: 1px solid #bd282e;
+            margin: 0px 47px;
+            border-radius: 10px;
+        }
+        & > .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin: 24px 0px;
+            & > p {
+                font-family: var(--font-family-secondary);
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 24px;
+                text-align: center;
+                color: var(--text-main-color);
+            }
+        }
+    }
+}

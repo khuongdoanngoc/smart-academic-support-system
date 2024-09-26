@@ -14,15 +14,18 @@ header {
         height: 66px;
         background-color: white;
 
-        & > .logo {
-            font-family: var(--font-family-secondary);
-            font-size: 24px;
-            color: var(--main-color);
-            font-weight: 700;
-            line-height: 23px;
-            letter-spacing: 5px;
-            & > span {
-                color: black !important;
+        & > a {
+            text-decoration: none;
+            & > .logo {
+                font-family: var(--font-family-secondary);
+                font-size: 24px;
+                color: var(--main-color);
+                font-weight: 700;
+                line-height: 23px;
+                letter-spacing: 5px;
+                & > span {
+                    color: black !important;
+                }
             }
         }
 
@@ -54,9 +57,9 @@ header {
                 line-height: 21px;
                 border-radius: 20px;
                 cursor: pointer;
+                transition: all 0.3s ease;
             }
             & > button:hover {
-                transition: 0.3s ease;
                 box-shadow: 0px 4px 4px 0px #00000040;
                 transform: scale(1.03);
             }
@@ -98,6 +101,14 @@ header {
             & > svg {
                 padding-top: 2px;
                 color: white;
+            }
+            transition: background-color 0.3s ease, transform 0.3s ease-out;
+        }
+        & > button:hover {
+            background-color: white;
+            transform: scale(1.03);
+            & > svg {
+                color: var(--main-color);
             }
         }
     }
