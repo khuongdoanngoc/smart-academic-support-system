@@ -1,4 +1,4 @@
-import styles from "../Header.module.scss";
+import styles from "./HeaderTop.module.scss";
 import classnames from "classnames/bind";
 import VietnameseIcon from "../../../assets/images/vietnamese.icon.png";
 import Avatar from "../../../assets/images/avatar.png";
