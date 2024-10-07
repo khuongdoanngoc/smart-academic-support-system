@@ -1,0 +1,107 @@
+.outstanding {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    & > .head {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--button-background-secondary-color);
+        & > h3 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 29.26px;
+            letter-spacing: 0.03em;
+            text-align: left;
+            padding: 21px 145px;
+        }
+    }
+    & > .content {
+        margin: 53px 0px;
+        display: flex;
+        max-width: 1404px;
+        width: 1404px;
+        width: 100%;
+        justify-content: center;
+        & > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 17px;
+            & > div {
+                display: flex;
+                width: 370px;
+                padding: 14px 27px;
+                border-radius: 50px;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                & > h3 {
+                    font-size: 21px;
+                    font-weight: 600;
+                    line-height: 29.26px;
+                    letter-spacing: 0.03em;
+                    text-align: left;
+                }
+                & > p {
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 24px;
+                    text-align: justify;
+                }
+            }
+
+            & > .search {
+                background-color: #e9fbf3;
+                & > h3 {
+                    color: #47c88a;
+                }
+                & > p {
+                    color: #00723b;
+                }
+            }
+
+            & > .support {
+                background-color: #e6f9ff;
+                & > h3 {
+                    color: #17b0e3;
+                }
+                & > p {
+                    color: #006a8b;
+                }
+            }
+
+            & > .propose {
+                background-color: #fef2e6;
+                & > h3 {
+                    color: #dd8433;
+                }
+                & > p {
+                    color: #a55200;
+                }
+            }
+
+            & > .list-filter {
+                background-color: #f5fbe9;
+                & > h3 {
+                    color: #96c338;
+                }
+                & > p {
+                    color: #517a00;
+                }
+            }
+            & > .calendar {
+                background-color: #fffce6;
+                & > h3 {
+                    color: #e3cd09;
+                }
+                & > p {
+                    color: #b49e00;
+                }
+            }
+        }
+    }
+}

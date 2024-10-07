@@ -13,7 +13,7 @@ export default function Catalog() {
                 </div>
                 <h2>Tên danh mục 1</h2>
                 <p>80+ Tài liệu</p>
-                <Button text="XEM THÊM" paddingY={3} paddingX={20} />
+                <Button text="XEM THÊM" paddingY={3} paddingX={20} fontSize={13}/>
             </div>
         </div>
     );
