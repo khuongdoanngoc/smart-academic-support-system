@@ -1,0 +1,90 @@
+.sidebar {
+    width: 20%;
+    gap: 16px;
+    padding: 30px 22px;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid #e5e8eb;
+    & > .account {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        & > img {
+            width: 42.5px;
+            height: 42.5px;
+            border-radius: 10px;
+        }
+        // name
+        & > div {
+            & > h3 {
+                font-family: var(--font-family-secondary);
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 18.15px;
+                text-align: left;
+            }
+            & > a {
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 14.52px;
+                text-align: left;
+            }
+        }
+    }
+    & > .statistics {
+        display: flex;
+        gap: 25px;
+        align-items: center;
+
+        & > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            & > h3 {
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 24.2px;
+                text-align: center;
+            }
+            & > h4 {
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 14.52px;
+                text-align: left;
+            }
+        }
+    }
+    & > .items {
+        display: flex;
+        flex-direction: column;
+        & > a {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: black;
+            padding: 7px 20px;
+            & > h3 {
+                font-family: var(--font-family-secondary);
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.36px;
+                text-align: left;
+            }
+            & > span {
+                font-family: var(--font-family-secondary);
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.36px;
+                text-align: left;
+                color: #00000099;
+            }
+        }
+        & > .active {
+            background-color: #f2f2f2;
+            border-radius: 10px;
+        }
+    }
+}
