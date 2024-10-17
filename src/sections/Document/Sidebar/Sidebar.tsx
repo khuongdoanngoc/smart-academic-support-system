@@ -9,12 +9,19 @@ import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
-import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
-import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
+import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
+
+import { useLocation } from "react-router-dom";
+
 export default function Sidebar() {
+    const pathName = useLocation().pathname;
+
+    console.log(pathName);
+
     return (
         <div className={cx("sidebar")}>
             <div className={cx("account")}>
@@ -39,23 +46,23 @@ export default function Sidebar() {
                 </div>
             </div>
             <Button
-                text="+ Tải tài liệu mới"
+                text="+ Thêm mới"
                 paddingY={9.5}
                 paddingX={0}
                 fontSize={16}
             />
             <div className={cx("items")}>
                 <a className={cx("active")} href="#">
-                    <HomeOutlinedIcon sx={{ width: "40px", height: "40px" }} />
+                    <HomeOutlinedIcon sx={{ width: "22px", height: "22px" }} />
                     <h3>Trang chủ</h3>
                 </a>
                 <a href="#">
-                    <BookOutlinedIcon sx={{ width: "40px", height: "40px" }} />
+                    <BookOutlinedIcon sx={{ width: "22px", height: "22px" }} />
                     <h3>Thư viện</h3>
                 </a>
                 <a href="#">
                     <AutoStoriesOutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                        sx={{ width: "22px", height: "22px" }}
                     />
                     <h3>Sách</h3>
                 </a>
@@ -64,40 +71,42 @@ export default function Sidebar() {
                 <span>Tài liệu của tôi</span>
                 <a href="#">
                     <InsertDriveFileOutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                        sx={{ width: "22px", height: "22px" }}
                     />
                     <h3>Tài liệu</h3>
                 </a>
                 <a href="#">
                     <StickyNote2OutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                        sx={{ width: "22px", height: "22px" }}
                     />
                     <h3>Môn học</h3>
                 </a>
                 <a href="#">
-                    <FolderOutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                    <NotificationsOutlinedIcon
+                        sx={{ width: "22px", height: "22px" }}
                     />
-                    <h3>Thư mục</h3>
+                    <h3>Thông báo</h3>
                 </a>
             </div>
             <div className={cx("items")}>
-                <span>Tìm kiếm thông minh</span>
+                <span>Tìm kiếm nâng cao</span>
                 <a href="#">
                     <SearchOutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                        sx={{ width: "22px", height: "22px" }}
                     />
                     <h3>Phân loại</h3>
                 </a>
                 <a href="#">
                     <BookmarkAddedOutlinedIcon
-                        sx={{ width: "40px", height: "40px" }}
+                        sx={{ width: "22px", height: "22px" }}
                     />
                     <h3>Đã lưu</h3>
                 </a>
                 <a href="#">
-                    <TagOutlinedIcon sx={{ width: "40px", height: "40px" }} />
-                    <h3>Gắn thẻ</h3>
+                    <SmartToyOutlinedIcon
+                        sx={{ width: "22px", height: "22px" }}
+                    />
+                    <h3>Hỗ trợ AI</h3>
                 </a>
             </div>
         </div>

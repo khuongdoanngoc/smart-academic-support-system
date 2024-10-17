@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     border: 0.5px solid #e5e8eb;
+    height: fit-content;
+    overflow-y: auto;
     & > .account {
         display: flex;
         align-items: center;
@@ -32,6 +34,16 @@
             }
         }
     }
+
+    & > button {
+        font-family: "Montserrat";
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 19.5px;
+        text-align: center;
+        background-color: #dc4342b2 !important;
+    }
+
     & > .statistics {
         display: flex;
         gap: 25px;
@@ -59,22 +71,23 @@
     & > .items {
         display: flex;
         flex-direction: column;
+        gap: 3px;
         & > a {
             display: flex;
             align-items: center;
             gap: 20px;
             text-decoration: none;
             color: black;
-            padding: 7px 20px;
+            border-radius: 10px;
+            padding: 5px 20px;
+            transition: 0.3s ease;
             & > h3 {
-                font-family: var(--font-family-secondary);
                 font-size: 16px;
                 font-weight: 400;
                 line-height: 19.36px;
                 text-align: left;
             }
             & > span {
-                font-family: var(--font-family-secondary);
                 font-size: 16px;
                 font-weight: 400;
                 line-height: 19.36px;
@@ -82,9 +95,12 @@
                 color: #00000099;
             }
         }
+        & > a:hover {
+            background-color: #ffd9db;
+        }
         & > .active {
-            background-color: #f2f2f2;
-            border-radius: 10px;
+            background-color: var(--Pink-nht, #ffc9cb);
+            color: var(--main-color);
         }
     }
 }

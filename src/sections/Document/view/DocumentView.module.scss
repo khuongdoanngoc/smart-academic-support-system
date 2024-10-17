@@ -1,8 +1,5 @@
-.library-page {
+.document-page {
     width: 100%;
     display: flex;
     box-sizing: border-box;
-    & > .content {
-        width: 80%;
-    }
 }

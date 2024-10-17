@@ -1,7 +1,7 @@
 import { Outlet, useRoutes } from "react-router-dom";
 import Layout from "../layouts";
 import HomePage from "../pages/Home";
-import LibraryPage from "../pages/Library";
+import DocumentPage from "../pages/Document";
 import { DocumentLayout } from "../components/DocumentLayout";
 
 export default function Router() {
@@ -20,7 +20,10 @@ export default function Router() {
                     <Outlet />
                 </DocumentLayout>
             ),
-            children: [{ path: "/library", element: <LibraryPage /> }],
+            children: [
+                { path: "/document", element: <DocumentPage /> },
+                { path: "/document/directory", element: <DocumentPage /> },
+            ],
         },
     ]);
     return routes;

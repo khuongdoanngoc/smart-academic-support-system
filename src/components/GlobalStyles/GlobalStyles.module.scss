@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 * {
     box-sizing: border-box;
@@ -17,9 +18,10 @@ html {
 :root {
     --font-family-main: "Montserrat";
     --font-family-secondary: "Plus Jakarta Sans";
+    --font-family-third: 'Inter';
     --main-color: #eb2930;
     --button-background-color: #dc4342;
     --button-background-hover-color: #eb2930;
     --button-background-secondary-color: #bd282e;
-    --text-main-color: #ffffff
+    --text-main-color: #ffffff;
 }
