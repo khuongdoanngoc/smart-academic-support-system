@@ -28,6 +28,12 @@ export default function Subjects() {
         setCurrentPage(alphabet[value - 1]);
     };
 
+    const filteredDataList = (data: any[]) => {
+        return data.filter((item) =>
+            item.title.toLowerCase().startsWith(currentPage.toLowerCase())
+        );
+    };
+
     return (
         <div className={cx("subjects")}>
             <h2>Môn học</h2>
@@ -50,7 +56,7 @@ export default function Subjects() {
             />
             {/* subjects */}
             <div>
-                {fakeSubjects.map((data, index) => (
+                {filteredDataList(fakeSubjects).map((data, index) => (
                     <div className={cx("subject")} key={index}>
                         <DescriptionIcon
                             sx={{ width: "35px", height: "35px" }}

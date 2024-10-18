@@ -13,7 +13,7 @@ interface PropsType {
 
 export default function Layout(props: PropsType) {
     return (
-        <div className={cx('layout-wrapper')}>
+        <div className={cx("layout-wrapper")}>
             <Header />
             <Main>{props.children}</Main>
             <Footer />

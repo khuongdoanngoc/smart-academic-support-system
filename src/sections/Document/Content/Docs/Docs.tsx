@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useSharingModal } from "../../../../contexts/SharingModalContext";
+import { SharingModal } from "../../../../components/SharingModal";
 
 interface IDoc {
     avatar: string;
@@ -28,8 +30,10 @@ const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ"
 const ITEM_HEIGHT = 48;
 
 export default function Docs({ title, docs }: IDocs) {
-    const [visibleCount, setVisibleCount] = useState<number>(3);
+    // configs cho nút chia sẻ
+    const { openSharingModal } = useSharingModal();
 
+    // configs cho nút ... trên tài liệu
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,6 +43,8 @@ export default function Docs({ title, docs }: IDocs) {
         setAnchorEl(null);
     };
 
+    // configs cho nút xem thêm
+    const [visibleCount, setVisibleCount] = useState<number>(3);
     const handleToggle = () => {
         if (visibleCount === 3) {
             setVisibleCount(visibleCount + 6);
@@ -108,13 +114,14 @@ export default function Docs({ title, docs }: IDocs) {
                                     onClick={() => {
                                         console.log("do download");
                                     }}>
-                                    <FileDownloadOutlinedIcon />
+                                    <FileDownloadOutlinedIcon
+                                        sx={{ color: "#EB2930" }}
+                                    />
                                 </div>
-                                <div
-                                    onClick={() => {
-                                        console.log("do share");
-                                    }}>
-                                    <ShareOutlinedIcon />
+                                <div onClick={openSharingModal}>
+                                    <ShareOutlinedIcon
+                                        sx={{ color: "#EB2930" }}
+                                    />
                                 </div>
                             </div>
                         </div>

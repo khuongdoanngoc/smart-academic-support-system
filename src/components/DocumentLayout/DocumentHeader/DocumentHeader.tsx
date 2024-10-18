@@ -7,7 +7,7 @@ import VietnameseIcon from "../../../assets/images/vietnamese.icon.png";
 export default function DocumentHeader() {
     return (
         <div className={cx("document-header")}>
-            <a href="/library">
+            <a href="/document">
                 <h1 className={cx("logo")}>
                     DTU<span>DOCUMENT</span>
                 </h1>
