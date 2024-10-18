@@ -103,4 +103,29 @@
             color: var(--main-color);
         }
     }
+
+    & > .support-btn {
+        background-color: #ffbaba !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 0px;
+        margin-top: 40px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    & > .support-btn:hover {
+        box-shadow: 0px 4px 4px 0px #00000040;
+        transform: scale(1.03);
+        background-color: #dc4342b2 !important;
+    }
+
+    & > #support-active {
+        background-color: var(--main-color) !important;
+    }
 }

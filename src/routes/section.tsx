@@ -3,6 +3,7 @@ import Layout from "../layouts";
 import HomePage from "../pages/Home";
 import DocumentPage from "../pages/Document";
 import { DocumentLayout } from "../components/DocumentLayout";
+import SupportPage from "../pages/Support";
 
 export default function Router() {
     const routes = useRoutes([
@@ -23,6 +24,7 @@ export default function Router() {
             children: [
                 { path: "/document", element: <DocumentPage /> },
                 { path: "/document/directory", element: <DocumentPage /> },
+                { path: "/document/support", element: <SupportPage /> },
             ],
         },
     ]);

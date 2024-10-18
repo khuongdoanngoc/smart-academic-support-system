@@ -15,11 +15,13 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
-import { useLocation } from "react-router-dom";
+import ContactICON from "../../../assets/images/icons/ContactICON.png";
+
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
     const pathName = useLocation().pathname;
-
+    const navigate = useNavigate();
     console.log(pathName);
 
     return (
@@ -52,7 +54,9 @@ export default function Sidebar() {
                 fontSize={16}
             />
             <div className={cx("items")}>
-                <a className={cx("active")} href="#">
+                <a
+                    className={cx(pathName === "/document" && "active")}
+                    href="#">
                     <HomeOutlinedIcon sx={{ width: "22px", height: "22px" }} />
                     <h3>Trang chủ</h3>
                 </a>
@@ -109,6 +113,15 @@ export default function Sidebar() {
                     <h3>Hỗ trợ AI</h3>
                 </a>
             </div>
+            <button
+                id={cx(pathName === "/document/support" && "support-active")}
+                className={cx("support-btn")}
+                onClick={() => {
+                    navigate("/document/support");
+                }}>
+                <img src={ContactICON} alt="contact" />
+                <span>Hỗ trợ 24/7</span>
+            </button>
         </div>
     );
 }
