@@ -20,9 +20,9 @@ export default function Router() {
             children: [
               { element: <HomePage />, index: true },
               { path: "/login", element: <Login />, index: true },
-        { path: "/register", element: <Register />, index: true },
-        { path: "/forgotpass", element: <ForgotPassWord />, index: true },
-        { path: "/newpassword", element: <NewPassword />, index: true },
+              { path: "/register", element: <Register />, index: true },
+              { path: "/forgotpass", element: <ForgotPassWord />, index: true },
+              { path: "/newpassword", element: <NewPassword />, index: true },
             ],
             
         },
