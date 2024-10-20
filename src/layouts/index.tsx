@@ -8,7 +8,7 @@ import { Footer } from "./footer";
 const cx = classnames.bind(styles);
 
 interface PropsType {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Layout(props: PropsType) {
