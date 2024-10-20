@@ -4,20 +4,20 @@ import styles from "./HeaderBottom.module.scss";
 import classnames from "classnames/bind";
 const cx = classnames.bind(styles);
 export default function HeaderBottom() {
-    return (
-        <div className={cx("header-bottom")}>
-            <a href="#">TRANG CHỦ</a>
-            <a href="#">GIỚI THIỆU</a>
-            <a href="#">TÀI LIỆU</a>
-            <a href="#">CÔNG CỤ AI</a>
-            <a href="#">TIN TỨC</a>
-            <a href="#">LIÊN HỆ</a>
-            <button>
-                <SearchIcon />
-            </button>
-            <button>
-                <NotificationsNoneIcon />
-            </button>
-        </div>
-    );
+  return (
+    <div className={cx("header-bottom")}>
+      <a href="#">TRANG CHỦ</a>
+      <a href="#">GIỚI THIỆU</a>
+      <a href="#">TÀI LIỆU</a>
+      <a href="#">CÔNG CỤ AI</a>
+      <a href="#">TIN TỨC</a>
+      <a href="#">LIÊN HỆ</a>
+      <button>
+        <SearchIcon />
+      </button>
+      <button>
+        <NotificationsNoneIcon />
+      </button>
+    </div>
+  );
 }

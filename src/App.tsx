@@ -1,12 +1,17 @@
 import "./App.css";
 import { GlobalStyles } from "./components/GlobalStyles";
+import { SharingModal } from "./components/SharingModal";
+import { SharingModalProvider } from "./contexts/SharingModalContext";
 import Router from "./routes/section";
 
 function App() {
     return (
-        <GlobalStyles>
-            <Router />
-        </GlobalStyles>
+        <SharingModalProvider>
+            <SharingModal />
+            <GlobalStyles>
+                <Router />
+            </GlobalStyles>
+        </SharingModalProvider>
     );
 }
 

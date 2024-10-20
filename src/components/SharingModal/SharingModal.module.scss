@@ -1,0 +1,57 @@
+.email-form {
+    display: flex;
+    justify-content: space-between;
+    & > .email-input {
+        background: #eaeaea;
+        width: 396px;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.5px;
+        text-align: left;
+        padding: 13px 20px;
+        border-radius: 10px;
+        transition: 0.3s ease;
+    }
+    & > .email-input::placeholder {
+        font-family: "Montserrat";
+    }
+    & > .email-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.5019607843);
+    }
+}
+
+.input-url {
+    width: 100%;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.5px;
+    text-align: left;
+    padding: 13px 20px;
+    border-radius: 10px;
+    transition: 0.3s ease;
+    background: #eaeaea;
+    font-family: var(--font-family-main) !important;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    & > button:first-child {
+        color: #dc4342;
+        border: 1px solid #000000;
+        width: 280px;
+        height: 50px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 19.5px;
+        background-color: white;
+        border-radius: 30px;
+    }
+}

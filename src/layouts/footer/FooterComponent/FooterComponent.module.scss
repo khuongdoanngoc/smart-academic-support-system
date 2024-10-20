@@ -1,0 +1,31 @@
+.footer-component {
+  width: 83%;
+  margin: 0 auto;
+  // background: antiquewhite;
+  margin-top: 2rem;
+  height: 234px;
+  & > .footer-component-main {
+    display: flex;
+    justify-content: space-between;
+    & > .component-main-right {
+      width: 70%;
+      margin-top: 32px;
+      & > .main-right-information {
+        width: 88%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        & > p {
+          font-size: 16px;
+          line-height: 24px;
+          color: #000000;
+          font-weight: 600;
+        }
+      }
+      & > .icon-right-bottom {
+        transform: rotate(180deg);
+      }
+    }
+  }
+}

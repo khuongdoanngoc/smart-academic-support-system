@@ -1,0 +1,131 @@
+.sidebar {
+    width: 20%;
+    gap: 16px;
+    padding: 30px 22px;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid #e5e8eb;
+    height: fit-content;
+    overflow-y: auto;
+    & > .account {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        & > img {
+            width: 42.5px;
+            height: 42.5px;
+            border-radius: 10px;
+        }
+        // name
+        & > div {
+            & > h3 {
+                font-family: var(--font-family-secondary);
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 18.15px;
+                text-align: left;
+            }
+            & > a {
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 14.52px;
+                text-align: left;
+            }
+        }
+    }
+
+    & > button {
+        font-family: "Montserrat";
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 19.5px;
+        text-align: center;
+        background-color: #dc4342b2 !important;
+    }
+
+    & > .statistics {
+        display: flex;
+        gap: 25px;
+        align-items: center;
+
+        & > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            & > h3 {
+                font-size: 20px;
+                font-weight: 500;
+                line-height: 24.2px;
+                text-align: center;
+            }
+            & > h4 {
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 14.52px;
+                text-align: left;
+            }
+        }
+    }
+    & > .items {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        & > a {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: black;
+            border-radius: 10px;
+            padding: 5px 20px;
+            transition: 0.3s ease;
+            & > h3 {
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.36px;
+                text-align: left;
+            }
+            & > span {
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.36px;
+                text-align: left;
+                color: #00000099;
+            }
+        }
+        & > a:hover {
+            background-color: #ffd9db;
+        }
+        & > .active {
+            background-color: var(--Pink-nht, #ffc9cb);
+            color: var(--main-color);
+        }
+    }
+
+    & > .support-btn {
+        background-color: #ffbaba !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 0px;
+        margin-top: 40px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    & > .support-btn:hover {
+        box-shadow: 0px 4px 4px 0px #00000040;
+        transform: scale(1.03);
+        background-color: #dc4342b2 !important;
+    }
+
+    & > #support-active {
+        background-color: var(--main-color) !important;
+    }
+}

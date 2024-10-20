@@ -1,0 +1,23 @@
+.content {
+    width: 80%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+    & > img {
+        height: 300px;
+        object-fit: cover;
+    }
+    & > .central {
+        width: 100%;
+        display: flex;
+        gap: 17px;
+        margin: 25px 0px;
+        & > .category {
+            width: calc(100% - 340px);
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+    }
+}

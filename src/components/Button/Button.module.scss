@@ -13,3 +13,17 @@
     box-shadow: 0px 4px 4px 0px #00000040;
     transform: scale(1.03);
 }
+
+.button {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  background: #eb2930;
+  border: none;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px;
+  line-height: 24px;
+}
