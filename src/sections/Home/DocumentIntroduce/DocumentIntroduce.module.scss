@@ -1,0 +1,167 @@
+.document-introduce-wrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 46px;
+    & > div {
+        display: flex;
+        max-width: 1404px;
+        width: 1304px;
+        gap: 55px;
+        & > .leftContent {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            & > .imgs {
+                position: relative;
+                margin-right: 0px;
+                padding-bottom: 87px;
+                & > .img1 {
+                    box-sizing: border-box;
+                    & > img {
+                        width: 470px;
+                        height: 399px;
+                        object-fit: cover;
+                        border-radius: 10px;
+                    }
+                }
+            }
+            & > .img2 {
+                position: absolute;
+                width: 145px;
+                top: 0px;
+                right: 0px;
+                text-align: left;
+                border-radius: 10px;
+                box-shadow: 0px 4px 30px 0px rgba(19, 61, 117, 0.12);
+                z-index: 2;
+                padding: 50px 16px 30px;
+                overflow: hidden;
+                background-size: cover;
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-image: url("../../../assets/images/homepage.introduce2.jpeg");
+                & > h1 {
+                    font-family: Arial;
+                    font-size: 50px;
+                    font-weight: 700;
+                    line-height: 24px;
+                    color: white;
+                    & > span {
+                        color: var(--main-color);
+                    }
+                }
+                & > p {
+                    margin-top: 24px;
+                    font-family: Arial;
+                    font-size: 16px;
+                    font-weight: 700;
+                    line-height: 24px;
+                    color: white;
+
+                    & > span {
+                        color: var(--main-color);
+                    }
+                }
+            }
+            & > .img2::after {
+                content: "";
+                z-index: -1;
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                background: linear-gradient(
+                    180deg,
+                    rgba(0, 0, 0, 0.28) 0%,
+                    rgba(172, 72, 76, 0.7) 41.5%
+                );
+            }
+            & > .img3 {
+                position: absolute;
+                right: 0px;
+                bottom: 0;
+                z-index: 1;
+
+                & > img {
+                    border-radius: 10px;
+                    width: 294px;
+                    height: 294px;
+                }
+            }
+
+            & > .img3::after {
+                content: "";
+                position: absolute;
+                left: -10px;
+                top: -10px;
+                background: white;
+                height: 100%;
+                width: 100%;
+                border-radius: 10px;
+                z-index: -1;
+            }
+
+            & > .img4 {
+                position: absolute;
+                bottom: -130px;
+                left: 0px;
+                z-index: -2;
+            }
+        }
+
+        & > .rightContent {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            gap: 27px;
+            & > h2 {
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 19.5px;
+                letter-spacing: 0.03em;
+                text-align: left;
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                color: var(--button-background-secondary-color);
+            }
+            & > h1 {
+                font-size: 22px;
+                font-weight: 600;
+                line-height: 26.82px;
+                letter-spacing: 0.03em;
+                text-align: left;
+            }
+            & > p {
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.52px;
+                letter-spacing: 0.05em;
+                text-align: justify;
+            }
+            & > .infor {
+                display: flex;
+                gap: 18px;
+                & > img {
+                    width: 200px;
+                    height: 120px;
+                    border-radius: 10px;
+                }
+                & > .items {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 21px;
+                    & > div {
+                        display: flex;
+                        align-items: center;
+                        gap: 3px;
+                    }
+                }
+            }
+        }
+    }
+}

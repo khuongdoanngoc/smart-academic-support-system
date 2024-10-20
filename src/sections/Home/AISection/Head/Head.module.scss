@@ -1,0 +1,21 @@
+.aisection-head {
+    width: 100%;
+    background: #eb29304d;
+    display: flex;
+    gap: 38px;
+    align-items: center;
+    justify-content: space-between;
+    & > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 50px;
+        gap: 5px;
+        & > h3 {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            text-align: justify;
+        }
+    }
+}

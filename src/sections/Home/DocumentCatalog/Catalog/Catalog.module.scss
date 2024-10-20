@@ -1,0 +1,28 @@
+.catalog-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 25px;
+    box-shadow: 0px 0px 8px 4px #00000040;
+    .catalog {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        & > div {
+            width: 65px;
+            height: 65px;
+        }
+        & > h2 {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 24px;
+        }
+        & > p {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 24px;
+        }
+    }
+}

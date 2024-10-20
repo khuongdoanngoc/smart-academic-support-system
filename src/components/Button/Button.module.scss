@@ -1,0 +1,15 @@
+.button-wrapper {
+    background-color: var(--button-background-color);
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    line-height: 24px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: fit-content;
+}
+.button-wrapper:hover {
+    box-shadow: 0px 4px 4px 0px #00000040;
+    transform: scale(1.03);
+}

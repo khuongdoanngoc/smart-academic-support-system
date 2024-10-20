@@ -1,6 +1,6 @@
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
-import styles from "../Header.module.scss";
+import styles from "./HeaderBottom.module.scss";
 import classnames from "classnames/bind";
 const cx = classnames.bind(styles);
 export default function HeaderBottom() {
