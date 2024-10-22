@@ -11,27 +11,85 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ArrowToLeft from "../../../assets/images/icons/ArrowToLeftIcon.png";
 import ArrowToRight from "../../../assets/images/icons/ArrowToRightIcon.png";
+import { useEffect, useRef, useState } from "react";
+// import Slider from "react-slick";
+import { motion } from "framer-motion";
+import {
+    fromInsideOut,
+    slideInLeft,
+    slideInRight,
+} from "../../../utils/animations";
 
 export default function News() {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const sectionRef = useRef(null);
+
+    // var carouselSettings = {
+    //     dots: true,
+    //     infinite: true,
+    //     slidesToShow: 3,
+    //     slidesToScroll: 1,
+    //     autoplay: true,
+    //     autoplaySpeed: 2000,
+    //     pauseOnHover: true,
+    // };
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "100px",
+            threshold: 0.5,
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, options);
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
     return (
-        <div className={cx("news")}>
+        <div ref={sectionRef} className={cx("news")}>
             <div>
                 <div className={cx("head")}>
-                    <div className={cx("titles")}>
+                    <motion.div
+                        variants={slideInLeft}
+                        initial="hidden"
+                        animate={isVisible ? "visible" : "hidden"}
+                        className={cx("titles")}>
                         <h2>
                             <DescriptionIcon />
                             TIN TỨC VÀ THÔNG BÁO NỔI BẬT CỦA CHÚNG TÔI
                         </h2>
                         <h1>TIN TỨC VÀ THÔNG BÁO MỚI NHẤT</h1>
-                    </div>
-                    <Button
-                        text="XEM TẤT CẢ TIN TỨC"
-                        fontSize={20}
-                        paddingX={25}
-                        paddingY={11}
-                    />
+                    </motion.div>
+                    <motion.div
+                        variants={slideInRight}
+                        initial="hidden"
+                        animate={isVisible ? "visible" : "hidden"}>
+                        <Button
+                            text="XEM TẤT CẢ TIN TỨC"
+                            fontSize={20}
+                            paddingX={25}
+                            paddingY={11}
+                        />
+                    </motion.div>
                 </div>
-                <div className={cx("content")}>
+                <motion.div
+                    variants={fromInsideOut}
+                    initial="hidden"
+                    animate={isVisible ? "visible" : "hidden"}
+                    className={cx("content")}>
                     <div className={cx("slider")}>
                         <div className={cx("card")}>
                             <img src={News1} alt="news1" />
@@ -109,7 +167,7 @@ export default function News() {
                             <img src={ArrowToLeft} alt="control" />
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

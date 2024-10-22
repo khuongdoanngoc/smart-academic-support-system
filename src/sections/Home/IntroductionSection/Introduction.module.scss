@@ -2,6 +2,8 @@
     position: relative;
     min-height: 800px;
     width: 100%;
+    overflow: hidden;
+    position: relative;
     & > .background {
         position: absolute;
         display: inline-block;
@@ -115,6 +117,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                background-color: white;
+                z-index: -1;
                 & > img {
                     width: 100%;
                     z-index: -1;

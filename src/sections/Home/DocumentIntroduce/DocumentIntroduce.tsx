@@ -8,11 +8,45 @@ import IMG4 from "../../../assets/images/homepage.introduce4.png";
 import ArticleIcon from "@mui/icons-material/Article";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import { Button } from "../../../components/Button";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { slideInLeft, slideInRight } from "../../../utils/animations";
 export default function DocumentIntroduce() {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const sectionRef = useRef(null);
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "200px",
+            threshold: 0.5,
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true); // Cập nhật trạng thái isVisible thành true khi section vào viewport
+                    observer.unobserve(entry.target); // Dừng quan sát section này
+                }
+            });
+        }, options);
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current); // Bắt đầu quan sát section
+        }
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
     return (
-        <div className={cx("document-introduce-wrapper")}>
+        <div ref={sectionRef} className={cx("document-introduce-wrapper")}>
             <div>
-                <div className={cx("leftContent")}>
+                <motion.div
+                    variants={slideInLeft}
+                    initial="hidden"
+                    animate={isVisible ? "visible" : "hidden"}
+                    className={cx("leftContent")}>
                     <div className={cx("imgs")}>
                         <div className={cx("img1")}>
                             <img src={IMG1} alt="img1" />
@@ -33,8 +67,12 @@ export default function DocumentIntroduce() {
                     <div className={cx("img4")}>
                         <img src={IMG4} alt="img4" />
                     </div>
-                </div>
-                <div className={cx("rightContent")}>
+                </motion.div>
+                <motion.div
+                    variants={slideInRight}
+                    initial="hidden"
+                    animate={isVisible ? "visible" : "hidden"}
+                    className={cx("rightContent")}>
                     <h2>
                         <ArticleIcon sx={{ color: "#bd282e" }} />
                         GIỚI THIỆU
@@ -78,7 +116,7 @@ export default function DocumentIntroduce() {
                         paddingY={23}
                         paddingX={76}
                     />
-                </div>
+                </motion.div>
             </div>
         </div>
     );
