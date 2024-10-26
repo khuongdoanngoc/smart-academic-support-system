@@ -8,10 +8,10 @@
     padding: 0px 100px;
     position: fixed;
     top: 0;
-    width: 100%;
     z-index: 10;
     transform: translateY(0);
     transition: transform;
+    box-shadow: 0px 0px 3px 1px #00000040;
     & > a {
         text-decoration: none;
         cursor: pointer;
