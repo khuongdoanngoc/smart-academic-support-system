@@ -6,8 +6,8 @@ import { axiosInstance } from "../utils/AxiosInterceptor";
 interface IRequest {
     url: string;
     method: string;
-    body?: any;
-    headers?: any;
+    body: null;
+    headers: null;
 }
 
 const useAxios = ({ url, method, body = null, headers = null }: IRequest) => {
