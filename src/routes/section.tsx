@@ -9,6 +9,7 @@ import ForgotPassWord from "../pages/ForgotPassWord";
 import { ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
+import EditProfile from "../pages/EditProfile";
 
 export default function Router() {
   const routes = useRoutes([
@@ -27,29 +28,34 @@ export default function Router() {
       ],
     },
 
+    {
+      element: (
+        <DocumentLayout>
+          <Outlet />
+        </DocumentLayout>
+      ),
+      children: [
+        { path: "/document", element: <DocumentPage /> },
+        { path: "/document/directory", element: <DocumentPage /> },
+        { path: "/document/support", element: <SupportPage /> },
+        { path: "/document/ai-support", element: <AISupportPage /> },
         {
-            element: (
-                <DocumentLayout>
-                    <Outlet />
-                </DocumentLayout>
-            ),
-            children: [
-                { path: "/document", element: <DocumentPage /> },
-                { path: "/document/directory", element: <DocumentPage /> },
-                { path: "/document/support", element: <SupportPage /> },
-                { path: "/document/ai-support", element: <AISupportPage /> },
-                {
-                    path: "/document/uploadfile",
-                    element: <UploadFile />,
-                    index: true,
-                },
-                {
-                    path: "/document/changepassword",
-                    element: <ChangePassWord />,
-                    index: true,
-                  },
-            ],
+          path: "/document/uploadfile",
+          element: <UploadFile />,
+          index: true,
         },
-    ]);
-    return routes;
+        {
+          path: "/document/changepassword",
+          element: <ChangePassWord />,
+          index: true,
+        },
+        {
+          path: "/document/editprofile",
+          element: <EditProfile />,
+          index: true,
+        },
+      ],
+    },
+  ]);
+  return routes;
 }
