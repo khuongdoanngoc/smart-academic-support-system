@@ -16,6 +16,7 @@ export default function Contact() {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const sectionRef = useRef(null);
 
+    
     useEffect(() => {
         const options = {
             root: null,
@@ -44,7 +45,7 @@ export default function Contact() {
         <div ref={sectionRef} className={cx("contact")}>
             <div>
                 <h1>THÔNG TIN LIÊN HỆ</h1>
-                <div className={cx("content")}>
+                <div className={cx("contact-content")}>
                     <motion.div
                         variants={slideInBottom}
                         initial="hidden"
