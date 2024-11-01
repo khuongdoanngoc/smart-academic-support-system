@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import UploadFileReducer from "./UploadFileSlice/uploadFileSlice";
+import DocumentReducer from "./DocumentSlice/documentSlice";
 
 const store = configureStore({
-  reducer: {
-    uploadFile: UploadFileReducer,
-  },
+    reducer: {
+        uploadFile: UploadFileReducer,
+        document: DocumentReducer,
+    },
 });
 
 export default store;
