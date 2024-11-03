@@ -37,6 +37,7 @@ export const DocumentSlice = createSlice({
                 state.Loading = true;
             })
             .addCase(getDocumentByID.fulfilled, (state, action) => {
+                state.Loading = false;
                 state.Document = action.payload;
             })
             .addCase(getDocumentByID.rejected, (state, action) => {
