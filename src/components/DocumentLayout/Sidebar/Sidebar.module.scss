@@ -1,11 +1,12 @@
 .sidebar {
-    width: 20%;
     gap: 16px;
     padding: 30px 22px;
     display: flex;
     flex-direction: column;
     border: 0.5px solid #e5e8eb;
     height: fit-content;
+    position: relative;
+    transition: 0.5s ease;
     & > .account {
         display: flex;
         align-items: center;
@@ -34,36 +35,51 @@
         }
     }
 
-    & > button {
-        font-family: "Montserrat";
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 19.5px;
-        text-align: center;
-        background-color: #dc4342b2 !important;
+    & > .addDoc-btn {
+        width: 100%;
+        & > button {
+            font-family: "Montserrat";
+            font-size: 16px;
+            width: 100%;
+            font-weight: 700;
+            line-height: 19.5px;
+            text-align: center;
+            background-color: #dc4342b2 !important;
+        }
     }
 
     & > .statistics {
-        display: flex;
-        gap: 25px;
-        align-items: center;
-
-        & > div {
+        position: relative;
+        height: 38.73px;
+        & > .toggle {
+            position: absolute;
+            top: 0px;
+            right: -39.5px;
+            z-index: 1;
+            cursor: pointer;
+        }
+        & > .statistics-in4 {
+            gap: 25px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            & > h3 {
-                font-size: 20px;
-                font-weight: 500;
-                line-height: 24.2px;
-                text-align: center;
-            }
-            & > h4 {
-                font-size: 12px;
-                font-weight: 500;
-                line-height: 14.52px;
-                text-align: left;
+            position: relative;
+            & > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                & > h3 {
+                    font-size: 20px;
+                    font-weight: 500;
+                    line-height: 24.2px;
+                    text-align: center;
+                }
+                & > h4 {
+                    font-size: 12px;
+                    font-weight: 500;
+                    line-height: 14.52px;
+                    text-align: left;
+                }
             }
         }
     }
@@ -71,6 +87,9 @@
         display: flex;
         flex-direction: column;
         gap: 3px;
+        & > span {
+            height: 20px;
+        }
         & > a {
             display: flex;
             align-items: center;
@@ -127,4 +146,13 @@
     & > #support-active {
         background-color: var(--main-color) !important;
     }
+}
+
+.open {
+    width: 20%;
+}
+
+.closed {
+    width: 80px;
+    padding: 30px 10px !important;
 }

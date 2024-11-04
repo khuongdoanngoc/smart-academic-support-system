@@ -19,7 +19,14 @@ export const slideInRight = {
             duration: 1.4,
         },
     },
-    hidden: { x: 700 },
+    hidden: {
+        x: 700,
+        transition: {
+            type: "spring",
+            bounce: 0,
+            duration: 1.4,
+        },
+    },
 };
 
 export const fromInsideOut = {
@@ -43,7 +50,11 @@ export const slideInBottom = {
             duration: 1.4,
         },
     },
-    hidden: { y: 500 },
+    hidden: { y: 500, transition: {
+        type: "spring",
+        bounce: 0,
+        duration: 1.4,
+    }, },
 };
 
 export const appear = {
@@ -55,5 +66,12 @@ export const appear = {
             duration: 1.4,
         },
     },
-    hidden: { opacity: 0 },
+    hidden: {
+        opacity: 0,
+        transition: {
+            type: "spring",
+            bounce: 0,
+            duration: 1.4,
+        },
+    },
 };
