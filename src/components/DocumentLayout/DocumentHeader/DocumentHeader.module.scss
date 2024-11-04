@@ -1,9 +1,10 @@
 .document-header {
-    width: 100%;
+    width: calc(100vw - var(--scrollbar-width, 15px));
     display: flex;
     background-color: white;
     justify-content: space-between;
     align-items: center;
+
     height: 100px;
     padding: 0px 100px;
     position: fixed;
