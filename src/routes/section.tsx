@@ -10,6 +10,7 @@ import { ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
+import Notication from "../pages/Notication";
 
 export default function Router() {
   const routes = useRoutes([
@@ -54,6 +55,7 @@ export default function Router() {
           element: <EditProfile />,
           index: true,
         },
+        { path: "/document/notication", element: <Notication />, index: true },
       ],
     },
   ]);
