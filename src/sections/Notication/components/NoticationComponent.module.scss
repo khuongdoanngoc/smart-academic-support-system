@@ -3,6 +3,7 @@
   & > .notication-page {
     width: 96%;
     margin: 0 auto;
+    margin-top: 20px;
     & > .notication-page-header {
       width: 100%;
       & > h2 {
@@ -230,6 +231,17 @@
             & > .opacity-menu {
               opacity: 50%;
             }
+          }
+        }
+      }
+    }
+    & > .notication-page-slide {
+      & > .page-slide-item {
+        margin: 25px 0;
+        & > nav {
+          & > ul {
+            display: flex;
+            justify-content: center;
           }
         }
       }
