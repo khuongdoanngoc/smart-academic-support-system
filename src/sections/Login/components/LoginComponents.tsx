@@ -1,30 +1,26 @@
 import styles from "./LoginComponents.module.scss";
 import classnames from "classnames/bind";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../redux/store";
 
 import user from "../../../assets/images/user.png";
 import unlock from "../../../assets/images/Unlock.png";
 import check from "../../../assets/images/Chield_check.png";
 import image4 from "../../../assets/images/Return-Outline.svg";
 import logoLogin from "../../../assets/images/image_main_login.jfif";
-import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
-import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
+
+import { ButtonSubmit } from "../../../components/Button/Button";
+import { useGlobalContextLoin } from "../../../layouts/useContext";
+import { LoginAction } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
+
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button } from "../../../components/Button";
 const cx = classnames.bind(styles);
-
-// Tạo schema kiểm tra với Yup
-
-const validationSchema = Yup.object({
-  username: Yup.string().required("Vui lòng nhập username"),
-  password: Yup.string().required("Vui lòng nhập password"),
-  captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
-});
 
 interface informationLogin {
   titleHeader: string;
@@ -36,31 +32,50 @@ interface informationLogin {
   titleForgot: string;
   titleRegister: string;
 }
+
+interface LoginData {
+  username: string;
+  password: string;
+  captcha: string;
+}
 interface PopsInformation {
   pops: informationLogin[];
 }
-
+const validationSchema: Yup.ObjectSchema<LoginData> = Yup.object({
+  // Tạo schema kiểm tra với Yup
+  username: Yup.string().required("Vui lòng nhập username"),
+  password: Yup.string().required("Vui lòng nhập password"),
+  captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
+});
 const LoginComponents: React.FC<PopsInformation> = ({
   pops,
 }: PopsInformation) => {
   const [typePass, setTypePass] = useState(false); //useState xem hoặc ẩn password
-
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
+  const { clickLogin, setClickForgotPass, setClickRegister } =
+    useGlobalContextLoin();
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const refreshString = () => {
     //hàm refresh mã captcha
     setCaptcha(Math.random().toString(36).slice(2, 6));
   };
-
-  const navigate = useNavigate();
   const handleOnClickForgot = () => {
     //hàm onclick để chuyển đến trang quên mật khẩu
-    navigate("/forgotpass");
+    setTimeout(() => {
+      navigate("/forgotpass");
+      setClickForgotPass(true);
+    }, 600);
   };
   const handleOnClickRegister = () => {
     //hàm onclick để chuyển đến trang quên mật khẩu
-    navigate("/register");
+    setTimeout(() => {
+      navigate("/register");
+      setClickRegister(true);
+    }, 600);
   };
 
   const handleTypePass = () => {
@@ -70,25 +85,26 @@ const LoginComponents: React.FC<PopsInformation> = ({
 
   const handleSubmit = (
     //hàm onclick kiểm tra username,password,captcha
-    values: { username: string; password: string; captcha: string },
+    values: { username: string; password: string },
     {
       setSubmitting,
       resetForm,
     }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    console.log("Form submitted", values);
+    // console.log("Form submitted", values);
 
-    if (values.captcha !== captcha) {
-      alert("Mã xác nhận không đúng");
-      setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
-    } else {
-      alert("Đăng nhập thành công");
+    // if (values.captcha !== captcha) {
+    //   alert("Mã xác nhận không đúng");
+    //   setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
+    // } else {
+    //   alert("Đăng nhập thành công");
 
-      setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
+    //   setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
 
-      resetForm(); // Reset lại form sau khi submit thành công
-    }
+    // }
 
+    dispatch(LoginAction(values));
+    resetForm(); // Reset lại form sau khi submit thành công
     setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
   };
 
@@ -102,47 +118,43 @@ const LoginComponents: React.FC<PopsInformation> = ({
   //     }, 100); // Đợi 100ms trước khi reset state
   //   }
   // }, [location.state, navigate]);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    // Lấy message từ sessionStorage khi trang đăng nhập load
-    const storedMessage = sessionStorage.getItem("passwordChangedMessage");
-    console.log("Stored message:", storedMessage);
+  // useEffect(() => {
+  //   // Lấy message từ sessionStorage khi trang đăng nhập load
+  //   const storedMessage = sessionStorage.getItem("passwordChangedMessage");
+  //   console.log("Stored message:", storedMessage);
 
-    if (storedMessage) {
-      console.log("Message exists, setting state");
-      setMessage(storedMessage);
+  //   if (storedMessage) {
+  //     console.log("Message exists, setting state");
+  //     setMessage(storedMessage);
 
-      // Xóa message sau khi hiển thị để tránh hiện lại khi reload trang
-      // sessionStorage.removeItem("passwordChangedMessage");
-      const timer = setTimeout(() => {
-        console.log("Clearing message after 5 seconds");
+  //     // Xóa message sau khi hiển thị để tránh hiện lại khi reload trang
+  //     // sessionStorage.removeItem("passwordChangedMessage");
+  //     const timer = setTimeout(() => {
+  //       console.log("Clearing message after 5 seconds");
 
-        setMessage(""); // Xóa thông báo sau 5 giây
-        console.log("thoi gian");
-      }, 5000);
+  //       setMessage(""); // Xóa thông báo sau 5 giây
+  //       console.log("thoi gian");
+  //     }, 5000);
 
-      // Cleanup để tránh lỗi khi component bị unmount trước khi timeout kết thúc
-      return () => {
-        clearTimeout(timer);
-        console.log(2);
-      };
-    }
-  }, []);
+  //     // Cleanup để tránh lỗi khi component bị unmount trước khi timeout kết thúc
+  //     return () => {
+  //       clearTimeout(timer);
+  //       console.log(2);
+  //     };
+  //   }
+  // }, []);
 
   return (
     <>
-      <div className="header-login">
-        <HeaderTop />
-        <HeaderCenter />
-      </div>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
         <div
-          className={cx("form-login")}
-          style={message ? { width: "534px" } : { width: "500px" }}
+          className={cx("form-login", clickLogin && "login-animation")}
+          // style={message ? { width: "534px" } : { width: "500px" }}
         >
           {pops.map((pop, index) => (
             <Formik
@@ -155,11 +167,11 @@ const LoginComponents: React.FC<PopsInformation> = ({
                 <Form className={cx("form-login-main")} key={index}>
                   <h3>{pop.titleHeader}</h3>
                   <div className={cx("main-border")}></div>
-                  {message && (
+                  {/* {message && (
                     <div className={cx("login-main-message")}>
                       <p>{message}</p>
                     </div>
-                  )}
+                  )} */}
                   <div className={cx("main-body")}>
                     <div className={cx("body-list")}>
                       <div className={cx("list-item", "list-user")}>
@@ -233,12 +245,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
                       </div>
                     </div>
                     <div className={cx("body-button")}>
-                      <Button
+                      <ButtonSubmit
                         titleButton={pop.titleButton}
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
+                        background={"#EB2930"}
                       />
                     </div>
                   </div>
