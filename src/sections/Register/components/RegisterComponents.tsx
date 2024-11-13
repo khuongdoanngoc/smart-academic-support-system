@@ -161,7 +161,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
               key={index}
               initialValues={{
                 email: "",
-                row: "",
+                row: valueRow,
                 password: "",
                 confirmPassword: "",
                 captcha: "",
@@ -195,7 +195,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-                      {/* <div className={cx("list-item")}></div> */}
                     </div>
                     <div className={cx("body-list")}>
                       <div className={cx("list-item", "list-row")}>
@@ -205,6 +204,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                             type="text"
                             name="row"
                             value={valueRow}
+                            readOnly
                             placeholder={pop.titleRow}
                           />
                         </div>
@@ -233,7 +233,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                               onClick={() => {
                                 const selectedValue = "Sinh Viên";
                                 setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true);
+                                setFieldTouched("row", true, false);
                                 setValueRow(selectedValue);
                                 validateField("row"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
@@ -246,7 +246,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                               onClick={() => {
                                 const selectedValue = "Giảng Viên";
                                 setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true);
+                                setFieldTouched("row", true, false);
                                 setValueRow(selectedValue);
                                 validateField("row"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
