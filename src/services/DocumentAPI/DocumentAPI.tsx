@@ -1,10 +1,13 @@
-import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
 
 export const GetDocumentByID = async (id: number) => {
     try {
-        const res = await axiosInstance.get(baseUrl + `/document/${id}`);
+        const res = await axiosInstance.get(`/document/${id}`);
         return res;
-    } catch (error: any) {
-        throw new Error(error.message);
+    } catch (error: unknown) {
+        if(error){
+            throw new Error(error.message);
+        }
+        
     }
 };
