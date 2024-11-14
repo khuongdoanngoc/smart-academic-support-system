@@ -33,7 +33,7 @@ const cx = classnames.bind(styles);
 
 interface Person {
   email: string;
-  row: string;
+  roleName: string;
   password: string;
   confirmPassword: string;
   captcha: string;
@@ -44,7 +44,7 @@ const validationSchema: Yup.ObjectSchema<Person> = Yup.object({
   email: Yup.string()
     .email("Địa chỉ email khong hợp lệ")
     .required("Vui lòng nhập email của bạn"),
-  row: Yup.string().required("Vui lòng xác nhận bạn là ?"),
+  roleName: Yup.string().required("Vui lòng xác nhận bạn là ?"),
   password: Yup.string()
     .required("Vui lòng nhập password")
     .min(8, "Password phải có ít nhất 8 ký tự")
@@ -113,9 +113,8 @@ const REgisterComponents: React.FC<PopsInformation> = ({
   const handleSubmit = (
     values: {
       email: string;
-      row: string;
+      roleName: string;
       password: string;
-      confirmPassword: string;
     },
     {
       setSubmitting,
@@ -161,7 +160,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
               key={index}
               initialValues={{
                 email: "",
-                row: valueRow,
+                roleName: valueRow,
                 password: "",
                 confirmPassword: "",
                 captcha: "",
@@ -202,14 +201,14 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           <SensorOccupied />
                           <Field
                             type="text"
-                            name="row"
+                            name="roleName"
                             value={valueRow}
                             readOnly
                             placeholder={pop.titleRow}
                           />
                         </div>
                         <ErrorMessage
-                          name="row"
+                          name="roleName"
                           component="div"
                           className={cx("error-message")}
                         />
@@ -232,10 +231,10 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                             <li
                               onClick={() => {
                                 const selectedValue = "Sinh Viên";
-                                setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true, false);
+                                setFieldValue("roleName", selectedValue);
+                                setFieldTouched("roleName", true, false);
                                 setValueRow(selectedValue);
-                                validateField("row"); // Kiểm tra lại trường "row"
+                                validateField("roleName"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
                               }}
                             >
@@ -244,15 +243,15 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                             <li
                               // value="Sinh Viên"
                               onClick={() => {
-                                const selectedValue = "Giảng Viên";
-                                setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true, false);
+                                const selectedValue = "LECTURER";
+                                setFieldValue("roleName", selectedValue);
+                                setFieldTouched("roleName", true, false);
                                 setValueRow(selectedValue);
-                                validateField("row"); // Kiểm tra lại trường "row"
+                                validateField("roleName"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
                               }}
                             >
-                              Giảng Viên
+                              LECTURER
                             </li>
                           </ul>
                         </div>

@@ -34,7 +34,7 @@ interface informationLogin {
 }
 
 interface LoginData {
-  username: string;
+  email: string;
   password: string;
   captcha: string;
 }
@@ -43,7 +43,7 @@ interface PopsInformation {
 }
 const validationSchema: Yup.ObjectSchema<LoginData> = Yup.object({
   // Tạo schema kiểm tra với Yup
-  username: Yup.string().required("Vui lòng nhập username"),
+  email: Yup.string().required("Vui lòng nhập email"),
   password: Yup.string().required("Vui lòng nhập password"),
   captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
 });
@@ -84,8 +84,8 @@ const LoginComponents: React.FC<PopsInformation> = ({
   };
 
   const handleSubmit = (
-    //hàm onclick kiểm tra username,password,captcha
-    values: { username: string; password: string },
+    //hàm onclick kiểm tra email,password,captcha
+    values: { email: string; password: string },
     {
       setSubmitting,
       resetForm,
@@ -159,7 +159,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
           {pops.map((pop, index) => (
             <Formik
               key={index}
-              initialValues={{ username: "", password: "", captcha: "" }}
+              initialValues={{ email: "", password: "" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
@@ -178,13 +178,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
                         <div className={cx("list-user-item")}>
                           <img src={user} alt="user" />
                           <Field
-                            type="text"
-                            name="username"
+                            type="email"
+                            name="email"
                             placeholder={pop.titleUser}
                           />
                         </div>
                         <ErrorMessage
-                          name="username"
+                          name="email"
                           component="div"
                           className={cx("error-message")}
                         />

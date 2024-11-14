@@ -9,15 +9,18 @@ import { toast } from "react-toastify";
 // import { error } from "console";
 
 interface ILogin {
-  username: string;
+  email: string;
   password: string;
+}
+interface ILoginS {
+  listRoles: string[];
+  username: string;
 }
 
 interface IRegister {
   email: string;
-  row: string;
   password: string;
-  confirmPassword: string;
+  roleName: string;
 }
 
 interface InitialStateStylesLogin {
@@ -26,6 +29,7 @@ interface InitialStateStylesLogin {
   isLogined: boolean;
   isRegister: boolean;
   username: string;
+  listRoles: string[];
 }
 const initialState: InitialStateStylesLogin = {
   Loading: false,
@@ -33,14 +37,15 @@ const initialState: InitialStateStylesLogin = {
   isLogined: false,
   isRegister: false,
   username: "",
+  listRoles: [],
 };
 
-export const LoginAction = createAsyncThunk<string, ILogin>(
+export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
   "Authentication/LoginAction",
   async (login: ILogin) => {
     try {
       const response = await LoginApi(login);
-      return response;
+      return response as ILoginS;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       toast.error(error.message);
@@ -54,16 +59,15 @@ export const RegisterAction = createAsyncThunk(
   async (register: IRegister) => {
     const values = {
       email: register.email,
-      row: register.row,
       password: register.password,
-      confirmPassword: register.confirmPassword,
+      roleName: register.roleName,
     };
     try {
       const response = await RegisterApi(values);
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
-      toast.error(error.message);
+      toast.error(error.response?.data.message || "Registration failed");
       throw Error(error.message);
     }
   }
@@ -108,14 +112,24 @@ const AuthenticationSlice = createSlice({
       })
       .addCase(
         LoginAction.fulfilled,
-        (state, action: PayloadAction<string>) => {
+        (state, action: PayloadAction<ILoginS>) => {
+          console.log(123);
+
           state.Loading = false;
           state.isLogined = true;
-          state.username = action.payload;
+          state.username = action.payload.username;
+          state.listRoles = action.payload.listRoles;
         }
       )
-      .addCase(RegisterAction.fulfilled, (state) => {
+
+      .addCase(RegisterAction.fulfilled, (state, action) => {
+        console.log(123);
+
         state.Loading = false;
+        console.log(action.payload);
+        if (action.payload) {
+          toast.success("Đăng ký tài khoản thành côngg!");
+        }
       })
       .addCase(LogoutAction.fulfilled, (state) => {
         state.Loading = false;
@@ -125,7 +139,12 @@ const AuthenticationSlice = createSlice({
       .addCase(LoginAction.rejected, (state, action) => {
         state.Loading = false;
         state.isLogined = false;
-        state.Error = action.error.message || "Login failed";
+        const errorMessage = action.payload as string;
+
+        toast.error(
+          errorMessage ||
+            `Account not found with email or not active: ${state.username}`
+        );
       })
       .addCase(RegisterAction.rejected, (state, action) => {
         state.Loading = false;

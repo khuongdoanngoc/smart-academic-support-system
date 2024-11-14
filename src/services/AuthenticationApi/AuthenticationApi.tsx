@@ -3,27 +3,30 @@ import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
 import { AxiosError } from "axios";
 
 interface LoginData {
-  username: string;
+  email: string;
   password: string;
+}
+interface ILoginS {
+  listRoles: string[];
+  username: string;
 }
 interface IRegister {
   email: string;
-  row: string;
   password: string;
-  confirmPassword: string;
+  roleName: string;
 }
-export const LoginApi = async (data: LoginData): Promise<string> => {
+export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
-    const res = await axiosInstance.post(`${baseUrl}/auth/login`, data);
+    const res = await axiosInstance.post("/auth/login", data);
     if (res) {
       toast.success("Đăng nhập thành công");
-      return data.username;
+      return res as unknown as ILoginS;
     }
     throw new Error("Đăng nhập thất bại");
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
-    if (error.status === 400) {
-      toast.error("tài khoản hoặc mật khẩu không đúng!");
+    if (error.response?.data.message) {
+      throw new Error(error.response.data.message);
     }
     throw new Error("tài khoản hoặc mật khẩu không đúng!");
   }
@@ -31,15 +34,20 @@ export const LoginApi = async (data: LoginData): Promise<string> => {
 
 export const RegisterApi = async (data: IRegister) => {
   try {
-    const res = await axiosInstance.post(`${baseUrl}/auth/register`, data);
-    toast.success("Đăng ký thành công");
+    const res = await axiosInstance.post("/auth/register", data);
+    if (res) {
+      toast.success("Đăng ký tài khoản thành công công!");
+    }
+
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
-    if (error.status === 400) {
-      toast.error(error.message);
+    if (error.response?.status === 400) {
+      toast.error(error.response.data.message || "An error occurred");
+    } else {
+      toast.error("An unexpected error occurred");
     }
-    throw new Error(error.message);
+    throw new Error(error.response?.data.message || error.message);
   }
 };
 export const LogoutApi = async () => {
