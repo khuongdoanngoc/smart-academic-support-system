@@ -35,10 +35,6 @@ export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
 export const RegisterApi = async (data: IRegister) => {
   try {
     const res = await axiosInstance.post("/auth/register", data);
-    if (res) {
-      toast.success("Đăng ký tài khoản thành công công!");
-    }
-
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
