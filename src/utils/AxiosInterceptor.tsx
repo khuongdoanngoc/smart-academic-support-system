@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-const baseUrl = import.meta.env.VITE_APP_API_URL;
+export const baseUrl = import.meta.env.VITE_APP_API_URL;
 interface response {
   token: string;
   refreshToken: string;
