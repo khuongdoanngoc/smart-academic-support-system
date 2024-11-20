@@ -122,11 +122,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
     }
   };
 
-  const listRoles = useSelector(
-    (state: RootState) => state.authentication.listRoles
-  );
-  console.log("List Roles:", listRoles);
-
   return (
     <>
       <div className={cx("main-login")}>
