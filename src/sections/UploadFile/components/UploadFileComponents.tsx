@@ -8,6 +8,8 @@ import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboa
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
 import { AppDispatch } from "../../../redux/store";
+// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
+// import UploadFileAction  from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { UploadFileAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useRef, useState } from "react";
 import {
@@ -44,6 +46,7 @@ import {
   // setMenuCheckItemRowYear,
   // setUploadFileSuccess,
   FileItem,
+  UploadFileAction,
   // setSpecialized,
   // setSubject,
   // setFolder,
@@ -54,6 +57,7 @@ import {
   // postFile,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
+// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
 // import UploadFileAPI from "../../../services/UploadFileAPI/UploadFileAPI";
 
 const cx = classNames.bind(styles);
