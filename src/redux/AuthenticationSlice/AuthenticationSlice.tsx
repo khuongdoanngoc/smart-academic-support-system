@@ -14,6 +14,8 @@ interface ILogin {
 }
 interface ILoginS {
   listRoles: string[];
+  accessToken: string;
+  refreshToken: string;
   username: string;
 }
 
@@ -24,32 +26,35 @@ interface IRegister {
 }
 
 interface InitialStateStylesLogin {
-  Loading: boolean;
+  loading: boolean;
   Error: string | null;
   isLogined: boolean;
   isRegister: boolean;
   username: string;
   listRoles: string[];
+  accessToken: string;
+  refreshToken: string;
 }
 const initialState: InitialStateStylesLogin = {
-  Loading: false,
+  loading: false,
   Error: "",
   isLogined: false,
   isRegister: false,
   username: "",
   listRoles: [],
+  accessToken: "",
+  refreshToken: "",
 };
 
 export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
   "Authentication/LoginAction",
-  async (login: ILogin) => {
+  async (login: ILogin, { rejectWithValue }) => {
     try {
       const response = await LoginApi(login);
-      return response as ILoginS;
+      return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
-      toast.error(error.message);
-      throw Error(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -62,12 +67,12 @@ export const RegisterAction = createAsyncThunk(
       password: register.password,
       roleName: register.roleName,
     };
+
     try {
       const response = await RegisterApi(values);
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
-      toast.error(error.response?.data.message || "Registration failed");
       throw Error(error.message);
     }
   }
@@ -98,66 +103,87 @@ const AuthenticationSlice = createSlice({
     clearStateWhenLogout: (state) => {
       state.isLogined = false;
     },
+    loginStart: (state) => {
+      state.loading = true; // Đặt loading = true khi bắt đầu đăng nhập
+    },
+    registerStart: (state) => {
+      state.loading = true; // Đặt loading = true khi bắt đầu đăng ký
+    },
+
+    loginSuccess: (state) => {
+      state.loading = false; // Đặt loading = false khi đăng nhập thành công
+      state.isLogined = true;
+    },
+    registerSuccess: (state) => {
+      state.loading = false; // Đặt loading = false khi đăng nhập thành công
+      state.isRegister = true;
+    },
+    loginFailure: (state) => {
+      state.loading = false;
+    },
+    registerFailure: (state) => {
+      state.loading = false;
+    },
   },
+  //caovanan
+  //caovanan
   extraReducers(builder) {
     builder
       .addCase(LoginAction.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(RegisterAction.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(LogoutAction.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(
         LoginAction.fulfilled,
         (state, action: PayloadAction<ILoginS>) => {
-          console.log(123);
-
-          state.Loading = false;
+          state.loading = false;
           state.isLogined = true;
           state.username = action.payload.username;
           state.listRoles = action.payload.listRoles;
+          state.accessToken = action.payload.accessToken;
+          state.refreshToken = action.payload.refreshToken;
         }
       )
 
-      .addCase(RegisterAction.fulfilled, (state, action) => {
-        console.log(123);
-
-        state.Loading = false;
-        console.log(action.payload);
-        if (action.payload) {
-          toast.success("Đăng ký tài khoản thành côngg!");
-        }
+      .addCase(RegisterAction.fulfilled, (state) => {
+        state.loading = false;
+        state.isRegister = true;
       })
       .addCase(LogoutAction.fulfilled, (state) => {
-        state.Loading = false;
-        state.username = "";
+        state.loading = false;
+        // state.username = "";
       })
-
-      .addCase(LoginAction.rejected, (state, action) => {
-        state.Loading = false;
+      .addCase(LoginAction.rejected, (state) => {
+        state.loading = false;
         state.isLogined = false;
-        const errorMessage = action.payload as string;
-
-        toast.error(
-          errorMessage ||
-            `Account not found with email or not active: ${state.username}`
-        );
       })
-      .addCase(RegisterAction.rejected, (state, action) => {
-        state.Loading = false;
-        state.Error = action.error.message || "Registration failed";
+
+      .addCase(RegisterAction.rejected, (state) => {
+        state.loading = false;
+        state.isRegister = false;
       })
       .addCase(LogoutAction.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.isLogined = false;
         state.Error = action.error.message || "Logout failed";
       });
   },
 });
 // eslint-disable-next-line react-refresh/only-export-components
-export const { userRegister, clearState, clearStateWhenLogout } =
-  AuthenticationSlice.actions;
+export const {
+  userRegister,
+  clearState,
+  clearStateWhenLogout,
+  loginStart,
+  loginFailure,
+  loginSuccess,
+  registerStart,
+  registerFailure,
+  registerSuccess,
+} = AuthenticationSlice.actions;
 export default AuthenticationSlice.reducer;

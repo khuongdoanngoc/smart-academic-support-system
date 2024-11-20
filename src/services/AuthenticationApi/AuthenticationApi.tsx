@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
 import { AxiosError } from "axios";
 
@@ -8,6 +8,8 @@ interface LoginData {
 }
 interface ILoginS {
   listRoles: string[];
+  accessToken: string;
+  refreshToken: string;
   username: string;
 }
 interface IRegister {
@@ -18,31 +20,26 @@ interface IRegister {
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
-    if (res) {
-      toast.success("Đăng nhập thành công");
-      return res as unknown as ILoginS;
-    }
-    throw new Error("Đăng nhập thất bại");
+
+    return res as unknown as ILoginS;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
+
     if (error.response?.data.message) {
       throw new Error(error.response.data.message);
     }
-    throw new Error("tài khoản hoặc mật khẩu không đúng!");
+    throw new Error(error.message || "Đăng nhập thất bại");
   }
 };
 
 export const RegisterApi = async (data: IRegister) => {
   try {
     const res = await axiosInstance.post("/auth/register", data);
+
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
-    if (error.response?.status === 400) {
-      toast.error(error.response.data.message || "An error occurred");
-    } else {
-      toast.error("An unexpected error occurred");
-    }
+
     throw new Error(error.response?.data.message || error.message);
   }
 };

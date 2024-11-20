@@ -5,9 +5,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   RegisterAction,
-  userRegister,
+  registerFailure,
+  registerStart,
+  registerSuccess,
 } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
-import { useAppDispatch } from "../../../redux/store";
+import { RootState, useAppDispatch } from "../../../redux/store";
 import { ButtonSubmit } from "../../../components/Button/Button";
 import { useGlobalContextLoin } from "../../../layouts/useContext";
 
@@ -28,6 +30,8 @@ import {
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const cx = classnames.bind(styles);
 
@@ -90,6 +94,9 @@ const REgisterComponents: React.FC<PopsInformation> = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { clickRegister } = useGlobalContextLoin();
+  const loading = useSelector(
+    (state: RootState) => state.authentication.loading
+  );
 
   const refreshString = () => {
     //hàm refresh mã captcha
@@ -110,32 +117,42 @@ const REgisterComponents: React.FC<PopsInformation> = ({
     setTypeconfirmPassword(!typeconfirmPassword);
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: {
       email: string;
-      roleName: string;
       password: string;
+      roleName: string;
     },
     {
       setSubmitting,
       resetForm,
     }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    // if (values.password !== values.confirmPassword) {
-    //   alert("Mật khẩu xác nhận không đúng");
-    // } else {
-    //   if (values.captcha === captcha) {
-    //     alert("Đăng ký thành công");
-    //     setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
+    setSubmitting(true);
 
-    //     resetForm(); // Reset lại form sau khi submit thành công
-    //   }
-    // }
+    try {
+      dispatch(registerStart());
+      const result = await dispatch(RegisterAction(values));
+      const message = result.payload as string;
 
-    dispatch(RegisterAction(values));
-    dispatch(userRegister());
-    resetForm(); // Reset lại form sau khi submit thành công
-    setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
+      if (message === "Register account is successful") {
+        dispatch(registerSuccess());
+        toast.success("Đăng kí thành công");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        toast.error("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.");
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(registerFailure());
+    } finally {
+      setSubmitting(false);
+    }
+    setValueRow("");
+    resetForm();
+    refreshString(); // Reset lại form sau khi submit thành công
   };
 
   const handleRowItem = () => {
@@ -230,7 +247,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           <ul>
                             <li
                               onClick={() => {
-                                const selectedValue = "Sinh Viên";
+                                const selectedValue = "STUDENT";
                                 setFieldValue("roleName", selectedValue);
                                 setFieldTouched("roleName", true, false);
                                 setValueRow(selectedValue);
@@ -238,10 +255,9 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                                 setRowRegister(false);
                               }}
                             >
-                              Sinh Viên
+                              STUDENT
                             </li>
                             <li
-                              // value="Sinh Viên"
                               onClick={() => {
                                 const selectedValue = "LECTURER";
                                 setFieldValue("roleName", selectedValue);
@@ -368,6 +384,11 @@ const REgisterComponents: React.FC<PopsInformation> = ({
             </Formik>
           ))}
         </div>
+        {loading && (
+          <div className={cx("main-login-load")}>
+            <div className={cx("login-load-item")}></div>
+          </div>
+        )}
       </div>
     </>
   );
