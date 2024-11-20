@@ -1,8 +1,8 @@
-import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
 
 export const CreateTag = async (tagName: string) => {
     try {
-        const res = await axiosInstance.post(`${baseUrl}/tags/create`, tagName);
+        const res = await axiosInstance.post(`/tags/create`, tagName);
         return res;
     } catch (error: any) {
         throw new Error(error.message);
@@ -15,7 +15,7 @@ export const UpdateTag = async (tagData: {
 }) => {
     try {
         const res = await axiosInstance.put(
-            `${baseUrl}/tags/update/${tagData.tagId}`,
+            `/tags/update/${tagData.tagId}`,
             tagData
         );
         return res;
@@ -27,10 +27,10 @@ export const UpdateTag = async (tagData: {
 export const DeleteTag = async (tagId: number) => {
     try {
         const res = await axiosInstance.delete(
-            `${baseUrl}/tags/delete/${tagId}`
+            `/tags/delete/${tagId}`
         );
         return res;
-    } catch (error: any) {
+    } catch (error: unknown) {
         throw new Error(error.message);
     }
 };

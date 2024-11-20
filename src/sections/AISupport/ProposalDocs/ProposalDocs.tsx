@@ -9,8 +9,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AnalystICON from "../../../assets/images/icons/analystICON.png";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import { Button } from "../../../components/Button";
+import MultiSelectSubjects from "./MultiSelectSubjects";
+import { SelectChangeEvent } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
 const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ", "Báo cáo"];
 const ITEM_HEIGHT = 48;
+
 export default function ProposalDocs() {
     // config cho popover ...
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -23,6 +29,17 @@ export default function ProposalDocs() {
     };
 
     const [isAnalysing, setIsAnalysing] = useState<boolean>(false);
+    const [courseName, setCourseName] = React.useState<string[]>([]);
+
+    const handleChange = (event: SelectChangeEvent<typeof courseName>) => {
+        const {
+            target: { value },
+        } = event;
+        setCourseName(
+            // On autofill we get a stringified value.
+            typeof value === "string" ? value.split(",") : value
+        );
+    };
 
     const notifyBox = (
         <div className={cx("notify-box")}>
@@ -36,7 +53,11 @@ export default function ProposalDocs() {
                 chúng tôi có thể phân tích và lựa chọn tài liệu phù hợp nhất
                 dành cho bạn nhé.
             </p>
-            <div className={cx("analyse-btn")}>
+            <div
+                onClick={() => {
+                    setIsAnalysing(true);
+                }}
+                className={cx("analyse-btn")}>
                 <Button
                     text="Phân tích ngay"
                     fontSize={16}
@@ -93,8 +114,35 @@ export default function ProposalDocs() {
                         <h3>Phân tích </h3>
                     </div>
                     <hr />
-                    <div className={cx("content")}></div>
-                    <div className={cx("actions")}></div>
+                    <div className={cx("content")}>
+                        <div className={cx("question")}>
+                            <p>Bạn đang học những môn học nào?</p>
+                            <MultiSelectSubjects
+                                courseName={courseName}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className={cx("question")}>
+                            <p>Câu hỏi phân tích 2 ?</p>
+                            <div className=""></div>
+                        </div>
+                        <div className={cx("question")}>
+                            <p>Câu hỏi phân tích 3 ?</p>
+                            <div className=""></div>
+                        </div>
+                    </div>
+                    <div className={cx("actions")}>
+                        <FormControlLabel
+                            control={<Checkbox defaultChecked />}
+                            label="Tôi xác nhận các câu trả lời trên là đúng "
+                        />
+                        <Button
+                            text="Xác nhận"
+                            paddingX={41}
+                            paddingY={12.5}
+                            fontSize={13}
+                        />
+                    </div>
                 </div>
             ) : (
                 notifyBox

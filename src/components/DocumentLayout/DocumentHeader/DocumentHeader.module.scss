@@ -1,5 +1,6 @@
 .document-header {
-    width: 100%;
+    width: calc(100vw - var(--scrollbar-width, 15px));
+    position: sticky;
     display: flex;
     background-color: white;
     justify-content: space-between;

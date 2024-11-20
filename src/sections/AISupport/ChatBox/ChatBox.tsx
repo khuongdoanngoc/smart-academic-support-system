@@ -11,6 +11,7 @@ import SendICON from "../../../assets/images/icons/SendICON.png";
 import AttachICON from "../../../assets/images/icons/attach-square.png";
 import MicroICON from "../../../assets/images/icons/microphone-2.png";
 import { Button } from "../../../components/Button";
+import Avatar from "../../../assets/images/avatar.png";
 const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ", "Báo cáo"];
 const ITEM_HEIGHT = 48;
 export default function ChatBox() {
@@ -24,8 +25,10 @@ export default function ChatBox() {
         setAnchorEl(null);
     };
 
+    const [isOpenSubbox, setIsOpenSubbox] = useState<boolean>(true);
+
     // config cho message
-    const [containMessage, setContainMessage] = useState<boolean>(false);
+    const [containMessage, setContainMessage] = useState<boolean>(true);
 
     return (
         <div className={cx("chat-box")}>
@@ -70,28 +73,83 @@ export default function ChatBox() {
                     ))}
                 </Menu>
             </div>
-
             {containMessage ? (
-                <div className={cx("messages")}></div>
+                <div className={cx("messages")}>
+                    <div className={cx("message-sent")}>
+                        <div className={cx("avatar")}>
+                            <img src={Avatar} alt="avt" />
+                        </div>
+                        <div className={cx("message-content")}>
+                            <p>MỘT CÂU HỎI KHÔNG LIÊN QUAN ĐẾN DTU DOCUMENT</p>
+                        </div>
+                    </div>
+                    <div className={cx("message-received")}>
+                        <div className={cx("avatar")}>
+                            <img src={Avatar} alt="avt" />
+                        </div>
+                        <div className={cx("message-content")}>
+                            <p>
+                                Câu hỏi của bạn nằm ngoài phạm vi tìm kiếm của
+                                chùng tôi, vui lòng hỏi các câu hỏi có liên quan
+                                đến tài liệu, thư mục bạn cần tìm kiếm hoặc các
+                                thông tin khác liên quan đến DTU DOCUMENT. Những
+                                câu hỏi nhạy cảm, không liên quan hoặc mục đích
+                                công kích thành viên tổ chức khác sẽ bị cấm sử
+                                dụng chat có thời hạn và bị cấm vô thời hạn khi
+                                vi phạm nhiều lần. Nếu bạn không muốn bị phân
+                                tích câu hỏi, bạn có thể tắt nó ở cài đặt tin
+                                nhắn ở dấu ở góc trên phải màn hình. Xin lỗi bạn
+                                vì sự bất tiện này.
+                            </p>
+                        </div>
+                    </div>
+                    <div className={cx("message-received")}>
+                        <div className={cx("avatar")}>
+                            <img src={Avatar} alt="avt" />
+                        </div>
+                        <div className={cx("message-content")}>
+                            <p>
+                                Câu hỏi của bạn nằm ngoài phạm vi tìm kiếm của
+                                chùng tôi, vui lòng hỏi các câu hỏi có liên quan
+                                đến tài liệu, thư mục bạn cần tìm kiếm hoặc các
+                                thông tin khác liên quan đến DTU DOCUMENT. Những
+                                câu hỏi nhạy cảm, không liên quan hoặc mục đích
+                                công kích thành viên tổ chức khác sẽ bị cấm sử
+                                dụng chat có thời hạn và bị cấm vô thời hạn khi
+                                vi phạm nhiều lần. Nếu bạn không muốn bị phân
+                                tích câu hỏi, bạn có thể tắt nó ở cài đặt tin
+                                nhắn ở dấu ở góc trên phải màn hình. Xin lỗi bạn
+                                vì sự bất tiện này.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             ) : (
                 <div className={cx("initial")}>
                     <h2>CHÀO "Tên người dùng"!</h2>
-                    <div className={cx("sub-box")}>
-                        <p>
-                            Những câu hỏi của bạn sẽ được chúng tôi phân tích để
-                            đề xuất các tài liệu phù hợp cho bạn, nếu bạn không
-                            muốn có thể tắt tính năng này.
-                        </p>
-                        <div className={cx("actions")}>
-                            <Button
-                                text="Tắt tính năng"
-                                fontSize={14}
-                                paddingY={6}
-                                paddingX={15}
-                            />
-                            <button className={cx("skip-btn")}>Bỏ qua</button>
+                    {isOpenSubbox && (
+                        <div className={cx("sub-box")}>
+                            <p>
+                                Những câu hỏi của bạn sẽ được chúng tôi phân
+                                tích để đề xuất các tài liệu phù hợp cho bạn,
+                                nếu bạn không muốn có thể tắt tính năng này.
+                            </p>
+                            <div className={cx("actions")}>
+                                <Button
+                                    text="Tắt tính năng"
+                                    fontSize={14}
+                                    paddingY={6}
+                                    paddingX={15}
+                                    onClick={() => setIsOpenSubbox(false)}
+                                />
+                                <button
+                                    onClick={() => setIsOpenSubbox(false)}
+                                    className={cx("skip-btn")}>
+                                    Bỏ qua
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             )}
 
