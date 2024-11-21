@@ -66,6 +66,7 @@ const validationSchema: Yup.ObjectSchema<Person> = Yup.object({
 });
 
 interface informationLogin {
+  //interface title header
   titleHeader: string;
   titleGmail: string;
   titleRow: string;
@@ -85,18 +86,16 @@ const REgisterComponents: React.FC<PopsInformation> = ({
 }: PopsInformation) => {
   const [typePass, setTypePass] = useState(false); //useState xem hoặc ẩn password
   const [typeconfirmPassword, setTypeconfirmPassword] = useState(false); //useState xem hoặc ẩn password
-
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
-
-  const [rowRegister, setRowRegister] = useState(false);
-  const [valueRow, setValueRow] = useState("");
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { clickRegister } = useGlobalContextLoin();
+  const [rowRegister, setRowRegister] = useState(false); //useState hiển thị danh sách role
+  const [valueRow, setValueRow] = useState(""); //useState value role
+  const navigate = useNavigate(); //navigate register
+  const dispatch = useAppDispatch(); //dispatch register
+  const { clickRegister } = useGlobalContextLoin(); //hiện ứng animation register
   const loading = useSelector(
     (state: RootState) => state.authentication.loading
-  );
+  ); //loading register
 
   const refreshString = () => {
     //hàm refresh mã captcha
@@ -131,37 +130,33 @@ const REgisterComponents: React.FC<PopsInformation> = ({
     setSubmitting(true);
 
     try {
-      dispatch(registerStart());
-      const result = await dispatch(RegisterAction(values));
-      const message = result.payload as string;
+      dispatch(registerStart()); //dispatch registerStart
+      const result = await dispatch(RegisterAction(values)); //dispatch RegisterAction
+      const message = result.payload as string; //payload register
 
       if (message === "Register account is successful") {
-        dispatch(registerSuccess());
-        toast.success("Đăng kí thành công");
+        dispatch(registerSuccess()); //dispatch registerSuccess
+        toast.success("Đăng kí thành công"); //toast success
         setTimeout(() => {
           navigate("/login");
         }, 1500);
       } else {
-        toast.error("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.");
+        toast.error("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin."); //toast error
       }
     } catch (error) {
-      console.log(error);
-      dispatch(registerFailure());
+      console.log(error); //log error
+      dispatch(registerFailure()); //dispatch registerFailure
     } finally {
       setSubmitting(false);
     }
     setValueRow("");
-    resetForm();
+    resetForm(); //reset form
     refreshString(); // Reset lại form sau khi submit thành công
   };
 
   const handleRowItem = () => {
-    setRowRegister(!rowRegister);
+    setRowRegister(!rowRegister); //setRowRegister
   };
-  // const handleValueItem = (value: string) => {
-  //   setValueRow(value);
-  //   setRowRegister(false);
-  // };
 
   return (
     <>
@@ -272,9 +267,7 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           </ul>
                         </div>
                       )}
-                      {/* <div className={cx("list-item")}></div> */}
                     </div>
-
                     <div className={cx("body-list", "body-list-pass")}>
                       <div className={cx("list-item", "list-pass")}>
                         <div className={cx("list-pass-item")}>
@@ -291,7 +284,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
                         onClick={handleTypePass}
@@ -315,7 +307,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
                         onClick={handleTypeconfirmPassword}
@@ -327,7 +318,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                         )}
                       </div>
                     </div>
-
                     <div className={cx("body-list", "body-list-check")}>
                       <div className={cx("list-item", "list-check")}>
                         <div className={cx("list-check-item")}>

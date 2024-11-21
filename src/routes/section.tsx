@@ -11,6 +11,7 @@ import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
 import Notication from "../pages/Notication";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Router() {
   const routes = useRoutes([
@@ -31,12 +32,17 @@ export default function Router() {
 
     {
       element: (
-        <DocumentLayout>
-          <Outlet />
-        </DocumentLayout>
+        <ProtectedRoute>
+          <DocumentLayout>
+            <Outlet />
+          </DocumentLayout>
+        </ProtectedRoute>
       ),
       children: [
-        { path: "/document", element: <DocumentPage /> },
+        {
+          path: "/document",
+          element: <DocumentPage />,
+        },
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
         { path: "/document/ai-support", element: <AISupportPage /> },

@@ -1,5 +1,10 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import store from "../redux/store";
+import {
+  logout,
+  updateToken,
+} from "../redux/AuthenticationSlice/AuthenticationSlice";
 export const baseUrl = import.meta.env.VITE_APP_API_URL;
 interface response {
   token: string;
@@ -39,6 +44,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (res) => res.data,
   async (err) => {
+    const originalRequest = err.config;
     if (err.response.status === 403) {
       if (!refreshPromise) {
         // Gọi refreshToken và lưu promise vào biến refreshPromise
@@ -53,15 +59,22 @@ axiosInstance.interceptors.response.use(
       // Gọi lại API gốc với AccessToken mới
       return axios.request(err.config);
     }
-    if (err.response.status === 401) {
-      const accessToken = Cookies.get("accessToken");
-      if (accessToken !== undefined) {
-        err.response.message =
-          "phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại";
-        return Promise.reject(err.response);
+    if (err.response.status === 401 || originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = store.getState().authentication.refreshToken;
+        const response = await axios.post("/refresh-token", {
+          refreshToken,
+        });
+
+        const { accessToken } = response.data;
+        store.dispatch(updateToken({ accessToken }));
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        store.dispatch(logout());
+        return Promise.reject(refreshError);
       }
-      err.response.message = "vui lòng đăng nhập lại";
-      return Promise.reject(err.response);
     }
     if (err.response) {
       return Promise.reject(err.response);

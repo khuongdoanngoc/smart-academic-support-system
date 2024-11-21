@@ -1,5 +1,4 @@
-// import { toast } from "react-toastify";
-import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
 import { AxiosError } from "axios";
 
 interface LoginData {
@@ -20,7 +19,6 @@ interface IRegister {
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
-
     return res as unknown as ILoginS;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
@@ -35,7 +33,6 @@ export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
 export const RegisterApi = async (data: IRegister) => {
   try {
     const res = await axiosInstance.post("/auth/register", data);
-
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
@@ -45,7 +42,7 @@ export const RegisterApi = async (data: IRegister) => {
 };
 export const LogoutApi = async () => {
   try {
-    const res = await axiosInstance.get(`${baseUrl}/auth/logout`);
+    const res = await axiosInstance.get("/auth/logout");
     if (res) {
       return;
     }

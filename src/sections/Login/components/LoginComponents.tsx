@@ -45,6 +45,10 @@ interface LoginData {
   password: string;
   captcha: string;
 }
+interface ILogin {
+  email: string;
+  password: string;
+}
 interface PopsInformation {
   pops: informationLogin[];
 }
@@ -60,14 +64,14 @@ const LoginComponents: React.FC<PopsInformation> = ({
   const [typePass, setTypePass] = useState(false); //useState xem hoặc ẩn password
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
+  const navigate = useNavigate(); //navigate login
+  const dispatch = useAppDispatch(); //dispatch login
+
   const { clickLogin, setClickForgotPass, setClickRegister } =
-    useGlobalContextLoin();
+    useGlobalContextLoin(); //hiện ứng animation login
   const loading = useSelector(
     (state: RootState) => state.authentication.loading
-  );
-
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  ); //loading login
 
   const refreshString = () => {
     //hàm refresh mã captcha
@@ -87,14 +91,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
       setClickRegister(true);
     }, 600);
   };
-
   const handleTypePass = () => {
     // hàm ẩn hoặc hiện password
     setTypePass(!typePass);
   };
 
   const handleSubmit = async (
-    //hàm onclick kiểm tra email,password,captcha
+    //hàm submit login
     values: { email: string; password: string },
     {
       setSubmitting,
@@ -102,16 +105,26 @@ const LoginComponents: React.FC<PopsInformation> = ({
     }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
     resetForm();
-    setSubmitting(true);
+    setSubmitting(true); //setSubmitting true
     refreshString(); // Reset lại form sau khi submit thành công
     try {
-      dispatch(loginStart());
-      const result = await dispatch(LoginAction(values));
-      const payload = result.payload as { accessToken?: string };
+      dispatch(loginStart()); //dispatch loginStart
+      const result = await dispatch(LoginAction(values)); //dispatch LoginAction
+      const payload = result.payload as {
+        user?: ILogin;
+        accessToken?: string;
+        refreshToken?: string;
+      };
       if (!payload || !payload.accessToken) {
         toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
       } else {
-        dispatch(loginSuccess());
+        dispatch(
+          loginSuccess({
+            user: payload.user,
+            accessToken: payload.accessToken,
+            refreshToken: payload.refreshToken,
+          })
+        );
         navigate("/document");
       }
     } catch (error) {
@@ -121,17 +134,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
       setSubmitting(false);
     }
   };
-
   return (
     <>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
-        <div
-          className={cx("form-login", clickLogin && "login-animation")}
-          // style={message ? { width: "534px" } : { width: "500px" }}
-        >
+        <div className={cx("form-login", clickLogin && "login-animation")}>
           {pops.map((pop, index) => (
             <Formik
               key={index}
@@ -143,11 +152,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
                 <Form className={cx("form-login-main")} key={index}>
                   <h3>{pop.titleHeader}</h3>
                   <div className={cx("main-border")}></div>
-                  {/* {message && (
-                    <div className={cx("login-main-message")}>
-                      <p>{message}</p>
-                    </div>
-                  )} */}
+
                   <div className={cx("main-body")}>
                     <div className={cx("body-list")}>
                       <div className={cx("list-item", "list-user")}>
@@ -167,7 +172,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
                       </div>
                       <div className={cx("list-item")}></div>
                     </div>
-
                     <div className={cx("body-list", "body-list-unlock")}>
                       <div className={cx("list-item", "list-unlock")}>
                         <div className={cx("list-unlock-item")}>
@@ -184,7 +188,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
                         onClick={handleTypePass}
@@ -208,7 +211,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div className={cx("list-item", "list-reload")}>
                         <div>
                           <p>{captcha}</p>
