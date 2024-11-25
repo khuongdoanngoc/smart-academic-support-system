@@ -17,7 +17,6 @@ import {
   LoginAction,
   loginFailure,
   loginStart,
-  loginSuccess,
 } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
 
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -27,6 +26,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
 const cx = classnames.bind(styles);
 
 interface informationLogin {
@@ -116,15 +116,8 @@ const LoginComponents: React.FC<PopsInformation> = ({
         refreshToken?: string;
       };
       if (!payload || !payload.accessToken) {
-        toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
+        toast.error("Email or password incorrect");
       } else {
-        dispatch(
-          loginSuccess({
-            user: payload.user,
-            accessToken: payload.accessToken,
-            refreshToken: payload.refreshToken,
-          })
-        );
         navigate("/document");
       }
     } catch (error) {
@@ -262,9 +255,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
           ))}
         </div>
         {loading && (
-          <div className={cx("main-login-load")}>
-            <div className={cx("login-load-item")}></div>
-          </div>
+          <Loader height={100}/>
         )}
       </div>
     </>

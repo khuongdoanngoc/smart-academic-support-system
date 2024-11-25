@@ -51,3 +51,13 @@ export const LogoutApi = async () => {
     throw new Error(error.message);
   }
 };
+
+export const AutoLoginApi= async ()=>{
+  try{
+    const res= await axiosInstance.get("/auth/autoLogin");
+    return res;
+  }catch(err:unknown){
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.message);
+  }
+}

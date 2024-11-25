@@ -22,6 +22,7 @@ import ContactICON from "../../../assets/images/icons/ContactICON.png";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAppSelector } from "../../../redux/store";
 
 const menuItems = [
   { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
@@ -61,10 +62,9 @@ const searchItems = [
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState<boolean>(true);
-
+  const {username} = useAppSelector(state=>state.authentication);
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
-  console.log(pathName);
 
   return (
     <div className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
@@ -72,7 +72,7 @@ export default function Sidebar() {
         <img src={Avatar} alt="avatar" />
         {isOpen && (
           <div>
-            <h3>Name user</h3>
+            <h3>{username ? username : "New User"}</h3>
             <a href="#">+ Add information</a>
           </div>
         )}

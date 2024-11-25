@@ -64,29 +64,7 @@ export default function ChatBox() {
     dispatch(setMessagesUser(data));
     setInputMessage("");
     dispatch(sendMessageAction(data));
-    // const responseBot = getBotResponse(data.message);
-    // dispatch(setMessagesUser(responseBot));
   };
-  //   const getBotResponse = (userInput: string) => {
-  //     // Quy tắc trả lời đơn giản
-  //     let responseText = "Xin chào! Tôi là chatbot.";
-  //     if (userInput.toLowerCase().includes("hello")) {
-  //       responseText = "Chào bạn! Bạn cần giúp gì?";
-  //     } else if (userInput.toLowerCase().includes("help")) {
-  //       responseText = "Tôi có thể giúp bạn trả lời các câu hỏi cơ bản.";
-  //     } else {
-  //       responseText = "Tôi chưa hiểu câu hỏi của bạn. Vui lòng thử lại.";
-  //     }
-
-  //     return {
-  //       id: Date.now().toString(),
-  //       name: "DTU AI Chat",
-  //       avatar: Avatar,
-  //       message: responseText,
-  //       time: new Date().toLocaleTimeString(),
-  //       sender: "bot",
-  //     };
-  //   };
 
   console.log(messages);
 
@@ -155,12 +133,13 @@ export default function ChatBox() {
                 </div>
                 <div className={cx("message-content")}>
                   <p>
-                    {message.message}
-                    {/* {message.sender === "user" ? (
-                      message.message
-                    ) : (
-                      <div className={cx("loader")} />
-                    )} */}
+                    {/* {message.message.replace("\n","<br>")} */}
+                    {message.message.split("\n").map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
                   </p>
                 </div>
               </div>

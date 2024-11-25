@@ -1,10 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import store from "../redux/store";
-import {
-  logout,
-  updateToken,
-} from "../redux/AuthenticationSlice/AuthenticationSlice";
+import {  LogoutAction } from "../redux/AuthenticationSlice/AuthenticationSlice";
 export const baseUrl = import.meta.env.VITE_APP_API_URL;
 interface response {
   token: string;
@@ -17,13 +14,13 @@ export const axiosInstance = axios.create({
   },
   withCredentials: true,
 });
-let isRefreshing = false;
-let refreshPromise: Promise<void> | null = null;
+let refreshTokePromise: Promise<unknown> | null = null;
+let isRefreshingToken = false;
 const callRefreshToken = async (): Promise<void> => {
-  if (!isRefreshing) {
-    isRefreshing = true;
-    await axiosInstance.get<void, response>("/auth/refreshToken");
-    isRefreshing = false;
+  if (!isRefreshingToken) {
+    isRefreshingToken = true;
+    await axiosInstance.get<void, response>("/auth/refresh-token");
+    isRefreshingToken = false;
   }
 };
 axiosInstance.interceptors.request.use(
@@ -45,36 +42,32 @@ axiosInstance.interceptors.response.use(
   (res) => res.data,
   async (err) => {
     const originalRequest = err.config;
-    if (err.response.status === 403) {
-      if (!refreshPromise) {
-        // Gọi refreshToken và lưu promise vào biến refreshPromise
-        refreshPromise = callRefreshToken();
-      }
-      // Chờ refreshToken hoàn thành trước khi thực hiện lại request gốc
-      await refreshPromise;
-
-      // Sau khi refreshToken hoàn thành, reset biến refreshPromise
-      refreshPromise = null;
-
-      // Gọi lại API gốc với AccessToken mới
-      return axios.request(err.config);
-    }
-    if (err.response.status === 401 || originalRequest._retry) {
+    if (err.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
-        const refreshToken = store.getState().authentication.refreshToken;
-        const response = await axios.post("/refresh-token", {
-          refreshToken,
-        });
-
-        const { accessToken } = response.data;
-        store.dispatch(updateToken({ accessToken }));
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        store.dispatch(logout());
-        return Promise.reject(refreshError);
+      if (!refreshTokePromise) {
+        // Gọi refreshToken và lưu promise vào biến refreshPromise
+        refreshTokePromise = callRefreshToken();
       }
+      try {
+        await refreshTokePromise;
+        refreshTokePromise = null;
+
+        return axiosInstance(originalRequest);
+      } catch (err) {
+        refreshTokePromise = null;
+        return Promise.reject(err);
+      }
+    }
+    if (err.response.status === 401) {
+      const accessToken = Cookies.get("accessToken");
+      if (accessToken) {
+        // call logout function or handle accordingly
+        
+        store.dispatch(LogoutAction());
+        err.response.message = "Vui lòng đăng nhập lại";
+      }
+      err.response.message = "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại";
+      return Promise.reject(err.response);
     }
     if (err.response) {
       return Promise.reject(err.response);
