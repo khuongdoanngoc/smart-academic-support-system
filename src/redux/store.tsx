@@ -3,7 +3,8 @@ import UploadFileReducer from "./UploadFileSlice/uploadFileSlice";
 import DocumentReducer from "./DocumentSlice/documentSlice";
 import TagReducers from "./TagSlice/TagSlice";
 import NoticatonReducer from "./Notication/NoticationSlice";
-import { useDispatch } from "react-redux";
+import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
+import { useDispatch,useSelector } from "react-redux";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     document: DocumentReducer,
     tag: TagReducers,
     notication: NoticatonReducer,
+    chatbot: ChatBotReducer
   },
 });
 
@@ -20,3 +22,4 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: (selector: (state: RootState) => unknown) => unknown = useSelector;

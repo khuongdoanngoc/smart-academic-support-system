@@ -1,6 +1,5 @@
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
-// import Avatar from "../../../assets/images/avatar.png";
 import Vector1 from "../../../assets/images/Vector 9.png";
 import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
@@ -8,9 +7,6 @@ import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboa
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
 import { AppDispatch } from "../../../redux/store";
-// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
-// import UploadFileAction  from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { UploadFileAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useRef, useState } from "react";
 import {
   ArrowBack,
@@ -32,33 +28,11 @@ import { RootState } from "../../../redux/store";
 
 import {
   setFileList,
-  // setIsDragging,
-  // setMenuDeleButton,
-  // setAlertFile,
-  // setInformationAlert,
-  // setDefaultUploadFile,
-  // setFileSelected,
-  // setIsColorItemButton,
-  // setFileDetailLoad,
   setValueRow,
-  // setvalueRowYear,
-  // setmenuCheckItemRow,
-  // setMenuCheckItemRowYear,
-  // setUploadFileSuccess,
   FileItem,
   UploadFileAction,
-  // setSpecialized,
-  // setSubject,
-  // setFolder,
-  // setDocumentType,
-  // setTitle,
-  // setAcademicYear,
-  // setDescription,
-  // postFile,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
-// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
-// import UploadFileAPI from "../../../services/UploadFileAPI/UploadFileAPI";
 
 const cx = classNames.bind(styles);
 
