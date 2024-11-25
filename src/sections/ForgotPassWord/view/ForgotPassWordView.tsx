@@ -7,7 +7,7 @@ const forgotBudgets = [
     titleConfirm: "Nhập mã xác nhận",
     titleButtonAuthen: "Gửi mã",
     titleVerify: "Mã xác minh",
-    titleButton: "Đặt lại mật khẩu",
+    titleButton: "Xác minh",
     titleForgot: "Quay lại Đăng nhập",
   },
 ];

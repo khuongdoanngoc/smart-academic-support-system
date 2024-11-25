@@ -5,6 +5,7 @@ import TagReducers from "./TagSlice/TagSlice";
 import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { useDispatch,useSelector } from "react-redux";
+import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
     document: DocumentReducer,
     tag: TagReducers,
     notication: NoticatonReducer,
-    chatbot: ChatBotReducer
+    chatbot: ChatBotReducer,
+    authentication: authenticationReducer,
   },
 });
 
