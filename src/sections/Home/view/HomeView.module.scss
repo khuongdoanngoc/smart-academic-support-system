@@ -1,8 +1,12 @@
 .homepage-wrapper {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+.home-opacity {
+  opacity: 0.6;
+  cursor: pointer;
 }

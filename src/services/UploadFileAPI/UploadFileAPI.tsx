@@ -1,10 +1,44 @@
-import axios from "axios";
+import { AxiosError } from "axios";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
+import { toast } from "react-toastify";
 
-const UploadFileAPI = axios.create({
-  baseURL: "https://your-api-base-url.com",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+interface ApiPostFile {
+  file: File;
+  title: string;
+  description: string;
+  content: string;
+  type: string;
+  subject: string;
+  facultyId: number;
+}
 
-export default UploadFileAPI;
+export const postFile = async (data: ApiPostFile) => {
+  const formData = new FormData();
+  formData.append("file", data.file);
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("content", data.content);
+  formData.append("type", data.type);
+  formData.append("subject", data.subject);
+  formData.append("facultyId", data.facultyId.toString());
+
+  try {
+    const res = await axiosInstance.post(
+      "/api/v1/document/upload?file=data.file&type=data",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    toast.success("File uploaded successfully!");
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    const errorMessage =
+      error.response?.data?.message || "An error occurred while uploading";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};

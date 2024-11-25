@@ -1,5 +1,6 @@
 .document-header {
-    width: 100%;
+    width: calc(100vw - var(--scrollbar-width, 15px));
+    position: sticky;
     display: flex;
     background-color: white;
     justify-content: space-between;
@@ -8,10 +9,10 @@
     padding: 0px 100px;
     position: fixed;
     top: 0;
-    width: 100%;
     z-index: 10;
     transform: translateY(0);
     transition: transform;
+    box-shadow: 0px 0px 3px 1px #00000040;
     & > a {
         text-decoration: none;
         cursor: pointer;

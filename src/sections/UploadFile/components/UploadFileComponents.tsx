@@ -7,7 +7,11 @@ import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
-import { useRef } from "react";
+import { AppDispatch } from "../../../redux/store";
+// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
+// import UploadFileAction  from "../../../redux/UploadFileSlice/uploadFileSlice";
+import { UploadFileAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
+import { useRef, useState } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -28,100 +32,114 @@ import { RootState } from "../../../redux/store";
 
 import {
   setFileList,
-  setIsDragging,
-  setMenuDeleButton,
-  setAlertFile,
-  setInformationAlert,
-  setDefaultUploadFile,
-  setFileSelected,
-  setIsColorItemButton,
-  setFileDetailLoad,
+  // setIsDragging,
+  // setMenuDeleButton,
+  // setAlertFile,
+  // setInformationAlert,
+  // setDefaultUploadFile,
+  // setFileSelected,
+  // setIsColorItemButton,
+  // setFileDetailLoad,
   setValueRow,
-  setvalueRowYear,
-  setmenuCheckItemRow,
-  setMenuCheckItemRowYear,
-  setUploadFileSuccess,
+  // setvalueRowYear,
+  // setmenuCheckItemRow,
+  // setMenuCheckItemRowYear,
+  // setUploadFileSuccess,
   FileItem,
-  setSpecialized,
-  setSubject,
-  setFolder,
+  // UploadFileAction,
+  // setSpecialized,
+  // setSubject,
+  // setFolder,
   // setDocumentType,
-  setTitle,
+  // setTitle,
   // setAcademicYear,
-  setDescription,
+  // setDescription,
+  // postFile,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
-import UploadFileAPI from "../../../services/UploadFileAPI/UploadFileAPI";
+// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
+// import UploadFileAPI from "../../../services/UploadFileAPI/UploadFileAPI";
 
 const cx = classNames.bind(styles);
+
 const UploadFileComponents = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   //  const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
   //      []
   //    );
 
-  // const [isDragging, setIsDragging] = useState(false); //trạng thái kéo file để hiện component Drop It
-  // const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
-  // const [alertFile, setAlertFile] = useState(false); //trạng thái hiện thông báo nếu upload file lỗi
-  // const [informationAlert, setInformationAlert] = useState(""); //use state hiển thị nội dung thông báo file lỗi
-  // const [defaultUploadFile, setDefaultUploadFile] = useState(false); //use state hiển thị phần chi tiết của default upload file
-  // const [fileSelected, setFileSelected] = useState<File | null>(null); //use state kiểm tra xem file đó đã được chọn chưa
-  // const [isColorItemButton, setIsColorItemButton] = useState(1); //use state  xem đang ở trạng thái tải tài liệu,chi tiết,hay hoàn thành
+  const [isDragging, setIsDragging] = useState(false); //trạng thái kéo file để hiện component Drop It
+  const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
+  const [alertFile, setAlertFile] = useState(false); //trạng thái hiện thông báo nếu upload file lỗi
+  const [informationAlert, setInformationAlert] = useState(""); //use state hiển thị nội dung thông báo file lỗi
+  const [defaultUploadFile, setDefaultUploadFile] = useState(false); //use state hiển thị phần chi tiết của default upload file
+  const [fileSelected, setFileSelected] = useState<File | null>(null); //use state kiểm tra xem file đó đã được chọn chưa
+  const [isColorItemButton, setIsColorItemButton] = useState(1); //use state  xem đang ở trạng thái tải tài liệu,chi tiết,hay hoàn thành
 
-  // const [fileDetailLoad, setFileDetailLoad] = useState(false); //use state hiển thị mục 2 của phần chi tiết default upload file
+  const [fileDetailLoad, setFileDetailLoad] = useState(false); //use state hiển thị mục 2 của phần chi tiết default upload file
   // const [valueRow, setValueRow] = useState(""); //use state hiển thị file là tn hay tl
   // const [valueRowYear, setvalueRowYear] = useState("");//use state hiển thị năm file
-  // const [menuCheckItemRow, setmenuCheckItemRow] = useState(false); //trạng thải ẩn và hiện của nút button tn hay tl
-  // const [menuCheckItemRowYear, setMenuCheckItemRowYear] = useState(false);//trạng thải ẩn và hiện của nút button năm file
-  // const [uploadFileSuccess, setUploadFileSuccess] = useState(false); //use state hiển thị component hoàn thành
+  const [menuCheckItemRow, setmenuCheckItemRow] = useState(false); //trạng thải ẩn và hiện của nút button tn hay tl
+  const [menuCheckItemRowYear, setMenuCheckItemRowYear] = useState(false); //trạng thải ẩn và hiện của nút button năm file
+  const [uploadFileSuccess, setUploadFileSuccess] = useState(false); //use state hiển thị component hoàn thành
 
-  const dispatch = useDispatch();
-  const fileList = useSelector((state: RootState) => state.uploadFile.fileList);
+  const [titleFile, setTitleFile] = useState("");
 
-  const {
-    specialized,
-    subject,
-    folder,
-    documentType,
-    title,
-    academicYear,
-    description,
-  } = useSelector((state: RootState) => state.uploadFile);
+  const [descriptionFile, setDescriptionFile] = useState("");
+  const [typeFile, setTypeFile] = useState("");
+  const [contentFile, setContentFile] = useState("");
+  const [subjectFile, setSubjectFile] = useState("");
+  const [facultyIdFile, setFacultyIdFile] = useState(2024 - 2024);
 
-  const handleSendData = async () => {
-    const data = {
-      specialized,
-      subject,
-      folder,
-      documentType,
-      title,
-      academicYear,
-      description,
-    };
+  const dispatch = useDispatch<AppDispatch>();
+  const fileList = useSelector(
+    (state: RootState) => state.uploadFile.fileUploadState.fileList
+  );
 
-    try {
-      const response = await UploadFileAPI.post("/your-api-endpoint", data);
-      console.log("Response:", response.data);
-    } catch (error) {
-      console.error("Error posting data:", error);
-    }
-  };
+  // const {
+  //   specialized,
+  //   subject,
+  //   folder,
+  //   // documentType,
+  //   title,
+  //   // academicYear,
+  //   description,
+  // } = useSelector((state: RootState) => state.uploadFile.fileUploadState);
 
-  const {
-    isDragging,
-    menuDeleButton,
-    alertFile,
-    informationAlert,
-    defaultUploadFile,
-    fileSelected,
-    isColorItemButton,
-    fileDetailLoad,
-    valueRow,
-    valueRowYear,
-    menuCheckItemRow,
-    menuCheckItemRowYear,
-    uploadFileSuccess,
-  } = useSelector((state: RootState) => state.uploadFile);
+  // const handleSendData = async () => {
+  //   const data = {
+  //     specialized,
+  //     subject,
+  //     folder,
+  //     documentType,
+  //     title,
+  //     academicYear,
+  //     description,
+  //   };
+
+  //   try {
+  //     const response = await UploadFileAPI.post("/your-api-endpoint", data);
+  //     console.log("Response:", response.data);
+  //   } catch (error) {
+  //     console.error("Error posting data:", error);
+  //   }
+  // };
+
+  // const {
+  //   // isDragging,
+  //   // menuDeleButton,
+  //   // alertFile,
+  //   // informationAlert,
+  //   // defaultUploadFile,
+  //   // fileSelected,
+  //   // isColorItemButton,
+  //   // fileDetailLoad,
+  //   valueRow,
+  //   valueRowYear,
+  //   // menuCheckItemRow,
+  //   // menuCheckItemRowYear,
+  //   // uploadFileSuccess,
+  // } = useSelector((state: RootState) => state.uploadFile.fileUploadState);
 
   // const onDragEnter = () => {
   //   if (wrapperRef.current) {
@@ -153,18 +171,17 @@ const UploadFileComponents = () => {
       const allowedExtensions = ["docx", "pdf", "xlsx"];
 
       if (!allowedExtensions.includes(fileExtension || "")) {
-        dispatch(
-          setInformationAlert("Only docx, pdf, or xlsx files are allowed.")
-        );
-        dispatch(setAlertFile(true));
+        setInformationAlert("Only docx, pdf, or xlsx files are allowed.");
+
+        setAlertFile(true);
         setTimeout(() => {
-          dispatch(setAlertFile(true));
+          setAlertFile(true);
         }, 4000);
         return;
       }
 
       if (fileSelected === null) {
-        dispatch(setFileSelected(newFile));
+        setFileSelected(newFile);
         const shortenedName =
           originalName.length > 14
             ? `${originalName.slice(0, 13)}...${originalName.slice(-8)}`
@@ -187,58 +204,27 @@ const UploadFileComponents = () => {
         }
 
         if (isFileAlreadyUploaded) {
-          dispatch(
-            setInformationAlert(
-              `This file seems to have been already uploaded: ${originalName}`
-            )
+          setInformationAlert(
+            `This file seems to have been already uploaded: ${originalName}`
           );
-          dispatch(setAlertFile(true));
+
+          setAlertFile(true);
           setTimeout(() => {
-            dispatch(setAlertFile(false));
+            setAlertFile(false);
           }, 4000);
           return;
         }
 
         if (fileList.length >= 1) {
-          dispatch(setInformationAlert("Only 1 file can be uploaded."));
-          dispatch(setAlertFile(true));
+          setInformationAlert("Only 1 file can be uploaded.");
+          setAlertFile(true);
           setTimeout(() => {
-            dispatch(setAlertFile(false));
+            setAlertFile(false);
           }, 4000);
           return;
         }
       }
     }
-    // console.log("new File 2", newFile);
-
-    //   if (fileList.length === 0) return;
-    //   const formData = new FormData();
-    //   filesForUpload.forEach((file) => formData.append("file", file));
-
-    //   try {
-    //     const response = await axios.post(
-    //       "https://your-api-endpoint.com/uploads",
-    //       formData,
-    //       {
-    //         headers: {
-    //           "Content-Type": "multipart/form-data",
-    //           Authorization: `Bearer YOUR_API_KEY`,
-    //         },
-    //         onUploadProgress: (progressEvent) => {
-    //           console.log(1);
-
-    //           const total = progressEvent.total ? progressEvent.total : 1;
-    //           const percentCompleted = Math.round(
-    //             (progressEvent.loaded * 100) / total
-    //           );
-    //           setFileLoad(percentCompleted); // Cập nhật % tiến trình upload
-    //         },
-    //       }
-    //     );
-    //     console.log(response.data); // Xử lý phản hồi sau khi upload thành công
-    //   } catch (error) {
-    //     console.error("Upload error:", error); // Xử lý lỗi nếu có
-    //   }
 
     e.target.value = "";
   };
@@ -253,69 +239,80 @@ const UploadFileComponents = () => {
 
   const handleDeleteFile = () => {
     dispatch(setFileList([]));
-    dispatch(setFileSelected(null));
-    dispatch(setMenuDeleButton(false));
+    setFileSelected(null);
+    setMenuDeleButton(false);
   };
   const handleCancelFile = () => {
-    dispatch(setMenuDeleButton(false));
+    setMenuDeleButton(false);
   };
 
   const handleMenuDeleteButton = () => {
-    dispatch(setMenuDeleButton(true));
+    setMenuDeleButton(true);
   };
 
   const handleClearAlert = () => {
-    dispatch(setAlertFile(false));
+    setAlertFile(false);
   };
   const handleDefaultUpload = () => {
     if (fileList.length >= 1) {
-      dispatch(setDefaultUploadFile(true));
-      dispatch(setIsDragging(false));
-      dispatch(setIsColorItemButton(2));
+      setDefaultUploadFile(true);
+      setIsDragging(false);
+      setIsColorItemButton(2);
     }
-    console.log(isColorItemButton);
   };
 
-  const handleItemNext = () => {
-    console.log("isColorItemButton 1", isColorItemButton);
-    console.log("isActiveTitle", isActiveTitle);
+  // const handleSubmit=()=>{
 
+  // }
+  const handleItemNext = () => {
     if (isColorItemButton === 2) {
       if (defaultUploadFile && !fileDetailLoad) {
-        dispatch(setFileDetailLoad(true));
+        setFileDetailLoad(true);
 
         return;
       }
-      dispatch(setDefaultUploadFile(false));
-      dispatch(setUploadFileSuccess(true));
+      setDefaultUploadFile(false);
+      setUploadFileSuccess(true);
+      if (fileSelected !== null) {
+        const data = {
+          file: fileSelected,
+          title: titleFile,
+          description: descriptionFile,
+          content: contentFile,
+          type: typeFile,
+          subject: subjectFile,
+          facultyId: facultyIdFile,
+        };
+        dispatch(UploadFileAction(data));
+      }
     }
-    dispatch(setIsColorItemButton((item) => Math.min(item + 1, 3)));
+    setIsColorItemButton((item) => Math.min(item + 1, 3));
   };
-  console.log("isColorItemButton 1", isColorItemButton);
 
   const handleItemBack = () => {
-    dispatch(setIsColorItemButton((item) => Math.max(item - 1, 1)));
+    setIsColorItemButton((item) => Math.max(item - 1, 1));
     if (isColorItemButton === 2) {
       console.log("setDefaultUploadFile");
 
-      dispatch(setDefaultUploadFile(false));
-      dispatch(setFileDetailLoad(false));
+      setDefaultUploadFile(false);
+      setFileDetailLoad(false);
     }
   };
 
   const handleChangeItemRow = (value: string) => {
     dispatch(setValueRow(value));
-    dispatch(setmenuCheckItemRow(false));
+    setmenuCheckItemRow(false);
   };
-  const handleChangeItemRowYear = (value: string) => {
-    dispatch(setvalueRowYear(value));
-    dispatch(setMenuCheckItemRowYear(false));
+  const handleChangeItemRowYear = (value: number) => {
+    setFacultyIdFile(value);
+    // dispatch(setvalueRowYear(value));
+    setMenuCheckItemRowYear(false);
   };
   const handleMenuCheckItemRow = () => {
-    dispatch(setmenuCheckItemRow(!menuCheckItemRow));
+    setmenuCheckItemRow(!menuCheckItemRow);
   };
   const handleMenuCheckItemRowYear = () => {
-    dispatch(setMenuCheckItemRowYear(!menuCheckItemRowYear));
+    setMenuCheckItemRowYear(!menuCheckItemRowYear);
   };
 
   const isActiveTitle = (step: number) => isColorItemButton === step;
@@ -358,9 +355,6 @@ const UploadFileComponents = () => {
         {isDragging ? (
           <div
             className={cx("main-body-center")}
-            // onDragEnter={onDragEnter}
-            // onDragLeave={onDrapLeave}
-            // onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
           >
             <input onChange={onFileDrop} type="file" />
@@ -373,7 +367,7 @@ const UploadFileComponents = () => {
             </div>
           </div>
         ) : defaultUploadFile ? (
-          <form className={cx("body-center-detail")} onSubmit={handleSendData}>
+          <form className={cx("body-center-detail")}>
             {fileList.map((file: FileItem, index: number) => (
               <div className={cx("center-detail-upload")} key={index}>
                 <div className={cx("detail-upload-header")}>
@@ -395,8 +389,8 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Nhập mã hoặc tên chuyên ngành"
-                      value={specialized}
-                      onChange={(e) => dispatch(setSpecialized(e.target.value))}
+                      // value={formData.subject}
+                      // onChange={handleInputChange}
                     />
                   </div>
                   <div className={cx("upload-body-list")}>
@@ -404,8 +398,8 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Nhập mã hoặc tên môn học"
-                      value={subject}
-                      onChange={(e) => dispatch(setSubject(e.target.value))}
+                      // value={subject}
+                      onChange={(e) => setSubjectFile(e.target.value)}
                     />
                   </div>
 
@@ -414,8 +408,8 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Tiêu đề thư mục"
-                      value={folder}
-                      onChange={(e) => dispatch(setFolder(e.target.value))}
+                      // value={formData.content}
+                      onChange={(e) => setContentFile(e.target.value)}
                     />
                   </div>
                 </div>
@@ -431,10 +425,8 @@ const UploadFileComponents = () => {
                             type="text"
                             readOnly
                             placeholder="Trắc nghiệm hoặc tự luận"
-                            value={valueRow}
-                            onChange={(e) =>
-                              dispatch(setValueRow(e.target.value))
-                            }
+                            // value={formData.type}
+                            onChange={(e) => setTypeFile(e.target.value)}
                             name="row"
                           />
                           <p onClick={handleMenuCheckItemRow}>
@@ -469,8 +461,8 @@ const UploadFileComponents = () => {
                         <input
                           type="text"
                           placeholder={file.name}
-                          value={title}
-                          onChange={(e) => dispatch(setTitle(e.target.value))}
+                          // value={formData.title}
+                          onChange={(e) => setTitleFile(e.target.value)}
                         />
                       </div>
                       <div className={cx("upload-body-list")}>
@@ -480,10 +472,10 @@ const UploadFileComponents = () => {
                             type="text"
                             readOnly
                             placeholder="2024 - 2024"
-                            value={valueRowYear}
+                            // value={formData.facultyId}
                             name="row"
                             onChange={(e) =>
-                              dispatch(setvalueRowYear(e.target.value))
+                              setFacultyIdFile(Number(e.target.value))
                             }
                           />
                           <p onClick={handleMenuCheckItemRowYear}>
@@ -500,56 +492,56 @@ const UploadFileComponents = () => {
                             <ul>
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2024 - 2024")
+                                  handleChangeItemRowYear(2024 - 2024)
                                 }
                               >
                                 2024 - 2024
                               </li>
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2023 - 2023")
+                                  handleChangeItemRowYear(2023 - 2023)
                                 }
                               >
                                 2023 - 2023
                               </li>
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2022 - 2022")
+                                  handleChangeItemRowYear(2022 - 2022)
                                 }
                               >
                                 2022 - 2022
                               </li>
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2021 - 2021")
+                                  handleChangeItemRowYear(2021 - 2021)
                                 }
                               >
                                 2021 - 2021
                               </li>
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2020 - 2020")
+                                  handleChangeItemRowYear(2020 - 2020)
                                 }
                               >
                                 2020 - 2020
                               </li>{" "}
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2019 - 2019")
+                                  handleChangeItemRowYear(2019 - 2019)
                                 }
                               >
                                 2019 - 2019
                               </li>{" "}
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2018 - 2018")
+                                  handleChangeItemRowYear(2018 - 2018)
                                 }
                               >
                                 2018 - 2018
                               </li>{" "}
                               <li
                                 onClick={() =>
-                                  handleChangeItemRowYear("2017 - 2017")
+                                  handleChangeItemRowYear(2017 - 2017)
                                 }
                               >
                                 2017 - 2017
@@ -562,10 +554,9 @@ const UploadFileComponents = () => {
                         <p>Mô tả</p>
                         <textarea
                           placeholder="Nhập mã hoặc tên khoá học"
-                          value={description}
-                          onChange={(e) =>
-                            dispatch(setDescription(e.target.value))
-                          }
+                          name="description"
+                          // value={formData.description}
+                          onChange={(e) => setDescriptionFile(e.target.value)}
                         />
                       </div>
                     </div>
@@ -633,6 +624,7 @@ const UploadFileComponents = () => {
                     type="file"
                     onChange={onFileDrop}
                     placeholder="Chọn tệp tài liệu"
+                    // value={}
                   />
                 </div>
                 <div className={cx("list-button-information")}>

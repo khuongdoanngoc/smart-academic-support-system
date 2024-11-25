@@ -4,13 +4,52 @@ import { Head } from "./Head";
 const cx = classNames.bind(styles);
 import AIBackground from "../../../assets/images/homepage.ai.png";
 import AIEmoji from "../../../assets/images/homepage.aiEmoji.png";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { slideInLeft, slideInRight } from "../../../utils/animations";
 export default function AISection() {
+    const [isVisible, setIsVisible] = useState<boolean>(false);
+    const sectionRef = useRef(null);
+
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "100px",
+            threshold: 0.5,
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true); // Cập nhật trạng thái isVisible thành true khi section vào viewport
+                    observer.unobserve(entry.target); // Dừng quan sát section này
+                }
+            });
+        }, options);
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current); // Bắt đầu quan sát section
+        }
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
     return (
         <div className={cx("ai-section")}>
             <Head />
-            <div className={cx("content")}>
-                <img src={AIBackground} alt="ai-background" />
-                <div>
+            <div ref={sectionRef} className={cx("content")}>
+                <motion.img
+                    variants={slideInLeft}
+                    initial="hidden"
+                    animate={isVisible ? "visible" : "hidden"}
+                    src={AIBackground}
+                    alt="ai-background"
+                />
+                <motion.div
+                    variants={slideInRight}
+                    initial="hidden"
+                    animate={isVisible ? "visible" : "hidden"}>
                     <h2>
                         <img src={AIEmoji} alt="emoji" />
                         TÍCH HỢP CÁC CÔNG CỤ AI
@@ -33,7 +72,7 @@ export default function AISection() {
                         được tích hợp AI của chúng tôi. Tôi dám chắc bạn sẽ bất
                         ngờ khi trải nghiệm tính năng mới này đó.
                     </p>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

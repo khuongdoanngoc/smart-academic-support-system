@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { axiosInstance } from "../../utils/AxiosInterceptor";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 interface UpdateProfileRequest {
@@ -14,17 +15,25 @@ interface UpdateProfileRequest {
 }
 
 const EditProfileAPI = createAsyncThunk(
-  "editProfile/editProfile",
+  "editProfile",
   async (data: UpdateProfileRequest, thunkAPI) => {
     try {
-      const accountId = localStorage.getItem("accountId"); // Lấy ID từ localStorage
+      const accountId = localStorage.getItem("accountId");
+      console.log(accountId);
+
+      if (!accountId) {
+        throw new Error("Vui lòng đăng nhập!");
+      }
       const response = await axiosInstance.put(
         `/user/update-profile/${accountId}`,
         data
       );
       return response.data;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      const errorMessage =
+        error.response?.data?.message || error.message || "An error occurred";
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );
