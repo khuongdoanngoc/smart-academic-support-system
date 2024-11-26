@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import store from "../redux/store";
 import {  LogoutAction } from "../redux/AuthenticationSlice/AuthenticationSlice";
+import { toast } from "react-toastify";
 export const baseUrl = import.meta.env.VITE_APP_API_URL;
 interface response {
   token: string;
@@ -66,6 +67,10 @@ axiosInstance.interceptors.response.use(
         store.dispatch(LogoutAction());
         err.response.message = "Vui lòng đăng nhập lại";
       }
+      toast.error("Please login to access",{autoClose:3000});
+      setTimeout(()=>{
+        window.location.href="/login";
+      },3000);
       err.response.message = "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại";
       return Promise.reject(err.response);
     }
