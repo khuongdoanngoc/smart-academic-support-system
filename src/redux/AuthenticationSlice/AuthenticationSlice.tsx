@@ -95,7 +95,7 @@ export const LogoutAction = createAsyncThunk(
   async () => {
     try {
       const response = await LogoutApi(); //logout api
-      
+
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
@@ -106,21 +106,20 @@ export const LogoutAction = createAsyncThunk(
 );
 export const AutoLoginAction = createAsyncThunk<ILoginS>(
   "AutoLoginAction",
-  async ()=>{
-    try{
-      const res= await AutoLoginApi();
-      if(res){
+  async () => {
+    try {
+      const res = await AutoLoginApi();
+      if (res) {
         return res as unknown as ILoginS;
-      }else{
+      } else {
         throw new Error("Unauthorized");
       }
-    }catch(err: unknown){
+    } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw Error(error.message); //throw error
     }
   }
-)
-
+);
 
 const AuthenticationSlice = createSlice({
   name: "Authentication", //name slice
@@ -179,6 +178,7 @@ const AuthenticationSlice = createSlice({
     builder
       .addCase(LoginAction.pending, (state) => {
         state.loading = true;
+        state.isLogined = false;
       })
       .addCase(RegisterAction.pending, (state) => {
         state.loading = true;
@@ -208,23 +208,22 @@ const AuthenticationSlice = createSlice({
       .addCase(LogoutAction.fulfilled, (state) => {
         state.loading = false;
         toast.success("Logout successful");
-        setTimeout(()=>{
-          window.location.href= "/login";
+        setTimeout(() => {
+          window.location.href = "/login";
           state.isLogined = false;
           state.username = "";
           state.listRoles = [];
           state.accessToken = null;
           state.refreshToken = null;
-        })
-        
+        });
       })
-      .addCase(AutoLoginAction.fulfilled, (state,action) => {
+      .addCase(AutoLoginAction.fulfilled, (state, action) => {
         state.loading = false;
-          state.isLogined = true;
-          state.username = action.payload.username;
-          state.listRoles = action.payload.listRoles;
-          state.accessToken = action.payload.accessToken;
-          state.refreshToken = action.payload.refreshToken;
+        state.isLogined = true;
+        state.username = action.payload.username;
+        state.listRoles = action.payload.listRoles;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
       })
       .addCase(LoginAction.rejected, (state) => {
         state.loading = false;
