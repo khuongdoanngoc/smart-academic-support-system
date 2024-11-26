@@ -9,7 +9,7 @@ function App() {
   return (
     <SharingModalProvider>
       <SharingModal />
-      <ToastContainer />
+      <ToastContainer autoClose={3000} />
       <GlobalStyles>
         <Router />
       </GlobalStyles>
