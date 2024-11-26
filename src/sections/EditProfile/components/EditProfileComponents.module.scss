@@ -16,88 +16,224 @@
     }
     & > .profile-main-body {
       margin-top: 20px;
-      & > .main-body-individual {
-        padding: 26px 45px;
-        width: 80%;
-        border: 2px solid #00000080;
-        border-radius: 20px;
-        & > .body-individual-title {
-          color: #00000099;
-          font-size: 20px;
-          line-height: 24px;
-          font-weight: 700;
-        }
-        & > .body-individual-input {
-          padding: 15px 0;
-          & > div {
+      & > .main-body-top {
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        & > .main-body-avatar {
+          display: flex;
+          flex-direction: column;
+          width: 24%;
+          background: #fff;
+          justify-content: center;
+          align-items: center;
+          padding: 26px 20px;
+          border: 2px solid #00000080;
+          border-radius: 20px;
+          & > h3 {
+            font-size: 20px;
+            line-height: 24px;
+            color: #00000099;
+            font-weight: 700;
+          }
+          & > img {
+            width: 150px;
+            height: 150px;
+            margin: 10px 0;
+          }
+          & > .file-input {
+            position: relative;
             display: flex;
-            justify-content: space-between;
-            margin: 22px 0;
-            & > div {
-              display: flex;
-              flex-direction: column;
-              width: 30%;
-              & > label {
-                font-size: 16px;
-                color: #00000099;
-                font-weight: 500;
-                line-height: 19px;
-                margin-bottom: 5px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            & > input[type="file"] {
+              &::-webkit-file-upload-button {
+                margin-right: 0;
               }
-              & > input {
-                border-radius: 10px;
-                padding: 10px 17px;
-                border: 1px solid #00000080;
-                gap: 10px;
-                color: #000;
-                font-size: 16px;
-                font-weight: 500;
-                line-height: 19px;
-                outline: none;
+
+              &::file-selector-button {
+                margin-right: 0;
               }
-              & > select {
-                border-radius: 10px;
-                padding: 10px 17px;
+
+              width: 133px;
+              color: transparent;
+
+              &::-webkit-file-upload-button {
+                color: initial;
+              }
+
+              &::file-selector-button {
+                color: initial;
+              }
+              &::file-selector-button {
+                width: 130px;
+                padding: 8px;
                 border: 1px solid #00000080;
-                gap: 10px;
-                color: #000;
-                font-size: 16px;
-                font-weight: 500;
-                line-height: 19px;
+                border-radius: 5px;
+                background: #bcbcbc80;
+                color: black;
+                cursor: pointer;
               }
             }
-            & > .input-name-lastname {
+            width: 170px;
+            & > button {
+              padding: 10px 17px;
+              width: 100px;
               display: flex;
-              flex-direction: column;
-              width: 36%;
-            }
-            & > .input-name-firstname {
-              display: flex;
-              flex-direction: column;
-              width: 50%;
+              justify-content: center;
+              align-items: center;
+              background: #00ba06;
+              color: #fff;
+              border-radius: 5px;
+              border: 1px solid #00000080;
+              margin-top: 14px;
             }
           }
-          & > .individual-input-infor {
-            width: 96%;
-            & > .input-infor-date {
-              width: 34%;
-            }
-            & > .input-infor-sex {
-              width: 18%;
-              & > .infor-sex-select {
-                height: max-content;
-                width: 95%;
-                outline: none;
-              }
-            }
-            & > .input-infor-country {
-              width: 38%;
+        }
+        & > .main-body-individual {
+          width: 70%;
+          padding: 26px 20px;
+          border: 2px solid #00000080;
+          border-radius: 20px;
+          & > .body-individual-title {
+            & > h4 {
+              font-size: 20px;
+              line-height: 24px;
+              font-weight: 700;
+              color: #00000099;
             }
           }
-          & > .individual-input-contact {
-            width: 80%;
-            & > .input-contact-email {
-              width: 62%;
+          & > .body-individual-input {
+            & > .individual-input-name {
+              display: flex;
+              justify-content: space-between;
+              & > .input-name-lastname {
+                display: flex;
+                flex-direction: column;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 7px;
+                  border-radius: 10px;
+                  border: 1px solid #00000080;
+                  font-size: 15px;
+                }
+              }
+              & > .input-name-firstname {
+                display: flex;
+                flex-direction: column;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 10px;
+                  border: 1px solid #00000080;
+                  border-radius: 10px;
+                  font-size: 15px;
+                }
+              }
+              & > .input-infor-sex {
+                display: flex;
+                flex-direction: column;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > select {
+                  padding: 8px 7px;
+                  border: 1px solid #00000080;
+                  border-radius: 10px;
+                  font-size: 15px;
+                  width: 102px;
+                }
+              }
+            }
+            & > .individual-input-infor {
+              display: flex;
+              justify-content: space-between;
+              margin: 12px 0;
+              & > .input-infor-date {
+                display: flex;
+                flex-direction: column;
+                width: 36%;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 15px;
+                  border-radius: 10px;
+                  border: 1px solid #00000080;
+                  font-size: 16px;
+                }
+              }
+              & > .input-infor-country {
+                display: flex;
+
+                flex-direction: column;
+                width: 60%;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 17px;
+                  border-radius: 10px;
+                  border: 1px solid #00000080;
+                  font-size: 15px;
+                }
+              }
+            }
+            & > .individual-input-contact {
+              display: flex;
+              justify-content: space-between;
+              & > .input-contact-email {
+                display: flex;
+                flex-direction: column;
+                width: 59%;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 15px;
+                  border-radius: 10px;
+                  border: 1px solid #00000080;
+                  font-size: 16px;
+                }
+              }
+              & > .input-contact-phone {
+                display: flex;
+                flex-direction: column;
+                & > label {
+                  font-weight: 500;
+                  font-size: 16px;
+                  line-height: 20px;
+                  color: #00000099;
+                }
+                & > input {
+                  padding: 10px 17px;
+                  border-radius: 10px;
+                  border: 1px solid #00000080;
+                  font-size: 15px;
+                }
+              }
             }
           }
         }
@@ -105,8 +241,8 @@
 
       & > .main-body-student {
         padding: 26px 45px;
-        width: 100%;
-        margin-top: 40px;
+        width: 90%;
+        margin: 30px 0;
         border: 2px solid #00000080;
         border-radius: 20px;
         & > .body-student-title {
@@ -178,9 +314,12 @@
             }
           }
           & > .student-input-information {
-            width: 86%;
+            // width: 90%;
             & > .input-information-position {
-              width: 45%;
+              width: 50%;
+              & > input {
+                cursor: not-allowed;
+              }
             }
             & > .input-information-year {
               width: 25%;
@@ -195,6 +334,32 @@
             }
           }
         }
+      }
+      & > .body-individual-submit {
+        width: 90%;
+        background-color: #0a75e6;
+        padding: 13px 0;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 24px;
+        margin-bottom: 30px;
+        border: none;
+        cursor: pointer;
+      }
+      & > .body-individual-delete {
+        width: 25%;
+        margin: 90px 0 29px 0;
+        background-color: #dc4342;
+        border-radius: 20px;
+        padding: 11px 0;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 24px;
+        border: none;
+        cursor: pointer;
       }
     }
     & > .profile-main-footer {

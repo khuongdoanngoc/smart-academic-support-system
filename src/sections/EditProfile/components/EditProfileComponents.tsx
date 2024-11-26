@@ -6,6 +6,7 @@ import classNames from "classnames/bind";
 import EditProfileAPI from "../../../services/EditProfileAPI/EditProfileAPI";
 import { RootState, AppDispatch } from "../../../redux/store";
 import { resetState } from "../../../redux/EditProfileSlice/EditProfileSlice";
+import avatar from "../../../assets/images/Frame 8720.png";
 
 const cx = classNames.bind(styles);
 
@@ -21,11 +22,14 @@ const EditProfileComponents = () => {
     birthDate: "",
     gender: "Nam",
     hometown: "",
+    email: "",
     phoneNumber: "",
     facultyId: 1,
     major: "Software Technology CMU",
+    position: "Sinh viên",
     enrollmentYear: new Date().getFullYear(),
     classNumber: "27",
+    avatar: null as File | null,
   });
 
   const handleInputChange = (
@@ -53,6 +57,13 @@ const EditProfileComponents = () => {
     }
   }, [success, error, dispatch]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData({ ...formData, avatar: file });
+    }
+  };
+
   return (
     <div className={cx("edit-profile")}>
       <div className={cx("edit-profile-main")}>
@@ -60,83 +71,111 @@ const EditProfileComponents = () => {
           <h3>CHỈNH SỬA THÔNG TIN</h3>
         </div>
         <div className={cx("profile-main-body")}>
-          <div className={cx("main-body-individual")}>
-            <div className={cx("body-individual-title")}>
-              <h4>Thông tin cá nhân</h4>
+          <div className={cx("main-body-top")}>
+            <div className={cx("main-body-avatar")}>
+              <h3>Ảnh đại diện</h3>
+              <img
+                src={
+                  formData.avatar
+                    ? URL.createObjectURL(formData.avatar)
+                    : avatar
+                }
+                alt="avatar"
+              />
+              <div className={cx("file-input")}>
+                <input type="file" name="avatar" onChange={handleFileChange} />
+                <button>Đổi ảnh</button>
+              </div>
             </div>
-            <div className={cx("body-individual-input")}>
-              <div className={cx("individual-input-name")}>
-                <div className={cx("input-name-lastname")}>
-                  <label>Họ</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Nguyễn"
-                  />
-                </div>
-                <div className={cx("input-name-firstname")}>
-                  <label>Tên</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    placeholder="Quốc Huy"
-                  />
-                </div>
+            <div className={cx("main-body-individual")}>
+              <div className={cx("body-individual-title")}>
+                <h4>Thông tin cá nhân</h4>
               </div>
-              <div className={cx("individual-input-infor")}>
-                <div className={cx("input-infor-date")}>
-                  <label>Ngày sinh</label>
-                  <input
-                    type="date"
-                    name="birthDate"
-                    value={formData.birthDate}
-                    onChange={handleInputChange}
-                  />
+              <div className={cx("body-individual-input")}>
+                <div className={cx("individual-input-name")}>
+                  <div className={cx("input-name-lastname")}>
+                    <label>Họ</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Nguyễn"
+                    />
+                  </div>
+                  <div className={cx("input-name-firstname")}>
+                    <label>Tên</label>
+                    <input
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="Quốc Huy"
+                    />
+                  </div>
+                  <div className={cx("input-infor-sex")}>
+                    <label>Giới tính</label>
+                    <select
+                      className={cx("infor-sex-select")}
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                    >
+                      <option>Nam</option>
+                      <option>Nữ</option>
+                    </select>
+                  </div>
                 </div>
-                <div className={cx("input-infor-sex")}>
-                  <label>Giới tính</label>
-                  <select
-                    className={cx("infor-sex-select")}
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                  >
-                    <option>Nam</option>
-                    <option>Nữ</option>
-                  </select>
+                <div className={cx("individual-input-infor")}>
+                  <div className={cx("input-infor-date")}>
+                    <label>Ngày sinh</label>
+                    <input
+                      type="date"
+                      name="birthDate"
+                      value={formData.birthDate}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+
+                  <div className={cx("input-infor-country")}>
+                    <label>Quê quán</label>
+                    <input
+                      type="text"
+                      name="hometown"
+                      value={formData.hometown}
+                      onChange={handleInputChange}
+                      placeholder="Phong Bình - Gio Linh - Quảng Trị"
+                    />
+                  </div>
                 </div>
-                <div className={cx("input-infor-country")}>
-                  <label>Quê quán</label>
-                  <input
-                    type="text"
-                    name="hometown"
-                    value={formData.hometown}
-                    onChange={handleInputChange}
-                    placeholder="Phong Bình - Gio Linh - Quảng Trị"
-                  />
-                </div>
-              </div>
-              <div className={cx("individual-input-contact")}>
-                <div className={cx("input-contact-phone")}>
-                  <label>SĐT</label>
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    placeholder="+84 353940610"
-                  />
+                <div className={cx("individual-input-contact")}>
+                  <div className={cx("input-contact-email")}>
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="nguyenquochuy@gmail.com"
+                    />
+                  </div>
+                  <div className={cx("input-contact-phone")}>
+                    <label>SĐT</label>
+                    <input
+                      type="text"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      placeholder="+84 353940610"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div className={cx("main-body-student")}>
             <div className={cx("body-student-title")}>
-              <h4>Thông tin học tập</h4>
+              <h4>Thông tin sinh viên</h4>
             </div>
             <div className={cx("body-student-input")}>
               <div className={cx("student-input-school")}>
@@ -164,6 +203,19 @@ const EditProfileComponents = () => {
                 </div>
               </div>
               <div className={cx("student-input-information")}>
+                <div className={cx("input-information-position")}>
+                  <label>Chức vụ(Không thể chỉnh sửa)</label>
+                  <input
+                    type="text"
+                    name="position"
+                    value={formData.position}
+                    readOnly
+                    onChange={handleInputChange}
+                    min={2000}
+                    max={new Date().getFullYear()}
+                    placeholder="YYYY"
+                  />
+                </div>
                 <div className={cx("input-information-year")}>
                   <label>Năm nhập học</label>
                   <input
@@ -191,22 +243,21 @@ const EditProfileComponents = () => {
                 </div>
               </div>
             </div>
-            <div className={cx("body-individual-submit")}>
-              {/* <ButtonSubmit
-                titleButton="Lưu thay đổi"
-                isSubmitting={isLoading}
-               
-                fontsize={16}
-                borderRadius={20}
-                background={"#0A75E6"}
-                onClick={handleSubmit}
-                
-              /> */}
-              <button onClick={handleSubmit} disabled={isloading}>
-                {isloading ? "Đang lưu..." : "Lưu thay đổi"}
-              </button>
-            </div>
           </div>
+          <button
+            onClick={handleSubmit}
+            disabled={isloading}
+            className={cx("body-individual-submit")}
+          >
+            {isloading ? "Đang lưu..." : "Lưu thay đổi"}
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isloading}
+            className={cx("body-individual-delete")}
+          >
+            Xoá tài khoản
+          </button>
         </div>
       </div>
     </div>
