@@ -1,11 +1,14 @@
 import classnames from "classnames/bind";
-import styles from "./ProfileAuthorComponents.module.scss";
+import styles from "./ProfilePersonalComponents.module.scss";
 import Avatar from "../../../assets/images/avatar.png";
 import File from "../../../assets/images/File_dock.svg";
 import EditIcon from "../../../assets/images/edit-05.png";
 import ImportLight from "../../../assets/images/Import_light.png";
+import Edit from "../../../assets/images/edit-06.png";
 import Share from "../../../assets/images/fi_share-2.png";
-import { Button } from "../../../components/Button";
+import SearchIcon from "@mui/icons-material/Search";
+
+// import { Button } from "../../../components/Button";
 import {
   Pagination,
   PaginationItem,
@@ -93,11 +96,10 @@ const fakeSubjects: Subject[] = [
   },
 ];
 
-const ProfilePersonalComponents = () => {
+const ProfileAuthorComponent = () => {
   const alphabet = Array.from("1234567");
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
-  // const [listItemFile, setListItemFile] = useState(4);
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
@@ -131,27 +133,28 @@ const ProfilePersonalComponents = () => {
                 </div>
               </div>
             </div>
-            <div className={cx("left-profile-button")}>
-              <Button
-                text="+ Theo dõi"
-                paddingX={29}
-                paddingY={6}
-                fontSize={16}
-              />
-            </div>
           </div>
         </div>
         <div className={cx("component-information-right")}>
-          <h4>Thông tin</h4>
-          <div className={cx("information-right-item")}>
-            <div>
-              <p>Chức vụ :Sinh viên</p>
-              <p>Khoa: Đào tạo quốc tế</p>
+          <div className={cx("information-right-title")}>
+            <div className={cx("right-title-text")}>
+              <h4>Thông tin</h4>
+              <img src={Edit} alt="edit" />
             </div>
-            <div>
-              <p>Chuyên ngành: Công nghệ Phần mềm CMU</p>
-              <p>Khóa: 27</p>
+            <div className={cx("information-right-item")}>
+              <div>
+                <p>Chức vụ :Sinh viên</p>
+                <p>Khoa: Đào tạo quốc tế</p>
+              </div>
+              <div>
+                <p>Chuyên ngành: Công nghệ Phần mềm CMU</p>
+                <p>Khóa: 27</p>
+              </div>
             </div>
+          </div>
+          <div className={cx("information-right-search")}>
+            <input type="text" placeholder="Tìm kiếm tài liệu..." />
+            <SearchIcon className={cx("search-icon")} />
           </div>
         </div>
       </div>
@@ -229,4 +232,4 @@ const ProfilePersonalComponents = () => {
     </div>
   );
 };
-export default ProfilePersonalComponents;
+export default ProfileAuthorComponent;

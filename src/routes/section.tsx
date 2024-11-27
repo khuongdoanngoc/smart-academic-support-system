@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
 import { ProfileAuthor, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
+import ProfilePersonal from "../pages/ProfilePersonal";
 
 export default function Router() {
   const routes = useRoutes([
@@ -37,6 +38,7 @@ export default function Router() {
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
         { path: "/document/profileauthor", element: <ProfileAuthor /> },
+        { path: "/document/profilepersonal", element: <ProfilePersonal /> },
         { path: "/document/uploadfile", element: <UploadFile />, index: true },
       ],
     },
