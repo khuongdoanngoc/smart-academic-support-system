@@ -6,8 +6,12 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import { ProfileAuthor, Register, UploadFile } from "../pages";
+import {ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
+import AISupportPage from "../pages/AISupport";
+import EditProfile from "../pages/EditProfile";
+import Notication from "../pages/Notication";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function Router() {
   const routes = useRoutes([
@@ -28,16 +32,37 @@ export default function Router() {
 
     {
       element: (
-        <DocumentLayout>
-          <Outlet />
-        </DocumentLayout>
+        <ProtectedRoute>
+          <DocumentLayout>
+            <Outlet />
+          </DocumentLayout>
+        </ProtectedRoute>
       ),
       children: [
-        { path: "/document", element: <DocumentPage /> },
+        {
+          path: "/document",
+          element: <DocumentPage />,
+        },
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
         { path: "/document/profileauthor", element: <ProfileAuthor /> },
-        { path: "/document/uploadfile", element: <UploadFile />, index: true },
+        { path: "/document/ai-support", element: <AISupportPage /> },
+        {
+          path: "/document/uploadfile",
+          element: <UploadFile />,
+          index: true,
+        },
+        {
+          path: "/document/changepassword",
+          element: <ChangePassWord />,
+          index: true,
+        },
+        {
+          path: "/document/editprofile",
+          element: <EditProfile />,
+          index: true,
+        },
+        { path: "/document/notication", element: <Notication />, index: true },
       ],
     },
   ]);
