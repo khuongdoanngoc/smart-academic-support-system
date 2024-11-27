@@ -6,7 +6,7 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import { ChangePassWord, Register, UploadFile } from "../pages";
+import {ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
@@ -45,6 +45,7 @@ export default function Router() {
         },
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
+        { path: "/document/profileauthor", element: <ProfileAuthor /> },
         { path: "/document/ai-support", element: <AISupportPage /> },
         {
           path: "/document/uploadfile",
