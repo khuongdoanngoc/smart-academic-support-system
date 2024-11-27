@@ -9,39 +9,39 @@ export interface FileItem {
   size: number;
 }
 
-interface FileUploadState {
-  valueRow: string;
-  valueRowYear: string;
-  fileList: FileItem[];
-  specialized: string;
-  subject: string;
-  folder: string;
-  documentType: string;
-  title: string;
-  academicYear: string;
-  description: string;
-}
+// interface FileUploadState {
+//   // valueRow: string;
+//   // valueRowYear: string;
+//   // fileList: FileItem[];
+//   specialized: string;
+//   subject: string;
+//   folder: string;
+//   documentType: string;
+//   title: string;
+//   academicYear: string;
+//   description: string;
+// }
 interface initState {
   loading: boolean;
   error: string | null;
-  fileUploadState: FileUploadState;
+  // fileUploadState: FileUploadState;
 }
 
 const initialState: initState = {
   loading: false,
   error: "",
-  fileUploadState: {
-    valueRow: "",
-    valueRowYear: "",
-    fileList: [],
-    specialized: "",
-    subject: "",
-    folder: "",
-    documentType: "",
-    title: "",
-    academicYear: "",
-    description: "",
-  },
+  // fileUploadState: {
+  //   // valueRow: "",
+  //   // valueRowYear: "",
+  //   // fileList: [],
+  //   // specialized: "",
+  //   // subject: "",
+  //   // folder: "",
+  //   // documentType: "",
+  //   // title: "",
+  //   // academicYear: "",
+  //   // description: "",
+  // },
 };
 interface ApiPostFile {
   file: File;
@@ -76,38 +76,36 @@ const uploadFileSlice = createSlice({
   name: "uploadFile",
   initialState,
   reducers: {
-    setFileList: (state, action: PayloadAction<FileItem[]>) => {
-      state.fileUploadState.fileList = action.payload;
-    },
-
-    setValueRow: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.valueRow = action.payload;
-    },
-    setvalueRowYear: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.valueRowYear = action.payload;
-    },
-    setSpecialized: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.specialized = action.payload;
-    },
-
-    setSubject: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.subject = action.payload;
-    },
-    setFolder: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.folder = action.payload;
-    },
-    setDocumentType: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.documentType = action.payload;
-    },
-    setTitle: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.title = action.payload;
-    },
-    setAcademicYear: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.academicYear = action.payload;
-    },
-    setDescription: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.description = action.payload;
-    },
+    // setFileList: (state, action: PayloadAction<FileItem[]>) => {
+    //   state.fileUploadState.fileList = action.payload;
+    // },
+    // setValueRow: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.valueRow = action.payload;
+    // },
+    // setvalueRowYear: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.valueRowYear = action.payload;
+    // },
+    // setSpecialized: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.specialized = action.payload;
+    // },
+    // setSubject: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.subject = action.payload;
+    // },
+    // setFolder: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.folder = action.payload;
+    // },
+    // setDocumentType: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.documentType = action.payload;
+    // },
+    // setTitle: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.title = action.payload;
+    // },
+    // setAcademicYear: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.academicYear = action.payload;
+    // },
+    // setDescription: (state, action: PayloadAction<string>) => {
+    //   state.fileUploadState.description = action.payload;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -131,17 +129,17 @@ const uploadFileSlice = createSlice({
   },
 });
 
-export const {
-  setFileList,
-  setValueRow,
-  setvalueRowYear,
-  setSpecialized,
-  setSubject,
-  setFolder,
-  setDocumentType,
-  setTitle,
-  setAcademicYear,
-  setDescription,
-} = uploadFileSlice.actions;
+// export const {
+//   // setFileList,
+//   // setValueRow,
+//   // setvalueRowYear,
+//   // setSpecialized,
+//   // setSubject,
+//   // setFolder,
+//   // setDocumentType,
+//   // setTitle,
+//   // setAcademicYear,
+//   // setDescription,
+// } = uploadFileSlice.actions;
 
 export default uploadFileSlice.reducer;

@@ -6,7 +6,7 @@ import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
-import { AppDispatch } from "../../../redux/store";
+// import { AppDispatch } from "../../../redux/store";
 import { useRef, useState } from "react";
 import {
   ArrowBack,
@@ -24,23 +24,23 @@ import {
 } from "@mui/icons-material";
 import { HeaderUploadFile } from "../../../layouts/header/HeaderUploadFile";
 // import axios from "axios";
-import { RootState } from "../../../redux/store";
+// import { RootState } from "../../../redux/store";
 
 import {
-  setFileList,
-  setValueRow,
+  // setFileList,
+  // setValueRow,
   FileItem,
-  UploadFileAction,
+  // UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
 
 const cx = classNames.bind(styles);
 
 const UploadFileComponents = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  //  const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
-  //      []
-  //    );
+  const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
+    []
+  );
 
   const [isDragging, setIsDragging] = useState(false); //trạng thái kéo file để hiện component Drop It
   const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
@@ -52,23 +52,22 @@ const UploadFileComponents = () => {
 
   const [fileDetailLoad, setFileDetailLoad] = useState(false); //use state hiển thị mục 2 của phần chi tiết default upload file
   // const [valueRow, setValueRow] = useState(""); //use state hiển thị file là tn hay tl
-  // const [valueRowYear, setvalueRowYear] = useState("");//use state hiển thị năm file
+  const [valueRowYear, setvalueRowYear] = useState(""); //use state hiển thị năm file
   const [menuCheckItemRow, setmenuCheckItemRow] = useState(false); //trạng thải ẩn và hiện của nút button tn hay tl
   const [menuCheckItemRowYear, setMenuCheckItemRowYear] = useState(false); //trạng thải ẩn và hiện của nút button năm file
   const [uploadFileSuccess, setUploadFileSuccess] = useState(false); //use state hiển thị component hoàn thành
 
   const [titleFile, setTitleFile] = useState("");
-
   const [descriptionFile, setDescriptionFile] = useState("");
   const [typeFile, setTypeFile] = useState("");
   const [contentFile, setContentFile] = useState("");
   const [subjectFile, setSubjectFile] = useState("");
-  const [facultyIdFile, setFacultyIdFile] = useState(2024 - 2024);
+  const [facultyIdFile, setFacultyIdFile] = useState(""); //use state hiển thị mã chuyên ngành
 
-  const dispatch = useDispatch<AppDispatch>();
-  const fileList = useSelector(
-    (state: RootState) => state.uploadFile.fileUploadState.fileList
-  );
+  // const dispatch = useDispatch<AppDispatch>();
+  // const fileList = useSelector(
+  //   (state: RootState) => state.uploadFile.fileUploadState.fileList
+  // );
 
   // const {
   //   specialized,
@@ -166,7 +165,7 @@ const UploadFileComponents = () => {
           { name: shortenedName, size: sizeFile },
         ];
 
-        dispatch(setFileList(upDatedList));
+        setFileList(upDatedList);
       } else {
         let isFileAlreadyUploaded = false;
 
@@ -212,7 +211,7 @@ const UploadFileComponents = () => {
   };
 
   const handleDeleteFile = () => {
-    dispatch(setFileList([]));
+    setFileList([]);
     setFileSelected(null);
     setMenuDeleButton(false);
   };
@@ -257,7 +256,9 @@ const UploadFileComponents = () => {
           subject: subjectFile,
           facultyId: facultyIdFile,
         };
-        dispatch(UploadFileAction(data));
+        console.log(data);
+
+        // dispatch(UploadFileAction(data));
       }
     }
     setIsColorItemButton((item) => Math.min(item + 1, 3));
@@ -274,12 +275,12 @@ const UploadFileComponents = () => {
   };
 
   const handleChangeItemRow = (value: string) => {
-    dispatch(setValueRow(value));
+    setTypeFile(value);
     setmenuCheckItemRow(false);
   };
   const handleChangeItemRowYear = (value: number) => {
-    setFacultyIdFile(value);
-    // dispatch(setvalueRowYear(value));
+    // setFacultyIdFile(value.toString());
+    setvalueRowYear(value.toString());
     setMenuCheckItemRowYear(false);
   };
   const handleMenuCheckItemRow = () => {
@@ -363,6 +364,8 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Nhập mã hoặc tên chuyên ngành"
+                      value={facultyIdFile}
+                      onChange={(e) => setFacultyIdFile(e.target.value)}
                       // value={formData.subject}
                       // onChange={handleInputChange}
                     />
@@ -372,7 +375,7 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Nhập mã hoặc tên môn học"
-                      // value={subject}
+                      value={subjectFile}
                       onChange={(e) => setSubjectFile(e.target.value)}
                     />
                   </div>
@@ -382,7 +385,7 @@ const UploadFileComponents = () => {
                     <input
                       type="text"
                       placeholder="Tiêu đề thư mục"
-                      // value={formData.content}
+                      value={contentFile}
                       onChange={(e) => setContentFile(e.target.value)}
                     />
                   </div>
@@ -399,7 +402,7 @@ const UploadFileComponents = () => {
                             type="text"
                             readOnly
                             placeholder="Trắc nghiệm hoặc tự luận"
-                            // value={formData.type}
+                            value={typeFile}
                             onChange={(e) => setTypeFile(e.target.value)}
                             name="row"
                           />
@@ -435,7 +438,7 @@ const UploadFileComponents = () => {
                         <input
                           type="text"
                           placeholder={file.name}
-                          // value={formData.title}
+                          value={titleFile}
                           onChange={(e) => setTitleFile(e.target.value)}
                         />
                       </div>
@@ -446,11 +449,9 @@ const UploadFileComponents = () => {
                             type="text"
                             readOnly
                             placeholder="2024 - 2024"
-                            // value={formData.facultyId}
+                            value={valueRowYear}
                             name="row"
-                            onChange={(e) =>
-                              setFacultyIdFile(Number(e.target.value))
-                            }
+                            onChange={(e) => setvalueRowYear(e.target.value)}
                           />
                           <p onClick={handleMenuCheckItemRowYear}>
                             {menuCheckItemRowYear ? (
@@ -529,7 +530,7 @@ const UploadFileComponents = () => {
                         <textarea
                           placeholder="Nhập mã hoặc tên khoá học"
                           name="description"
-                          // value={formData.description}
+                          value={descriptionFile}
                           onChange={(e) => setDescriptionFile(e.target.value)}
                         />
                       </div>

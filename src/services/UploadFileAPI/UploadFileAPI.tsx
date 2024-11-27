@@ -23,16 +23,14 @@ export const postFile = async (data: ApiPostFile) => {
   formData.append("facultyId", data.facultyId.toString());
 
   try {
-    const res = await axiosInstance.post(
-      "/api/v1/document/upload?file=data.file&type=data",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    toast.success("File uploaded successfully!");
+    const res = await axiosInstance.post("/document/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    if (res.status === 200) {
+      toast.success("File uploaded successfully!");
+    }
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
