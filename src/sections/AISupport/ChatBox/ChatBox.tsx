@@ -36,6 +36,7 @@ export default function ChatBox() {
   const [isOpenSubbox, setIsOpenSubbox] = useState<boolean>(true);
   // config cho message
   const { messages, loading } = useAppSelector((state) => state.chatbot);
+  const {username}= useAppSelector(state=>state.authentication);
   const [containMessage, setContainMessage] = useState<boolean>(false);
   const [inputMessage, setInputMessage] = useState("");
 
@@ -49,6 +50,23 @@ export default function ChatBox() {
   const handleInputMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputMessage(value);
+  };
+  const handleKeyDown = (event: { key: string; }) => {
+    if (event.key === 'Enter') {
+      setContainMessage(true);
+      const data = {
+        id: Date.now().toString(),
+        name: "DTU AI Chat",
+        avatar: Avatar,
+        message: inputMessage,
+        time: new Date().toLocaleTimeString(),
+        sender: "user",
+      };
+      dispatch(setMessagesUser(data));
+      setInputMessage("");
+      dispatch(sendMessageAction(data));
+    }
+    
   };
 
   const handleSubmitQuestion = () => {
@@ -65,8 +83,6 @@ export default function ChatBox() {
     setInputMessage("");
     dispatch(sendMessageAction(data));
   };
-
-  console.log(messages);
 
   return (
     <div className={cx("chat-box")}>
@@ -158,7 +174,7 @@ export default function ChatBox() {
         </div>
       ) : (
         <div className={cx("initial")}>
-          <h2>CHÀO "Tên người dùng"!</h2>
+          <h2>CHÀO {username?username:"Tên người dùng"}!</h2>
           {isOpenSubbox && (
             <div className={cx("sub-box")}>
               <p>
@@ -191,6 +207,7 @@ export default function ChatBox() {
           type="text"
           placeholder="Bạn cần DTU AI giúp gì không?"
           value={inputMessage}
+          onKeyDown={handleKeyDown}
           onChange={handleInputMessage}
         />
         <img

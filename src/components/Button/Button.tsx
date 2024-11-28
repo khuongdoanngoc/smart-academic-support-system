@@ -27,6 +27,7 @@ export default function Button({
 }: IButton) {
     return (
         <button
+            type="submit"
             onClick={onClick}
             style={{
                 padding: `${paddingY}px ${paddingX}px`,
