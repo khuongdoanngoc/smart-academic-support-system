@@ -25,8 +25,8 @@ export default function Router() {
         { element: <HomePage />, index: true },
         { path: "/login", element: <Login />, index: true },
         { path: "/register", element: <Register />, index: true },
-        { path: "/forgotpass", element: <ForgotPassWord />, index: true },
-        { path: "/newpassword", element: <NewPassword />, index: true },
+        { path: "/forgot-password", element: <ForgotPassWord />, index: true },
+        { path: "/new-password", element: <NewPassword />, index: true },
       ],
     },
 
