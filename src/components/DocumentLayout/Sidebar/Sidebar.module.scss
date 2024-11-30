@@ -7,6 +7,8 @@
     height: fit-content;
     position: relative;
     transition: 0.5s ease;
+    z-index: 9;
+    background-color: white;
     & > .account {
         display: flex;
         align-items: center;

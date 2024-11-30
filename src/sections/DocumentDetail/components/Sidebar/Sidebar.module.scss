@@ -1,0 +1,123 @@
+.sidebar {
+    width: 363px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 24px;
+    border: 1px solid #e5e8eb;
+    height: 100vh;
+    overflow-y: auto;
+    & > h2 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24.38px;
+        color: var(--button-background-color);
+    }
+    & > h3 {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.5px;
+    }
+    & > p {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 14.63px;
+    }
+    & > .category {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        & > h3 {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 14.63px;
+        }
+        & > a {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 14.63px;
+            text-decoration: none;
+            color: #026cb9;
+        }
+        & > span {
+            margin-right: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 14.63px;
+            text-align: center;
+        }
+    }
+    & > .author {
+        display: flex;
+        flex-direction: column;
+        & > h3 {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 14.63px;
+        }
+        & > .author-detail {
+            display: flex;
+            margin-top: 10px;
+            width: 100%;
+            align-items: center;
+            gap: 8px;
+            & > img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+            }
+            & > .name {
+                & > h3 {
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: 14.63px;
+                    color: #6f6a6a;
+                }
+                & > span {
+                    font-size: 12px;
+                    font-weight: 600;
+                    line-height: 14.63px;
+                    color: #dc4342;
+                }
+            }
+        }
+    }
+    & > .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        & > h3 {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 14.63px;
+        }
+        & > textarea {
+            width: 100% !important;
+            height: 70px !important;
+            border: 0.5px solid #00000080;
+            border-radius: 10px;
+            resize: vertical;
+        }
+        & > button {
+            margin-left: auto;
+            width: fit-content;
+            padding: 8px 24px;
+            text-align: center;
+            background-color: #026cb9;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 12.19px;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        & > button:hover {
+            background-color: #3599d2;
+        }
+    }
+}

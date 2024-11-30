@@ -12,58 +12,63 @@ import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
 import Notication from "../pages/Notication";
 import ProtectedRoute from "./ProtectedRoute";
+import DocumentDetailPage from "../pages/DocumentDetail";
 
 export default function Router() {
   const routes = useRoutes([
     {
-      element: (
-        <Layout>
-          <Outlet />
-        </Layout>
-      ),
-      children: [
-        { element: <HomePage />, index: true },
-        { path: "/login", element: <Login />, index: true },
-        { path: "/register", element: <Register />, index: true },
-        { path: "/forgot-password", element: <ForgotPassWord />, index: true },
-        { path: "/new-password", element: <NewPassword />, index: true },
-      ],
+        path: "/",
+        element: (
+            <Layout>
+                <Outlet />
+            </Layout>
+        ),
+        children: [
+            { element: <HomePage />, index: true },
+            { path: "login", element: <Login />, index: true },
+            { path: "register", element: <Register />, index: true },
+            {
+                path: "forgotpass",
+                element: <ForgotPassWord />,
+            },
+            { path: "newpassword", element: <NewPassword />, index: true },
+        ],
     },
 
     {
+        path: "/document",
       element: (
-        <ProtectedRoute>
+<ProtectedRoute>
           <DocumentLayout>
             <Outlet />
           </DocumentLayout>
-        </ProtectedRoute>
-      ),
+        </ProtectedRoute>      ),
       children: [
+        { index: true, element: <DocumentPage /> },
+        // { path: "/directory", element: <DocumentPage /> },
+        { path: "support", element: <SupportPage /> },
+        { path: "ai-support", element: <AISupportPage /> },
         {
-          path: "/document",
-          element: <DocumentPage />,
-        },
-        { path: "/document/directory", element: <DocumentPage /> },
-        { path: "/document/support", element: <SupportPage /> },
-        { path: "/document/profileauthor", element: <ProfileAuthor /> },
-        { path: "/document/ai-support", element: <AISupportPage /> },
-        {
-          path: "/document/uploadfile",
-          element: <UploadFile />,
-          index: true,
+            path: "uploadfile",
+            element: <UploadFile />,
         },
         {
-          path: "/document/changepassword",
-          element: <ChangePassWord />,
-          index: true,
+            path: "changepassword",
+            element: <ChangePassWord />,
         },
         {
-          path: "/document/editprofile",
-          element: <EditProfile />,
-          index: true,
+            path: "editprofile",
+            element: <EditProfile />,
         },
-        { path: "/document/notication", element: <Notication />, index: true },
-      ],
+        {
+            path: "notication",
+            element: <Notication />,
+        },
+        {
+            path: ":majorSlug/:folderSlug/:id",
+            element: <DocumentDetailPage />,
+        },
+    ],
     },
   ]);
   return routes;

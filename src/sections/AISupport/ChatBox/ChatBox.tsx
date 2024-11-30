@@ -211,7 +211,6 @@ export default function ChatBox() {
                     )}
                 </div>
             )}
-
             <div className={cx("input-message")}>
                 <input
                     type="text"
