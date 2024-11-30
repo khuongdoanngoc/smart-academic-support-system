@@ -13,6 +13,10 @@ import EditProfile from "../pages/EditProfile";
 import Notication from "../pages/Notication";
 import ProtectedRoute from "./ProtectedRoute";
 import DocumentDetailPage from "../pages/DocumentDetail";
+import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import AdminHome from "../pages/Admin/AdminHome";
+import AdminDocumenPage from "../pages/Admin/AdminDocument";
+import AdminUsers from "../pages/Admin/AdminUsers";
 
 export default function Router() {
   const routes = useRoutes([
@@ -70,6 +74,29 @@ export default function Router() {
         },
     ],
     },
+    {
+        path: "/admin",
+        element: (
+            <DashboardLayout>
+                <Outlet />
+            </DashboardLayout>
+        ),
+        children: [
+            {
+                path: "dashboard",
+                element: <AdminHome />,
+            },
+            {
+                path: "documents",
+                element: <AdminDocumenPage />,
+            },
+            {
+                path: "users",
+                element: <AdminUsers />,
+            },
+        ],
+    },
+    
   ]);
   return routes;
 }
