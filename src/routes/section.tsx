@@ -6,7 +6,7 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import {ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
+import { ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
@@ -19,84 +19,84 @@ import AdminDocumenPage from "../pages/Admin/AdminDocument";
 import AdminUsers from "../pages/Admin/AdminUsers";
 
 export default function Router() {
-  const routes = useRoutes([
-    {
-        path: "/",
-        element: (
-            <Layout>
-                <Outlet />
-            </Layout>
-        ),
-        children: [
-            { element: <HomePage />, index: true },
-            { path: "login", element: <Login />, index: true },
-            { path: "register", element: <Register />, index: true },
-            {
-                path: "forgotpass",
-                element: <ForgotPassWord />,
-            },
-            { path: "newpassword", element: <NewPassword />, index: true },
-        ],
-    },
+    const routes = useRoutes([
+        {
+            path: "/",
+            element: (
+                <Layout>
+                    <Outlet />
+                </Layout>
+            ),
+            children: [
+                { element: <HomePage />, index: true },
+                { path: "login", element: <Login />, index: true },
+                { path: "register", element: <Register />, index: true },
+                {
+                    path: "forgotpass",
+                    element: <ForgotPassWord />,
+                },
+                { path: "newpassword", element: <NewPassword />, index: true },
+            ],
+        },
 
-    {
-        path: "/document",
-      element: (
-<ProtectedRoute>
-          <DocumentLayout>
-            <Outlet />
-          </DocumentLayout>
-        </ProtectedRoute>      ),
-      children: [
-        { index: true, element: <DocumentPage /> },
-        // { path: "/directory", element: <DocumentPage /> },
-        { path: "support", element: <SupportPage /> },
-        { path: "ai-support", element: <AISupportPage /> },
         {
-            path: "uploadfile",
-            element: <UploadFile />,
+            path: "/document",
+            element: (
+                <ProtectedRoute>
+                    <DocumentLayout>
+                        <Outlet />
+                    </DocumentLayout>
+                </ProtectedRoute>
+            ),
+            children: [
+                { index: true, element: <DocumentPage /> },
+                // { path: "/directory", element: <DocumentPage /> },
+                { path: "support", element: <SupportPage /> },
+                { path: "ai-support", element: <AISupportPage /> },
+                {
+                    path: "uploadfile",
+                    element: <UploadFile />,
+                },
+                {
+                    path: "changepassword",
+                    element: <ChangePassWord />,
+                },
+                {
+                    path: "editprofile",
+                    element: <EditProfile />,
+                },
+                {
+                    path: "notication",
+                    element: <Notication />,
+                },
+                {
+                    path: ":majorSlug/:folderSlug/:id",
+                    element: <DocumentDetailPage />,
+                },
+            ],
         },
         {
-            path: "changepassword",
-            element: <ChangePassWord />,
+            path: "/admin",
+            element: (
+                <DashboardLayout>
+                    <Outlet />
+                </DashboardLayout>
+            ),
+            children: [
+                {
+                    path: "dashboard",
+                    element: <AdminHome />,
+                },
+                {
+                    path: "documents",
+                    element: <AdminDocumenPage />,
+                },
+                {
+                    path: "users",
+                    element: <AdminUsers />,
+                },
+            ],
         },
-        {
-            path: "editprofile",
-            element: <EditProfile />,
-        },
-        {
-            path: "notication",
-            element: <Notication />,
-        },
-        {
-            path: ":majorSlug/:folderSlug/:id",
-            element: <DocumentDetailPage />,
-        },
-    ],
-    },
-    {
-        path: "/admin",
-        element: (
-            <DashboardLayout>
-                <Outlet />
-            </DashboardLayout>
-        ),
-        children: [
-            {
-                path: "dashboard",
-                element: <AdminHome />,
-            },
-            {
-                path: "documents",
-                element: <AdminDocumenPage />,
-            },
-            {
-                path: "users",
-                element: <AdminUsers />,
-            },
-        ],
-    },
-    
-  ]);
-  return routes;
+    ]);
+    return routes;
 }
