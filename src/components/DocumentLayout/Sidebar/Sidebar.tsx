@@ -18,11 +18,15 @@ import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import CloseIcon from "../../../assets/images/icons/CloseArrowIcon.png";
 import OpenIcon from "../../../assets/images/icons/OpenArrowIcon.png";
 
+import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContactICON from "../../../assets/images/icons/ContactICON.png";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useAppSelector } from "../../../redux/store";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { appear } from "../../../utils/animations";
 
 const menuItems = [
     { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
@@ -66,12 +70,49 @@ interface ISidebar {
     setIsOpen: any;
 }
 
+const customAppear = {
+    ...appear,
+    hidden: {
+        ...appear.hidden,
+        transition: { ...appear.hidden.transition, duration: 0 },
+    },
+};
+
 export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const navigate = useNavigate();
     const pathName = useLocation().pathname;
+    const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
     console.log(pathName);
     const { username } = useAppSelector((state) => state.authentication);
     const isOpenAndModal = isModal && isOpen;
+
+    const uploadFileDropdown = (
+        <AnimatePresence>
+            {dropdownToggle && (
+                <motion.div
+                    variants={customAppear}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    className={cx("uploadfile-dropdown")}>
+                    <div className={cx("item")}>
+                        <UploadFileIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tải tài liệu</span>}
+                    </div>
+                    <hr />
+                    <div className={cx("item")}>
+                        <CreateNewFolderOutlinedIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tạo thư mục</span>}
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+
     return (
         <div
             style={isOpenAndModal ? { position: "fixed" } : {}}
@@ -115,7 +156,9 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 className={cx("addDoc-btn")}
                 onClick={(e) => {
                     e.preventDefault();
-                    navigate("/document/uploadfile");
+                    setDropdownToggle(
+                        (prevDropdownToggle) => !prevDropdownToggle
+                    );
                 }}>
                 <Button
                     text={`+ ${isOpen ? "Thêm mới" : ""}`}
@@ -124,6 +167,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                     fontSize={16}
                 />
             </div>
+            {uploadFileDropdown}
             <div
                 style={{ ...(!isOpen && { alignItems: "center" }) }}
                 className={cx("items")}>

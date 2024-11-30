@@ -50,6 +50,41 @@
         }
     }
 
+    & > .uploadfile-dropdown {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        border-radius: 10px;
+        border: 1px solid #00000080;
+        box-shadow: 0px 0px 4px 0px #00000040;
+        gap: 5px;
+        & > hr {
+            width: 100%;
+            height: 2px;
+        }
+        & > .item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 7px 0px;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 19.5px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.4s ease;
+        }
+        & > .item:hover {
+            background-color: #dc4342b2;
+            color: white;
+        }
+    }
+
     & > .statistics {
         position: relative;
         height: 38.73px;
