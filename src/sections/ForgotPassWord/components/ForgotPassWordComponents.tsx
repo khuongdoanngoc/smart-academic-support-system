@@ -7,13 +7,12 @@ import user from "../../../assets/images/user.png";
 import check from "../../../assets/images/Chield_check.png";
 import image4 from "../../../assets/images/Return-Outline.svg";
 import logoLogin from "../../../assets/images/image_main_login.jfif";
-import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
-import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button } from "../../../components/Button";
 import { Password } from "@mui/icons-material";
+import { ButtonSubmit } from "../../../components/Button/Button";
+import { useGlobalContextLoin } from "../../../layouts/useContext";
 
 const cx = classnames.bind(styles);
 
@@ -46,7 +45,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
 }: PopsInformation) => {
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
-
+  const { clickForgotPass, setClickLogin } = useGlobalContextLoin();
   const refreshString = () => {
     //hàm refresh mã captcha
     setCaptcha(Math.random().toString(36).slice(2, 6));
@@ -55,7 +54,10 @@ const LoginComponents: React.FC<PopsInformation> = ({
   const navigate = useNavigate();
   const handleOnClickForgot = () => {
     //hàm onclick để chuyển đến trang đăng nhập
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");
+      setClickLogin(true);
+    }, 600);
   };
 
   const handleSubmit = (
@@ -84,15 +86,16 @@ const LoginComponents: React.FC<PopsInformation> = ({
 
   return (
     <>
-      <div className="header-login">
-        <HeaderTop />
-        <HeaderCenter />
-      </div>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
-        <div className={cx("form-login-pass")}>
+        <div
+          className={cx(
+            "form-login-pass",
+            clickForgotPass && "forgot-animation"
+          )}
+        >
           {pops.map((pop, index) => (
             <Formik
               key={index}
@@ -139,12 +142,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
                         />
                       </div>
                       <div className={cx("confirm-button")}>
-                        <Button
+                        <ButtonSubmit
                           titleButton="Gửi mã"
                           isSubmitting
                           padding={0}
                           fontsize={12}
                           borderRadius={5}
+                          background={"#EB2930"}
                         />
                       </div>
 
@@ -174,12 +178,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
                       </div>
                     </div>
                     <div className={cx("body-button")}>
-                      <Button
+                      <ButtonSubmit
                         titleButton={pop.titleButton}
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
+                        background={"#EB2930"}
                       />
                     </div>
                   </div>

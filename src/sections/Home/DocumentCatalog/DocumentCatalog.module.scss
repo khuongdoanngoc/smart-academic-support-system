@@ -1,6 +1,8 @@
 .document-catalog-wrapper {
     width: 100%;
     padding: 80px 0px;
+    
+    animation-name: slideInUp;
     & > div {
         display: flex;
         gap: 85px;

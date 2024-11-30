@@ -1,0 +1,90 @@
+.proposal-docs {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 10px;
+    & > .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    & > .notify-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px;
+        border: 1px solid #000000;
+        border-radius: 20px;
+        gap: 10px;
+        & > .title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 19.5px;
+            text-align: justified;
+        }
+        & > p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 19.5px;
+            text-align: justified;
+        }
+        & > .analyse-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    & > .analyst {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border: 1px solid #000000;
+        border-radius: 20px;
+        min-height: 645px;
+        gap: 18px;
+        position: relative;
+        padding-bottom: 90px;
+        & > .title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 19.5px;
+            text-align: justified;
+        }
+
+        & > .content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            & > .question {
+                & > p {
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 19.5px;
+                    text-align: left;
+                }
+                & > div {
+                    height: 80px;
+                }
+            }
+        }
+        & > .actions {
+            width: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+            transform: translate(-50%, -50%);
+            left: 50%;
+        }
+    }
+}

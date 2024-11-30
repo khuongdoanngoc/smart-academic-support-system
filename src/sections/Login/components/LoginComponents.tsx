@@ -1,30 +1,33 @@
 import styles from "./LoginComponents.module.scss";
 import classnames from "classnames/bind";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { RootState, useAppDispatch } from "../../../redux/store";
 
 import user from "../../../assets/images/user.png";
 import unlock from "../../../assets/images/Unlock.png";
 import check from "../../../assets/images/Chield_check.png";
 import image4 from "../../../assets/images/Return-Outline.svg";
 import logoLogin from "../../../assets/images/image_main_login.jfif";
-import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
-import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
+
+import { ButtonSubmit } from "../../../components/Button/Button";
+import { useGlobalContextLoin } from "../../../layouts/useContext";
+import {
+  LoginAction,
+  loginFailure,
+  loginStart,
+} from "../../../redux/AuthenticationSlice/AuthenticationSlice";
+
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button } from "../../../components/Button";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
 const cx = classnames.bind(styles);
-
-// Tạo schema kiểm tra với Yup
-
-const validationSchema = Yup.object({
-  username: Yup.string().required("Vui lòng nhập username"),
-  password: Yup.string().required("Vui lòng nhập password"),
-  captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
-});
 
 interface informationLogin {
   titleHeader: string;
@@ -36,118 +39,106 @@ interface informationLogin {
   titleForgot: string;
   titleRegister: string;
 }
+
+interface LoginData {
+  email: string;
+  password: string;
+  captcha: string;
+}
+interface ILogin {
+  email: string;
+  password: string;
+}
 interface PopsInformation {
   pops: informationLogin[];
 }
-
+const validationSchema: Yup.ObjectSchema<LoginData> = Yup.object({
+  // Tạo schema kiểm tra với Yup
+  email: Yup.string().required("Vui lòng nhập email"),
+  password: Yup.string().required("Vui lòng nhập password"),
+  captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
+});
 const LoginComponents: React.FC<PopsInformation> = ({
   pops,
 }: PopsInformation) => {
   const [typePass, setTypePass] = useState(false); //useState xem hoặc ẩn password
-
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
+  const navigate = useNavigate(); //navigate login
+  const dispatch = useAppDispatch(); //dispatch login
+
+  const { clickLogin, setClickForgotPass, setClickRegister } =
+    useGlobalContextLoin(); //hiện ứng animation login
+  const loading = useSelector(
+    (state: RootState) => state.authentication.loading
+  ); //loading login
 
   const refreshString = () => {
     //hàm refresh mã captcha
     setCaptcha(Math.random().toString(36).slice(2, 6));
   };
-
-  const navigate = useNavigate();
   const handleOnClickForgot = () => {
     //hàm onclick để chuyển đến trang quên mật khẩu
-    navigate("/forgotpass");
+    setTimeout(() => {
+      navigate("/forgotpass");
+      setClickForgotPass(true);
+    }, 600);
   };
   const handleOnClickRegister = () => {
     //hàm onclick để chuyển đến trang quên mật khẩu
-    navigate("/register");
+    setTimeout(() => {
+      navigate("/register");
+      setClickRegister(true);
+    }, 600);
   };
-
   const handleTypePass = () => {
     // hàm ẩn hoặc hiện password
     setTypePass(!typePass);
   };
 
-  const handleSubmit = (
-    //hàm onclick kiểm tra username,password,captcha
-    values: { username: string; password: string; captcha: string },
+  const handleSubmit = async (
+    //hàm submit login
+    values: { email: string; password: string },
     {
       setSubmitting,
       resetForm,
     }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    console.log("Form submitted", values);
-
-    if (values.captcha !== captcha) {
-      alert("Mã xác nhận không đúng");
-      setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
-    } else {
-      alert("Đăng nhập thành công");
-
-      setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
-
-      resetForm(); // Reset lại form sau khi submit thành công
-    }
-
-    setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
-  };
-
-  // const location = useLocation();
-  // const message = location.state?.message || "";
-  // useEffect(() => {
-  //   if (location.state?.message) {
-  //     // Sử dụng setTimeout để đảm bảo thông báo hiển thị trước khi reset state
-  //     setTimeout(() => {
-  //       navigate("/login", { replace: true, state: {} });
-  //     }, 100); // Đợi 100ms trước khi reset state
-  //   }
-  // }, [location.state, navigate]);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    // Lấy message từ sessionStorage khi trang đăng nhập load
-    const storedMessage = sessionStorage.getItem("passwordChangedMessage");
-    console.log("Stored message:", storedMessage);
-
-    if (storedMessage) {
-      console.log("Message exists, setting state");
-      setMessage(storedMessage);
-
-      // Xóa message sau khi hiển thị để tránh hiện lại khi reload trang
-      // sessionStorage.removeItem("passwordChangedMessage");
-      const timer = setTimeout(() => {
-        console.log("Clearing message after 5 seconds");
-
-        setMessage(""); // Xóa thông báo sau 5 giây
-        console.log("thoi gian");
-      }, 5000);
-
-      // Cleanup để tránh lỗi khi component bị unmount trước khi timeout kết thúc
-      return () => {
-        clearTimeout(timer);
-        console.log(2);
+    resetForm();
+    setSubmitting(true); //setSubmitting true
+    refreshString(); // Reset lại form sau khi submit thành công
+    try {
+      dispatch(loginStart()); //dispatch loginStart
+      const result = await dispatch(LoginAction(values)); //dispatch LoginAction
+      const payload = result.payload as {
+        user?: ILogin;
+        accessToken?: string;
+        refreshToken?: string;
       };
+      if (!payload || !payload.accessToken) {
+        toast.error("Email or password incorrect");
+      } else {
+        navigate("/document");
+      }
+      console.log("Saved token:", localStorage.getItem("token"));
+    } catch (error) {
+      console.log(error);
+      dispatch(loginFailure());
+    } finally {
+      setSubmitting(false);
     }
-  }, []);
-
+  };
   return (
     <>
-      <div className="header-login">
-        <HeaderTop />
-        <HeaderCenter />
-      </div>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
-        <div
-          className={cx("form-login")}
-          style={message ? { width: "534px" } : { width: "500px" }}
-        >
+        <div className={cx("form-login", clickLogin && "login-animation")}>
           {pops.map((pop, index) => (
             <Formik
               key={index}
-              initialValues={{ username: "", password: "", captcha: "" }}
+              initialValues={{ email: "", password: "", captcha: "" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
@@ -155,31 +146,26 @@ const LoginComponents: React.FC<PopsInformation> = ({
                 <Form className={cx("form-login-main")} key={index}>
                   <h3>{pop.titleHeader}</h3>
                   <div className={cx("main-border")}></div>
-                  {message && (
-                    <div className={cx("login-main-message")}>
-                      <p>{message}</p>
-                    </div>
-                  )}
+
                   <div className={cx("main-body")}>
                     <div className={cx("body-list")}>
                       <div className={cx("list-item", "list-user")}>
                         <div className={cx("list-user-item")}>
                           <img src={user} alt="user" />
                           <Field
-                            type="text"
-                            name="username"
+                            type="email"
+                            name="email"
                             placeholder={pop.titleUser}
                           />
                         </div>
                         <ErrorMessage
-                          name="username"
+                          name="email"
                           component="div"
                           className={cx("error-message")}
                         />
                       </div>
                       <div className={cx("list-item")}></div>
                     </div>
-
                     <div className={cx("body-list", "body-list-unlock")}>
                       <div className={cx("list-item", "list-unlock")}>
                         <div className={cx("list-unlock-item")}>
@@ -196,7 +182,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
                         onClick={handleTypePass}
@@ -220,7 +205,6 @@ const LoginComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div className={cx("list-item", "list-reload")}>
                         <div>
                           <p>{captcha}</p>
@@ -233,12 +217,13 @@ const LoginComponents: React.FC<PopsInformation> = ({
                       </div>
                     </div>
                     <div className={cx("body-button")}>
-                      <Button
+                      <ButtonSubmit
                         titleButton={pop.titleButton}
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
+                        background={"#EB2930"}
                       />
                     </div>
                   </div>
@@ -270,6 +255,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
             </Formik>
           ))}
         </div>
+        {loading && <Loader height={100} />}
       </div>
     </>
   );

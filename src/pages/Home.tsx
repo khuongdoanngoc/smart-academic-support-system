@@ -5,7 +5,6 @@ import { HomeView } from "../sections/Home/view";
 export default function HomePage() {
   return (
     <>
-      {/* <Header /> */}
       <Helmet>
         <title>Home</title>
       </Helmet>
