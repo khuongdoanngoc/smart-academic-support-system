@@ -7,7 +7,7 @@ import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboa
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
 import { AppDispatch } from "../../../redux/store";
-import { postFile } from "../../../redux/UploadFileSlice/uploadFileSlice";
+// import { postFile } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useRef, useState } from "react";
 import {
     ArrowBack,
@@ -284,7 +284,7 @@ const UploadFileComponents = () => {
           subject: subjectFile,
           facultyId: facultyIdFile,
         };
-        dispatch(postFile(data));
+        // dispatch(postFile(data));
       }
     }
     setIsColorItemButton((item) => Math.min(item + 1, 3));
