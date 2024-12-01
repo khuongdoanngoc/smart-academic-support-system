@@ -2,7 +2,8 @@ import { useLocation } from "react-router-dom";
 import { Sidebar } from "../Sidebar";
 import { useAppSelector } from "../../../redux/store";
 import Loader from "../../Loader/Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface PropsType {
     children: React.ReactNode;
@@ -10,7 +11,8 @@ interface PropsType {
 
 export default function Main(props: PropsType) {
   const location = useLocation();
-  const {loading}= useAppSelector(state=>state.authentication);
+  const {loading,isLogined}= useAppSelector(state=>state.authentication);
+  const [loadingElement, setLoadingElement] = useState(false);
     const regex = /^\/document\/[^\/]+\/[^\/]+\/\d+$/;
     const [isOpen, setIsOpen] = useState<boolean>(
         !regex.test(location.pathname)
@@ -31,6 +33,21 @@ export default function Main(props: PropsType) {
     const toggleSideBar = () => {
         setIsOpen(false);
     };
+  
+  
+  useEffect(()=>{
+    if(!isLogined&&location.pathname !== "/document"){
+      toast.error("You must login");
+      setLoadingElement(true);
+      setTimeout(()=>{
+        if(isLogined){
+          window.location.href = "/login";
+        }
+        setLoadingElement(false);
+      },3000);
+  
+    }
+  },[isLogined, location.pathname]);
 
   return (
     <>
@@ -51,6 +68,8 @@ export default function Main(props: PropsType) {
                     className="main">
                     {props.children}
                 </div>
+        {/* {location.pathname !== "/document/uploadfile" && <Sidebar />} */}
+        {(loading || loadingElement)?<Loader height={100}/>:props.children}
       </div>
     </>
   );

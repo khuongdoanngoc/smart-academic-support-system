@@ -22,9 +22,9 @@ import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutl
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContactICON from "../../../assets/images/icons/ContactICON.png";
 
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../../redux/store";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAppSelector } from "../../../redux/store";
 import { motion, AnimatePresence } from "framer-motion";
 import { appear } from "../../../utils/animations";
 
@@ -172,13 +172,13 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 style={{ ...(!isOpen && { alignItems: "center" }) }}
                 className={cx("items")}>
                 {menuItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <div
@@ -188,13 +188,13 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                     Tài liệu của tôi
                 </span>
                 {docItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <div
@@ -204,13 +204,13 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                     Tìm kiếm nâng cao
                 </span>
                 {searchItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <button

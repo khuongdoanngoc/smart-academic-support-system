@@ -36,10 +36,7 @@
         width: 100%;
         height: 500px;
         overflow-y: auto;
-<<<<<<< HEAD
-=======
         margin-bottom: 50px;
->>>>>>> 7665dcc (fix(ai-support): fix chatbox size)
         & > div {
             display: flex;
             margin-bottom: 20px;
@@ -129,7 +126,8 @@
         position: sticky;
         bottom: 0;
         width: 100%;
-        & > input {
+        & > textarea {
+            resize: none;
             width: 100%;
             height: 59px;
             font-family: Montserrat;

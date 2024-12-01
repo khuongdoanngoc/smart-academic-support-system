@@ -36,7 +36,7 @@ export default function ChatBox() {
   const [isOpenSubbox, setIsOpenSubbox] = useState<boolean>(true);
   // config cho message
   const { messages, loading } = useAppSelector((state) => state.chatbot);
-  const {username}= useAppSelector(state=>state.authentication);
+  const { username } = useAppSelector((state) => state.authentication);
   const [containMessage, setContainMessage] = useState<boolean>(false);
   const [inputMessage, setInputMessage] = useState("");
 
@@ -47,12 +47,12 @@ export default function ChatBox() {
     setAnchorEl(null);
   };
 
-  const handleInputMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputMessage = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
     setInputMessage(value);
   };
-  const handleKeyDown = (event: { key: string; }) => {
-    if (event.key === 'Enter') {
+  const handleKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter") {
       setContainMessage(true);
       const data = {
         id: Date.now().toString(),
@@ -66,7 +66,6 @@ export default function ChatBox() {
       setInputMessage("");
       dispatch(sendMessageAction(data));
     }
-    
   };
 
   const handleSubmitQuestion = () => {
@@ -83,56 +82,124 @@ export default function ChatBox() {
     setInputMessage("");
     dispatch(sendMessageAction(data));
   };
-
-    const [isOpenSubbox, setIsOpenSubbox] = useState<boolean>(true);
-
-    // config cho message
-    const [containMessage, setContainMessage] = useState<boolean>(true);
-
-    return (
-        <div className={cx("chat-box")}>
-            <div className={cx("head")}>
-                <div className={cx("title")}>
-                    <img src={SlackICON} alt="icon" />
-                    <h2>DTU AI Chat</h2>
+  return (
+    <div className={cx("chat-box")}>
+      <div className={cx("head")}>
+        <div className={cx("title")}>
+          <img src={SlackICON} alt="icon" />
+          <h2>DTU AI Chat</h2>
+        </div>
+        <IconButton
+          aria-label="more"
+          id="long-button"
+          aria-controls={open ? "long-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreHorizIcon />
+        </IconButton>
+        <Menu
+          id="long-menu"
+          MenuListProps={{
+            "aria-labelledby": "long-button",
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          slotProps={{
+            paper: {
+              style: {
+                borderRadius: "12px",
+                maxHeight: ITEM_HEIGHT * 4.5,
+                width: "13ch",
+              },
+            },
+          }}
+        >
+          {options.map((option) => (
+            <MenuItem
+              key={option}
+              selected={option === "Pyxis"}
+              onClick={handleClose}
+            >
+              {option}
+            </MenuItem>
+          ))}
+        </Menu>
+      </div>
+      {containMessage ? (
+        <div className={cx("messages")}>
+          {messages.map((message: MessagesUser, index: number) => {
+            return (
+              <div
+                className={cx(
+                  `${
+                    message.sender === "user"
+                      ? "message-sent"
+                      : "message-received"
+                  }`
+                )}
+                key={index}
+              >
+                <div className={cx("avatar")}>
+                  <img src={Avatar} alt="avt" />
                 </div>
-                <IconButton
-                    aria-label="more"
-                    id="long-button"
-                    aria-controls={open ? "long-menu" : undefined}
-                    aria-expanded={open ? "true" : undefined}
-                    aria-haspopup="true"
-                    onClick={handleClick}>
-                    <MoreHorizIcon />
-                </IconButton>
-                <Menu
-                    id="long-menu"
-                    MenuListProps={{
-                        "aria-labelledby": "long-button",
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                    slotProps={{
-                        paper: {
-                            style: {
-                                borderRadius: "12px",
-                                maxHeight: ITEM_HEIGHT * 4.5,
-                                width: "13ch",
-                            },
-                        },
-                    }}>
-                    {options.map((option) => (
-                        <MenuItem
-                            key={option}
-                            selected={option === "Pyxis"}
-                            onClick={handleClose}>
-                            {option}
-                        </MenuItem>
+                <div className={cx("message-content")}>
+                  <p>
+                    {/* {message.message.replace("\n","<br>")} */}
+                    {message.message.split("\n").map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        <br />
+                      </React.Fragment>
                     ))}
-                </Menu>
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+          {loading && (
+            <div className={cx("message-received")}>
+              <div className={cx("avatar")}>
+                <img src={Avatar} alt="avt" />
+              </div>
+              <div className={cx("message-content")}>
+                <div className={cx("loader")} />
+              </div>
             </div>
-            {containMessage ? (
+          )}
+        </div>
+      ) : (
+        <div className={cx("initial")}>
+          <h2>CHÀO {username ? username : "Tên người dùng"}!</h2>
+          {isOpenSubbox && (
+            <div className={cx("sub-box")}>
+              <p>
+                Những câu hỏi của bạn sẽ được chúng tôi phân tích để đề xuất các
+                tài liệu phù hợp cho bạn, nếu bạn không muốn có thể tắt tính
+                năng này.
+              </p>
+              <div className={cx("actions")}>
+                <Button
+                  text="Tắt tính năng"
+                  fontSize={14}
+                  paddingY={6}
+                  paddingX={15}
+                  onClick={() => setIsOpenSubbox(false)}
+                />
+                <button
+                  onClick={() => setIsOpenSubbox(false)}
+                  className={cx("skip-btn")}
+                >
+                  Bỏ qua
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      {/* {containMessage ? (
                 <div className={cx("messages")}>
                     <div className={cx("message-sent")}>
                         <div className={cx("avatar")}>
@@ -219,122 +286,48 @@ export default function ChatBox() {
                 <img className={cx("attach")} src={AttachICON} alt="attach" />
                 <img className={cx("mic")} src={MicroICON} alt="micro" />
                 <img className={cx("send")} src={SendICON} alt="send" />
-            </div>
-        </div>
-        <IconButton
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? "long-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <MoreHorizIcon />
-        </IconButton>
-        <Menu
-          id="long-menu"
-          MenuListProps={{
-            "aria-labelledby": "long-button",
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          slotProps={{
-            paper: {
-              style: {
-                borderRadius: "12px",
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "13ch",
-              },
+            </div> */}
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MoreHorizIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          paper: {
+            style: {
+              borderRadius: "12px",
+              maxHeight: ITEM_HEIGHT * 4.5,
+              width: "13ch",
             },
-          }}
-        >
-          {options.map((option) => (
-            <MenuItem
-              key={option}
-              selected={option === "Pyxis"}
-              onClick={handleClose}
-            >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
-      </div>
-      {containMessage ? (
-        <div className={cx("messages")}>
-          {messages.map((message: MessagesUser, index: number) => {
-            return (
-              <div
-                className={cx(
-                  `${
-                    message.sender === "user"
-                      ? "message-sent"
-                      : "message-received"
-                  }`
-                )}
-                key={index}
-              >
-                <div className={cx("avatar")}>
-                  <img src={Avatar} alt="avt" />
-                </div>
-                <div className={cx("message-content")}>
-                  <p>
-                    {/* {message.message.replace("\n","<br>")} */}
-                    {message.message.split("\n").map((line, index) => (
-                      <React.Fragment key={index}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-          {loading && (
-            <div className={cx("message-received")}>
-              <div className={cx("avatar")}>
-                <img src={Avatar} alt="avt" />
-              </div>
-              <div className={cx("message-content")}>
-                <div className={cx("loader")} />
-              </div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className={cx("initial")}>
-          <h2>CHÀO {username?username:"Tên người dùng"}!</h2>
-          {isOpenSubbox && (
-            <div className={cx("sub-box")}>
-              <p>
-                Những câu hỏi của bạn sẽ được chúng tôi phân tích để đề xuất các
-                tài liệu phù hợp cho bạn, nếu bạn không muốn có thể tắt tính
-                năng này.
-              </p>
-              <div className={cx("actions")}>
-                <Button
-                  text="Tắt tính năng"
-                  fontSize={14}
-                  paddingY={6}
-                  paddingX={15}
-                  onClick={() => setIsOpenSubbox(false)}
-                />
-                <button
-                  onClick={() => setIsOpenSubbox(false)}
-                  className={cx("skip-btn")}
-                >
-                  Bỏ qua
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            selected={option === "Pyxis"}
+            onClick={handleClose}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
 
       <div className={cx("input-message")}>
-        <input
-          type="text"
+        <textarea
           placeholder="Bạn cần DTU AI giúp gì không?"
           value={inputMessage}
           onKeyDown={handleKeyDown}
