@@ -32,10 +32,10 @@ export default function Router() {
                 { path: "login", element: <Login />, index: true },
                 { path: "register", element: <Register />, index: true },
                 {
-                    path: "forgotpass",
+                    path: "forgot-password",
                     element: <ForgotPassWord />,
                 },
-                { path: "newpassword", element: <NewPassword />, index: true },
+                { path: "new-password", element: <NewPassword />, index: true },
             ],
         },
 

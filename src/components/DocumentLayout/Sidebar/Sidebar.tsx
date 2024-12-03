@@ -82,7 +82,6 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const navigate = useNavigate();
     const pathName = useLocation().pathname;
     const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
-    console.log(pathName);
     const { username } = useAppSelector((state) => state.authentication);
     const isOpenAndModal = isModal && isOpen;
 
