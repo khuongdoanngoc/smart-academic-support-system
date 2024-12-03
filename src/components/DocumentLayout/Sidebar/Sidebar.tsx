@@ -120,7 +120,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 <img src={Avatar} alt="avatar" />
                 {isOpen && (
                     <div>
-                        <h3>{username?username:"Name User"}</h3>
+                        <h3>{username ? username : "Name User"}</h3>
                         <a href="#">+ Add information</a>
                     </div>
                 )}

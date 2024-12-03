@@ -15,6 +15,39 @@
         font-size: 16px;
         line-height: 21px;
     }
+
+    & > .search-container {
+        position: relative;
+        width: auto;
+        height: 40px;
+        & > input {
+            background-color: var(--main-color);
+            border-radius: 50px;
+            transition: width 0.5s ease-in-out;
+            width: 40px;
+            height: 100%;
+            background-color: none;
+            border: 2px solid #ffffff80;
+            box-shadow: 0px 0px 5.3px 2px #ffffff40;
+            color: white;
+            font-family: var(--font-family-main);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 23px;
+        }
+        & > input:focus {
+            width: 400px;
+            border: 3px solid #ffffff;
+            padding: 11.5px 15px 11.5px 33px;
+        }
+        & > .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 7.5px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+    }
     & > button {
         background-color: var(--main-color);
         cursor: pointer;
@@ -28,12 +61,100 @@
             color: white;
         }
         transition: background-color 0.3s ease, transform 0.3s ease-out;
+        & > input {
+            width: 0;
+        }
     }
     & > button:hover {
         background-color: white;
         transform: scale(1.03);
         & > svg {
             color: var(--main-color);
+        }
+    }
+}
+
+.popover-content {
+    display: flex;
+    flex-direction: column;
+    width: 330px;
+    padding: 15px;
+    gap: 10px;
+    & > .popover-header {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        & > h1 {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 36px;
+        }
+    }
+    & > .popover-body {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        & > .actions {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            & > span {
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 24px;
+                color: #495057;
+            }
+            & > a {
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #4f95c7;
+                text-decoration: none;
+            }
+        }
+        & > .notifications {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 15px;
+            & > .notify {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                & > img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                }
+                & > p {
+                    width: 230px;
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 19.5px;
+                }
+                & > span {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+
+                    background: #026cb9;
+                }
+            }
+        }
+        & > button {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            color: white;
+            border-radius: 10px;
+            border: none;
+            padding: 8px;
+            background: #6c757d;
+            cursor: pointer;
         }
     }
 }
