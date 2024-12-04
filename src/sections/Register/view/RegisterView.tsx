@@ -6,7 +6,7 @@ const homeBudgets = [
     titleGmail: "Nhập gmail của bạn",
     titleRow: "Bạn là ...?",
     titlePass: "Nhập mật khẩu",
-    titleConfirmPass: "Nhập lại mật khẩu",
+    titleconfirmPassword: "Nhập lại mật khẩu",
     titleConfirm: "Mã xác nhận",
     titleButton: "Đăng Ký",
     titleNoRegister: "Bạn đã có tài khoản",

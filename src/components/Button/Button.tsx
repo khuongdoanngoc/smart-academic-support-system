@@ -8,22 +8,27 @@ interface IButton {
     paddingY: number;
     paddingX: number;
     fontSize: number;
+    onClick?: () => void;
 }
 interface submitButton {
-  titleButton: string;
-  isSubmitting: boolean;
-  padding: number;
-  fontsize: number;
-  borderRadius: number;
+    titleButton: string;
+    isSubmitting: boolean;
+    padding: number;
+    fontsize: number;
+    borderRadius: number;
+    background: string;
 }
 export default function Button({
     text,
     paddingY,
     paddingX,
     fontSize,
+    onClick,
 }: IButton) {
     return (
         <button
+            type="submit"
+            onClick={onClick}
             style={{
                 padding: `${paddingY}px ${paddingX}px`,
                 fontSize: `${fontSize}px`,
@@ -34,28 +39,26 @@ export default function Button({
     );
 }
 
-
-
 export const ButtonSubmit: React.FC<submitButton> = ({
-  titleButton,
-  isSubmitting,
-  padding,
-  fontsize,
-  borderRadius,
+    titleButton,
+    isSubmitting,
+    padding,
+    fontsize,
+    borderRadius,
+    background,
 }) => {
-  return (
-    <button
-      type="submit"
-      disabled={isSubmitting}
-      className={cx("button")}
-      style={{
-        padding: `${padding}px`,
-        fontSize: `${fontsize}px`,
-        borderRadius: `${borderRadius}px`,
-      }}
-    >
-      {titleButton}
-    </button>
-  );
+    return (
+        <button
+            type="submit"
+            disabled={isSubmitting}
+            className={cx("button")}
+            style={{
+                padding: `${padding}px`,
+                fontSize: `${fontsize}px`,
+                borderRadius: `${borderRadius}px`,
+                backgroundColor: `${background}`,
+            }}>
+            {titleButton}
+        </button>
+    );
 };
-

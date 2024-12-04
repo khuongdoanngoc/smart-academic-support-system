@@ -1,35 +1,54 @@
 import styles from "./RegisterComponents.module.scss";
 import classnames from "classnames/bind";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  RegisterAction,
+  registerFailure,
+  registerStart,
+  registerSuccess,
+} from "../../../redux/AuthenticationSlice/AuthenticationSlice";
+import { RootState, useAppDispatch } from "../../../redux/store";
+import { ButtonSubmit } from "../../../components/Button/Button";
+import { useGlobalContextLoin } from "../../../layouts/useContext";
 
 import unlock from "../../../assets/images/Unlock.png";
 import check from "../../../assets/images/Chield_check.png";
 import image4 from "../../../assets/images/Return-Outline.svg";
 import logoLogin from "../../../assets/images/image_main_login.jfif";
-import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
-import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
+
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { Button } from "../../../components/Button";
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
   MailOutline,
+  Person,
   SensorOccupied,
 } from "@mui/icons-material";
+
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 const cx = classnames.bind(styles);
 
-// Tạo schema kiểm tra với Yup
+interface Person {
+  email: string;
+  roleName: string;
+  password: string;
+  confirmPassword: string;
+  captcha: string;
+}
 
-const validationSchema = Yup.object({
+const validationSchema: Yup.ObjectSchema<Person> = Yup.object({
+  // Tạo schema kiểm tra với Yup
   email: Yup.string()
     .email("Địa chỉ email khong hợp lệ")
     .required("Vui lòng nhập email của bạn"),
-  row: Yup.string().required("Vui lòng xác nhận bạn là ?"),
+  roleName: Yup.string().required("Vui lòng xác nhận bạn là ?"),
   password: Yup.string()
     .required("Vui lòng nhập password")
     .min(8, "Password phải có ít nhất 8 ký tự")
@@ -40,18 +59,19 @@ const validationSchema = Yup.object({
       "Password phải chứa ít nhất 1 ký tự đặc biệt"
     ),
 
-  confirmPass: Yup.string()
+  confirmPassword: Yup.string()
     .required("Vui lòng nhập lại password")
     .oneOf([Yup.ref("password")], "Password nhập lại không khớp"),
   captcha: Yup.string().required("Vui lòng nhập mã xác nhận"),
 });
 
 interface informationLogin {
+  //interface title header
   titleHeader: string;
   titleGmail: string;
   titleRow: string;
   titlePass: string;
-  titleConfirmPass: string;
+  titleconfirmPassword: string;
   titleConfirm: string;
   titleButton: string;
   titleNoRegister: string;
@@ -65,19 +85,23 @@ const REgisterComponents: React.FC<PopsInformation> = ({
   pops,
 }: PopsInformation) => {
   const [typePass, setTypePass] = useState(false); //useState xem hoặc ẩn password
-  const [typeConfirmPass, setTypeConfirmPass] = useState(false); //useState xem hoặc ẩn password
-
+  const [typeconfirmPassword, setTypeconfirmPassword] = useState(false); //useState xem hoặc ẩn password
   const randomString = () => Math.random().toString(36).slice(2, 6); // Tạo mã captcha
   const [captcha, setCaptcha] = useState(randomString()); //useState macaptcha
+  const [rowRegister, setRowRegister] = useState(false); //useState hiển thị danh sách role
+  const [valueRow, setValueRow] = useState(""); //useState value role
+  const navigate = useNavigate(); //navigate register
+  const dispatch = useAppDispatch(); //dispatch register
+  const { clickRegister } = useGlobalContextLoin(); //hiện ứng animation register
+  const loading = useSelector(
+    (state: RootState) => state.authentication.loading
+  ); //loading register
 
-  const [rowRegister, setRowRegister] = useState(false);
-  const [valueRow, setValueRow] = useState("");
   const refreshString = () => {
     //hàm refresh mã captcha
     setCaptcha(Math.random().toString(36).slice(2, 6));
   };
 
-  const navigate = useNavigate();
   const handleOnClickLogin = () => {
     //hàm onclick để chuyển đến trang login
     navigate("/login");
@@ -87,72 +111,70 @@ const REgisterComponents: React.FC<PopsInformation> = ({
     // hàm ẩn hoặc hiện password
     setTypePass(!typePass);
   };
-  const handleTypeConfirmPass = () => {
+  const handleTypeconfirmPassword = () => {
     // hàm ẩn hoặc hiện password
-    setTypeConfirmPass(!typeConfirmPass);
+    setTypeconfirmPassword(!typeconfirmPassword);
   };
 
-  const handleSubmit = (
-    //hàm onclick kiểm tra username,password,captcha
-    values: { password: string; confirmPass: string; captcha: string },
+  const handleSubmit = async (
+    values: {
+      email: string;
+      password: string;
+      roleName: string;
+    },
     {
       setSubmitting,
       resetForm,
     }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    console.log("Form submitted", values);
+    setSubmitting(true);
 
-    // if (values.captcha !== captcha) {
-    //   alert("Mã xác nhận không đúng");
-    //   setCaptcha(randomString());
-    // } else {
-    //   alert("Đăng nhập thành công");
+    try {
+      dispatch(registerStart()); //dispatch registerStart
+      const result = await dispatch(RegisterAction(values)); //dispatch RegisterAction
+      const message = result.payload as string; //payload register
 
-    //   setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
-
-    //   resetForm(); // Reset lại form sau khi submit thành công
-    // }
-    if (values.password !== values.confirmPass) {
-      alert("Mật khẩu xác nhận không đúng");
-    } else {
-      if (values.captcha === captcha) {
-        alert("Đăng ký thành công");
-        setCaptcha(randomString()); // Làm mới mã captcha sau khi đăng nhập thành công
-
-        resetForm(); // Reset lại form sau khi submit thành công
+      if (message === "Register account is successful") {
+        dispatch(registerSuccess()); //dispatch registerSuccess
+        toast.success("Đăng kí thành công"); //toast success
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        toast.error("Đăng ký thất bại. Vui lòng kiểm tra lại thông tin."); //toast error
       }
+    } catch (error) {
+      console.log(error); //log error
+      dispatch(registerFailure()); //dispatch registerFailure
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
+    setValueRow("");
+    resetForm(); //reset form
+    refreshString(); // Reset lại form sau khi submit thành công
   };
 
   const handleRowItem = () => {
-    setRowRegister(!rowRegister);
+    setRowRegister(!rowRegister); //setRowRegister
   };
-  // const handleValueItem = (value: string) => {
-  //   setValueRow(value);
-  //   setRowRegister(false);
-  // };
 
   return (
     <>
-      <div className="header-login">
-        <HeaderTop />
-        <HeaderCenter />
-      </div>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
-        <div className={cx("form-login")}>
+        <div
+          className={cx("form-login", clickRegister && "register-animation")}
+        >
           {pops.map((pop, index) => (
             <Formik
               key={index}
               initialValues={{
                 email: "",
-                row: "",
+                roleName: valueRow,
                 password: "",
-                confirmPass: "",
+                confirmPassword: "",
                 captcha: "",
               }}
               validationSchema={validationSchema}
@@ -184,7 +206,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-                      {/* <div className={cx("list-item")}></div> */}
                     </div>
                     <div className={cx("body-list")}>
                       <div className={cx("list-item", "list-row")}>
@@ -192,13 +213,14 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           <SensorOccupied />
                           <Field
                             type="text"
-                            name="row"
+                            name="roleName"
                             value={valueRow}
+                            readOnly
                             placeholder={pop.titleRow}
                           />
                         </div>
                         <ErrorMessage
-                          name="row"
+                          name="roleName"
                           component="div"
                           className={cx("error-message")}
                         />
@@ -220,35 +242,32 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           <ul>
                             <li
                               onClick={() => {
-                                const selectedValue = "Sinh Viên";
-                                setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true);
+                                const selectedValue = "STUDENT";
+                                setFieldValue("roleName", selectedValue);
+                                setFieldTouched("roleName", true, false);
                                 setValueRow(selectedValue);
-                                validateField("row"); // Kiểm tra lại trường "row"
+                                validateField("roleName"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
                               }}
                             >
-                              Sinh Viên
+                              STUDENT
                             </li>
                             <li
-                              // value="Sinh Viên"
                               onClick={() => {
-                                const selectedValue = "Giảng Viên";
-                                setFieldValue("row", selectedValue);
-                                setFieldTouched("row", true);
+                                const selectedValue = "LECTURER";
+                                setFieldValue("roleName", selectedValue);
+                                setFieldTouched("roleName", true, false);
                                 setValueRow(selectedValue);
-                                validateField("row"); // Kiểm tra lại trường "row"
+                                validateField("roleName"); // Kiểm tra lại trường "row"
                                 setRowRegister(false);
                               }}
                             >
-                              Giảng Viên
+                              LECTURER
                             </li>
                           </ul>
                         </div>
                       )}
-                      {/* <div className={cx("list-item")}></div> */}
                     </div>
-
                     <div className={cx("body-list", "body-list-pass")}>
                       <div className={cx("list-item", "list-pass")}>
                         <div className={cx("list-pass-item")}>
@@ -265,7 +284,6 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
                         onClick={handleTypePass}
@@ -278,30 +296,28 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                         <div className={cx("list-pass-item")}>
                           <img src={unlock} alt="unlock" />
                           <Field
-                            type={typeConfirmPass ? "text" : "password"}
-                            placeholder={pop.titleConfirmPass}
-                            name="confirmPass"
+                            type={typeconfirmPassword ? "text" : "password"}
+                            placeholder={pop.titleconfirmPassword}
+                            name="confirmPassword"
                           />
                         </div>
                         <ErrorMessage
-                          name="confirmPass"
+                          name="confirmPassword"
                           component="div"
                           className={cx("error-message")}
                         />
                       </div>
-
                       <div
                         className={cx("list-item", "list-eye")}
-                        onClick={handleTypeConfirmPass}
+                        onClick={handleTypeconfirmPassword}
                       >
-                        {typeConfirmPass ? (
+                        {typeconfirmPassword ? (
                           <VisibilityIcon />
                         ) : (
                           <VisibilityOffIcon />
                         )}
                       </div>
                     </div>
-
                     <div className={cx("body-list", "body-list-check")}>
                       <div className={cx("list-item", "list-check")}>
                         <div className={cx("list-check-item")}>
@@ -330,12 +346,13 @@ const REgisterComponents: React.FC<PopsInformation> = ({
                       </div>
                     </div>
                     <div className={cx("body-button")}>
-                      <Button
+                      <ButtonSubmit
                         titleButton={pop.titleButton}
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
+                        background={"#EB2930"}
                       />
                     </div>
                   </div>
@@ -357,6 +374,11 @@ const REgisterComponents: React.FC<PopsInformation> = ({
             </Formik>
           ))}
         </div>
+        {loading && (
+          <div className={cx("main-login-load")}>
+            <div className={cx("login-load-item")}></div>
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,6 +1,54 @@
 .main-login {
   width: 100%;
   position: relative;
+  & > .main-login-load {
+    position: absolute;
+    top: 0px;
+    background: #000000;
+    width: 100%;
+    opacity: 0.6;
+    & > .login-load-item {
+      position: relative;
+      text-align: center;
+      margin-top: 224px;
+      margin-right: 101px;
+    }
+    & > .login-load-item::after,
+    & > .login-load-item::before {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px #eb2930;
+      border-style: dotted solid dotted solid;
+      animation: turn-left 1.5s linear infinite;
+    }
+    & > .login-load-item::before {
+      left: calc(50% - 25px);
+      top: calc(50% - 25px);
+      width: 150px;
+      height: 150px;
+      border-style: dotted dotted solid solid;
+      animation: turn-right 1.5s linear infinite;
+    }
+    @keyframes turn-right {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes turn-left {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+  }
   & > div {
     height: 712px;
 
@@ -11,7 +59,6 @@
     }
   }
   & > .form-login {
-    // width: 500px;
     height: 500px;
     background: #ffffff;
     display: flex;
@@ -79,12 +126,17 @@
           }
           & > .list-user {
             position: relative;
+            width: 100%;
             & > .list-user-item {
+              width: 100%;
               display: flex;
               & > img {
                 width: 35px;
                 height: 35px;
                 margin-right: 10px;
+              }
+              & > input {
+                width: 100%;
               }
             }
             & > .error-message {
@@ -207,12 +259,21 @@
           }
         }
       }
-      // & > .main-forgot-pass {
-      //   margin-top: 0;
-      // }
     }
   }
-  // & > .form-login-pass {
-  //   padding: 75px 45px;
-  // }
+}
+.login-animation {
+  animation: tilt-in-fwd-tr 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes tilt-in-fwd-tr {
+  0% {
+    transform: rotateY(20deg) rotateX(35deg) translate(300px, -300px)
+      skew(-35deg, 10deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateY(0) rotateX(0deg) translate(0, 0) skew(0deg, 0deg);
+    opacity: 1;
+  }
 }

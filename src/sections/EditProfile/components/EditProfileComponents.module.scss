@@ -1,0 +1,204 @@
+.edit-profile {
+  width: 100%;
+  margin-top: 23px;
+  & > .edit-profile-main {
+    width: 92%;
+    margin: 0 auto;
+    & > .profile-main-header {
+      & > h3 {
+        font-size: 24px;
+        color: #00000099;
+        line-height: 29px;
+        font-weight: 700;
+        padding: 10px;
+        border-bottom: 2px solid #00000080;
+      }
+    }
+    & > .profile-main-body {
+      margin-top: 20px;
+      & > .main-body-individual {
+        padding: 26px 45px;
+        width: 80%;
+        border: 2px solid #00000080;
+        border-radius: 20px;
+        & > .body-individual-title {
+          color: #00000099;
+          font-size: 20px;
+          line-height: 24px;
+          font-weight: 700;
+        }
+        & > .body-individual-input {
+          padding: 15px 0;
+          & > div {
+            display: flex;
+            justify-content: space-between;
+            margin: 22px 0;
+            & > div {
+              display: flex;
+              flex-direction: column;
+              width: 30%;
+              & > label {
+                font-size: 16px;
+                color: #00000099;
+                font-weight: 500;
+                line-height: 19px;
+                margin-bottom: 5px;
+              }
+              & > input {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                outline: none;
+              }
+              & > select {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+              }
+            }
+            & > .input-name-lastname {
+              display: flex;
+              flex-direction: column;
+              width: 36%;
+            }
+            & > .input-name-firstname {
+              display: flex;
+              flex-direction: column;
+              width: 50%;
+            }
+          }
+          & > .individual-input-infor {
+            width: 96%;
+            & > .input-infor-date {
+              width: 34%;
+            }
+            & > .input-infor-sex {
+              width: 18%;
+              & > .infor-sex-select {
+                height: max-content;
+                width: 95%;
+                outline: none;
+              }
+            }
+            & > .input-infor-country {
+              width: 38%;
+            }
+          }
+          & > .individual-input-contact {
+            width: 80%;
+            & > .input-contact-email {
+              width: 62%;
+            }
+          }
+        }
+      }
+
+      & > .main-body-student {
+        padding: 26px 45px;
+        width: 100%;
+        margin-top: 40px;
+        border: 2px solid #00000080;
+        border-radius: 20px;
+        & > .body-student-title {
+          color: #00000099;
+          font-size: 20px;
+          line-height: 24px;
+          font-weight: 700;
+        }
+        & > .body-student-input {
+          padding: 15px 0;
+          & > div {
+            display: flex;
+            justify-content: space-between;
+            margin: 22px 0;
+            & > div {
+              display: flex;
+              flex-direction: column;
+              & > label {
+                font-size: 16px;
+                color: #00000099;
+                font-weight: 500;
+                line-height: 19px;
+                margin-bottom: 5px;
+              }
+              & > select {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                outline: none;
+              }
+              & > input {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                outline: none;
+              }
+            }
+            & > .input-school-department {
+              display: flex;
+              flex-direction: column;
+              width: 45%;
+
+              & > select {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                outline: none;
+              }
+            }
+            & > .input-school-specialized {
+              display: flex;
+              flex-direction: column;
+              width: 45%;
+            }
+          }
+          & > .student-input-information {
+            width: 86%;
+            & > .input-information-position {
+              width: 45%;
+            }
+            & > .input-information-year {
+              width: 25%;
+              & > select {
+                height: max-content;
+                width: 95%;
+                outline: none;
+              }
+            }
+            & > .input-infor-lock {
+              width: 18%;
+            }
+          }
+        }
+      }
+    }
+    & > .profile-main-footer {
+      margin: 40px 0;
+    }
+  }
+}

@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSharingModal } from "../../../../contexts/SharingModalContext";
-// import { SharingModal } from "../../../../components/SharingModal";
+// import { SharingModal } from "../../../../components/SharingModal"
 
 interface IDoc {
   avatar: string;

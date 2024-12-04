@@ -15,103 +15,202 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
+import CloseIcon from "../../../assets/images/icons/CloseArrowIcon.png";
+import OpenIcon from "../../../assets/images/icons/OpenArrowIcon.png";
+
+import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContactICON from "../../../assets/images/icons/ContactICON.png";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useAppSelector } from "../../../redux/store";
+import { motion, AnimatePresence } from "framer-motion";
+import { appear } from "../../../utils/animations";
 
-export default function Sidebar() {
-    const pathName = useLocation().pathname;
+const menuItems = [
+    { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
+    { title: "Thư viện", icon: BookOutlinedIcon, pathAcitve: "#unknown" },
+    { title: "Sách", icon: AutoStoriesOutlinedIcon, pathAcitve: "#unknown" },
+];
+const docItems = [
+    {
+        title: "Tài liệu",
+        icon: InsertDriveFileOutlinedIcon,
+        pathAcitve: "#unknown",
+    },
+    { title: "Môn học", icon: StickyNote2OutlinedIcon, pathAcitve: "#unknown" },
+    {
+        title: "Thông báo",
+        icon: NotificationsOutlinedIcon,
+        pathAcitve: "/document/notication",
+    },
+];
+const searchItems = [
+    {
+        title: "Phân loại",
+        icon: SearchOutlinedIcon,
+        pathAcitve: "#unknown",
+    },
+    {
+        title: "Tài liệu đã lưu",
+        icon: BookmarkAddedOutlinedIcon,
+        pathAcitve: "#unknown",
+    },
+    {
+        title: "Hỗ trợ AI",
+        icon: SmartToyOutlinedIcon,
+        pathAcitve: "/document/ai-support",
+    },
+];
+
+interface ISidebar {
+    isModal: boolean;
+    isOpen: boolean;
+    setIsOpen: any;
+}
+
+const customAppear = {
+    ...appear,
+    hidden: {
+        ...appear.hidden,
+        transition: { ...appear.hidden.transition, duration: 0 },
+    },
+};
+
+export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const navigate = useNavigate();
-    console.log(pathName);
+    const pathName = useLocation().pathname;
+    const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
+    const { username } = useAppSelector((state) => state.authentication);
+    const isOpenAndModal = isModal && isOpen;
+
+    const uploadFileDropdown = (
+        <AnimatePresence>
+            {dropdownToggle && (
+                <motion.div
+                    variants={customAppear}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    className={cx("uploadfile-dropdown")}>
+                    <div className={cx("item")}>
+                        <UploadFileIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tải tài liệu</span>}
+                    </div>
+                    <hr />
+                    <div className={cx("item")}>
+                        <CreateNewFolderOutlinedIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tạo thư mục</span>}
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 
     return (
-        <div className={cx("sidebar")}>
+        <div
+            style={isOpenAndModal ? { position: "fixed" } : {}}
+            className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
             <div className={cx("account")}>
                 <img src={Avatar} alt="avatar" />
-                <div>
-                    <h3>Name user</h3>
-                    <a href="#">+ Add information</a>
-                </div>
+                {isOpen && (
+                    <div>
+                        <h3>{username ? username : "Name User"}</h3>
+                        <a href="#">+ Add information</a>
+                    </div>
+                )}
             </div>
             <div className={cx("statistics")}>
-                <div>
-                    <h3>0</h3>
-                    <h4>Followers</h4>
-                </div>
-                <div>
-                    <h3>0</h3>
-                    <h4>Upload</h4>
-                </div>
-                <div>
-                    <h3>0</h3>
-                    <h4>Following</h4>
-                </div>
+                <img
+                    style={{ ...(!isOpen && { right: "-27.5px" }) }}
+                    onClick={() => setIsOpen(!isOpen)}
+                    src={isOpen ? CloseIcon : OpenIcon}
+                    className={cx("toggle")}
+                    alt="close-icon"
+                />
+
+                {isOpen && (
+                    <div className={cx("statistics-in4")}>
+                        <div>
+                            <h3>0</h3>
+                            <h4>Followers</h4>
+                        </div>
+                        <div>
+                            <h3>0</h3>
+                            <h4>Upload</h4>
+                        </div>
+                        <div>
+                            <h3>0</h3>
+                            <h4>Following</h4>
+                        </div>
+                    </div>
+                )}
             </div>
-            <Button
-                text="+ Thêm mới"
-                paddingY={9.5}
-                paddingX={0}
-                fontSize={16}
-            />
-            <div className={cx("items")}>
-                <a
-                    className={cx(pathName === "/document" && "active")}
-                    href="#">
-                    <HomeOutlinedIcon sx={{ width: "22px", height: "22px" }} />
-                    <h3>Trang chủ</h3>
-                </a>
-                <a href="#">
-                    <BookOutlinedIcon sx={{ width: "22px", height: "22px" }} />
-                    <h3>Thư viện</h3>
-                </a>
-                <a href="#">
-                    <AutoStoriesOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Sách</h3>
-                </a>
+            <div
+                className={cx("addDoc-btn")}
+                onClick={(e) => {
+                    e.preventDefault();
+                    setDropdownToggle(
+                        (prevDropdownToggle) => !prevDropdownToggle
+                    );
+                }}>
+                <Button
+                    text={`+ ${isOpen ? "Thêm mới" : ""}`}
+                    paddingY={9.5}
+                    paddingX={0}
+                    fontSize={16}
+                />
             </div>
-            <div className={cx("items")}>
-                <span>Tài liệu của tôi</span>
-                <a href="#">
-                    <InsertDriveFileOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Tài liệu</h3>
-                </a>
-                <a href="#">
-                    <StickyNote2OutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Môn học</h3>
-                </a>
-                <a href="#">
-                    <NotificationsOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Thông báo</h3>
-                </a>
+            {uploadFileDropdown}
+            <div
+                style={{ ...(!isOpen && { alignItems: "center" }) }}
+                className={cx("items")}>
+                {menuItems.map((item, index) => (
+                    <Link
+                        key={index}
+                        className={cx(pathName === item.pathAcitve && "active")}
+                        to={item.pathAcitve}>
+                        <item.icon sx={{ width: "22px", height: "22px" }} />
+                        {isOpen && <h3>{item.title}</h3>}
+                    </Link>
+                ))}
             </div>
-            <div className={cx("items")}>
-                <span>Tìm kiếm nâng cao</span>
-                <a href="#">
-                    <SearchOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Phân loại</h3>
-                </a>
-                <a href="#">
-                    <BookmarkAddedOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Đã lưu</h3>
-                </a>
-                <a href="#">
-                    <SmartToyOutlinedIcon
-                        sx={{ width: "22px", height: "22px" }}
-                    />
-                    <h3>Hỗ trợ AI</h3>
-                </a>
+            <div
+                style={{ ...(!isOpen && { alignItems: "center" }) }}
+                className={cx("items")}>
+                <span style={{ ...(!isOpen && { visibility: "hidden" }) }}>
+                    Tài liệu của tôi
+                </span>
+                {docItems.map((item, index) => (
+                    <Link
+                        key={index}
+                        className={cx(pathName === item.pathAcitve && "active")}
+                        to={item.pathAcitve}>
+                        <item.icon sx={{ width: "22px", height: "22px" }} />
+                        {isOpen && <h3>{item.title}</h3>}
+                    </Link>
+                ))}
+            </div>
+            <div
+                style={{ ...(!isOpen && { alignItems: "center" }) }}
+                className={cx("items")}>
+                <span style={{ ...(!isOpen && { visibility: "hidden" }) }}>
+                    Tìm kiếm nâng cao
+                </span>
+                {searchItems.map((item, index) => (
+                    <Link
+                        key={index}
+                        className={cx(pathName === item.pathAcitve && "active")}
+                        to={item.pathAcitve}>
+                        <item.icon sx={{ width: "22px", height: "22px" }} />
+                        {isOpen && <h3>{item.title}</h3>}
+                    </Link>
+                ))}
             </div>
             <button
                 id={cx(pathName === "/document/support" && "support-active")}
@@ -120,7 +219,7 @@ export default function Sidebar() {
                     navigate("/document/support");
                 }}>
                 <img src={ContactICON} alt="contact" />
-                <span>Hỗ trợ 24/7</span>
+                {isOpen && <span>Hỗ trợ 24/7</span>}
             </button>
         </div>
     );
