@@ -1,0 +1,104 @@
+.docs-directory {
+  width: 97%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  & > .directory-titles {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    & > h2 {
+      color: #00000099;
+      font-size: 24px;
+    }
+    & > span {
+      text-decoration: underline;
+      color: #eb2930;
+      cursor: pointer;
+    }
+  }
+  & > .directory-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 35px;
+    margin: 0 auto;
+
+    & > .card-list {
+      width: 100%;
+      box-shadow: 1px 1px 4px 4px #00000040;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      & > .list-author {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        & > .name {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          & > img {
+            width: 22px;
+            height: 22px;
+            border-radius: 20px;
+          }
+          & > p {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14.63px;
+            text-align: center;
+          }
+        }
+      }
+      & > img {
+        width: 100%;
+        border-radius: 5px;
+      }
+
+      & > h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 8px 0;
+        line-height: 19.5px;
+        text-align: left;
+        color: #b40e0e;
+      }
+
+      & > span {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14.63px;
+        text-align: left;
+        color: #6f6a6a;
+        margin: 10px 0;
+      }
+      & > .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & > span {
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 14.63px;
+          text-align: left;
+          color: #6f6a6a;
+        }
+
+        & > div {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          & > div {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

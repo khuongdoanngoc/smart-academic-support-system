@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import styles from "./Docs.module.scss";
+import styles from "./DocsDirectory.module.scss";
 const cx = classNames.bind(styles);
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -10,15 +10,15 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSharingModal } from "../../../../contexts/SharingModalContext";
-// import { SharingModal } from "../../../../components/SharingModal"
+// import { SharingModal } from "../../../../components/SharingModal";
 
 interface IDoc {
-  avatar: string;
-  author: string;
-  content: string;
-  subject: string;
-  downloads: number;
-  image: string;
+  logo: string;
+  name: string;
+  img: string;
+  titleDocs: string;
+  folder: string;
+  download: number;
 }
 
 interface IDocs {
@@ -44,30 +44,30 @@ export default function Docs({ title, docs }: IDocs) {
   };
 
   // configs cho nút xem thêm
-  const [visibleCount, setVisibleCount] = useState<number>(3);
+  const [visibleCount, setVisibleCount] = useState<number>(4);
   const handleToggle = () => {
-    if (visibleCount === 3) {
+    if (visibleCount === 4) {
       setVisibleCount(visibleCount + 6);
     } else {
-      setVisibleCount(3);
+      setVisibleCount(4);
     }
   };
 
   return (
-    <div className={cx("docs")}>
-      <div className={cx("titles")}>
+    <div className={cx("docs-directory")}>
+      <div className={cx("directory-titles")}>
         <h2>{title}</h2>
         <span onClick={handleToggle}>
-          {visibleCount === 3 ? "Xem thêm" : "Thu gọn"}
+          {visibleCount === 4 ? "Xem thêm" : "Thu gọn"}
         </span>
       </div>
-      <div className={cx("cards")}>
+      <div className={cx("directory-cards")}>
         {docs.slice(0, visibleCount).map((data, index) => (
-          <div key={index} className={cx("card")}>
-            <div className={cx("author")}>
+          <div key={index} className={cx("card-list")}>
+            <div className={cx("list-author")}>
               <div className={cx("name")}>
-                <img src={`${data.avatar}`} alt="avt" />
-                <p>{data.author}</p>
+                <img src={`${data.logo}`} alt="logo" />
+                <p>{data.name}</p>
               </div>
               <IconButton
                 aria-label="more"
@@ -107,11 +107,11 @@ export default function Docs({ title, docs }: IDocs) {
                 ))}
               </Menu>
             </div>
-            <img src={`${data.image}`} alt="doc" />
-            <h3>{data.content}</h3>
-            <span>{data.subject}</span>
+            <img src={`${data.img}`} alt="doc" />
+            <h3>{data.titleDocs}</h3>
+            <span>{data.folder}</span>
             <div className={cx("actions")}>
-              <span>{data.downloads}+ lượt tải</span>
+              <span>{data.download}+ lượt tải</span>
               <div>
                 <div
                   onClick={() => {

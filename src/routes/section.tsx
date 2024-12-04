@@ -18,6 +18,8 @@ import AdminHome from "../pages/Admin/AdminHome";
 import AdminDocumenPage from "../pages/Admin/AdminDocument";
 import AdminUsers from "../pages/Admin/AdminUsers";
 
+import Directory from "../pages/Directory";
+
 export default function Router() {
     const routes = useRoutes([
         {
@@ -50,7 +52,7 @@ export default function Router() {
             ),
             children: [
                 { index: true, element: <DocumentPage /> },
-                // { path: "/directory", element: <DocumentPage /> },
+                { path: "/directory", element: <Directory /> },
                 { path: "support", element: <SupportPage /> },
                 { path: "ai-support", element: <AISupportPage /> },
                 {
