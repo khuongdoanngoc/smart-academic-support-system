@@ -229,6 +229,7 @@ const UploadFileComponents = () => {
 
         e.target.value = "";
     };
+  }
 
     const formatFileSize = (size: number) => {
         return size < 1024
