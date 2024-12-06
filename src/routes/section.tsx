@@ -6,64 +6,99 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import { ChangePassWord, Register, UploadFile } from "../pages";
+import { ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
 import Notication from "../pages/Notication";
 import ProtectedRoute from "./ProtectedRoute";
+import DocumentDetailPage from "../pages/DocumentDetail";
+import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import AdminHome from "../pages/Admin/AdminHome";
+import AdminDocumenPage from "../pages/Admin/AdminDocument";
+import AdminUsers from "../pages/Admin/AdminUsers";
+
+import Directory from "../pages/Directory";
 
 export default function Router() {
-  const routes = useRoutes([
-    {
-      element: (
-        <Layout>
-          <Outlet />
-        </Layout>
-      ),
-      children: [
-        { element: <HomePage />, index: true },
-        { path: "/login", element: <Login />, index: true },
-        { path: "/register", element: <Register />, index: true },
-        { path: "/forgotpass", element: <ForgotPassWord />, index: true },
-        { path: "/newpassword", element: <NewPassword />, index: true },
-      ],
-    },
+    const routes = useRoutes([
+        {
+            path: "/",
+            element: (
+                <Layout>
+                    <Outlet />
+                </Layout>
+            ),
+            children: [
+                { element: <HomePage />, index: true },
+                { path: "login", element: <Login />, index: true },
+                { path: "register", element: <Register />, index: true },
+                {
+                    path: "forgot-password",
+                    element: <ForgotPassWord />,
+                },
+                { path: "new-password", element: <NewPassword />, index: true },
+            ],
+        },
 
-    {
-      element: (
-        <ProtectedRoute>
-          <DocumentLayout>
-            <Outlet />
-          </DocumentLayout>
-        </ProtectedRoute>
-      ),
-      children: [
         {
-          path: "/document",
-          element: <DocumentPage />,
+            path: "/document",
+            element: (
+                <ProtectedRoute>
+                    <DocumentLayout>
+                        <Outlet />
+                    </DocumentLayout>
+                </ProtectedRoute>
+            ),
+            children: [
+                { index: true, element: <DocumentPage /> },
+                { path: "/directory", element: <Directory /> },
+                { path: "support", element: <SupportPage /> },
+                { path: "ai-support", element: <AISupportPage /> },
+                {
+                    path: "uploadfile",
+                    element: <UploadFile />,
+                },
+                {
+                    path: "changepassword",
+                    element: <ChangePassWord />,
+                },
+                {
+                    path: "editprofile",
+                    element: <EditProfile />,
+                },
+                {
+                    path: "notication",
+                    element: <Notication />,
+                },
+                {
+                    path: ":majorSlug/:folderSlug/:id",
+                    element: <DocumentDetailPage />,
+                },
+            ],
         },
-        { path: "/document/directory", element: <DocumentPage /> },
-        { path: "/document/support", element: <SupportPage /> },
-        { path: "/document/ai-support", element: <AISupportPage /> },
         {
-          path: "/document/uploadfile",
-          element: <UploadFile />,
-          index: true,
+            path: "/admin",
+            element: (
+                <DashboardLayout>
+                    <Outlet />
+                </DashboardLayout>
+            ),
+            children: [
+                {
+                    path: "dashboard",
+                    element: <AdminHome />,
+                },
+                {
+                    path: "documents",
+                    element: <AdminDocumenPage />,
+                },
+                {
+                    path: "users",
+                    element: <AdminUsers />,
+                },
+            ],
         },
-        {
-          path: "/document/changepassword",
-          element: <ChangePassWord />,
-          index: true,
-        },
-        {
-          path: "/document/editprofile",
-          element: <EditProfile />,
-          index: true,
-        },
-        { path: "/document/notication", element: <Notication />, index: true },
-      ],
-    },
-  ]);
-  return routes;
+    ]);
+    return routes;
 }

@@ -2,7 +2,7 @@ import classNames from "classnames/bind";
 import styles from "./ChatBox.module.scss";
 const cx = classNames.bind(styles);
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -31,11 +31,13 @@ type MessagesUser = {
 export default function ChatBox() {
   const dispatch = useAppDispatch();
   // configs cho popover
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [isOpenSubbox, setIsOpenSubbox] = useState<boolean>(true);
   // config cho message
   const { messages, loading } = useAppSelector((state) => state.chatbot);
+  const { username } = useAppSelector((state) => state.authentication);
   const [containMessage, setContainMessage] = useState<boolean>(false);
   const [inputMessage, setInputMessage] = useState("");
 
@@ -49,6 +51,22 @@ export default function ChatBox() {
   const handleInputMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputMessage(value);
+  };
+  const handleKeyDown = (event: { key: string }) => {
+    if (event.key === "Enter") {
+      setContainMessage(true);
+      const data = {
+        id: Date.now().toString(),
+        name: "DTU AI Chat",
+        avatar: Avatar,
+        message: inputMessage,
+        time: new Date().toLocaleTimeString(),
+        sender: "user",
+      };
+      dispatch(setMessagesUser(data));
+      setInputMessage("");
+      dispatch(sendMessageAction(data));
+    }
   };
 
   const handleSubmitQuestion = () => {
@@ -66,7 +84,15 @@ export default function ChatBox() {
     dispatch(sendMessageAction(data));
   };
 
-  console.log(messages);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTo({
+        top: messagesEndRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  }, [messages]);
 
   return (
     <div className={cx("chat-box")}>
@@ -115,7 +141,7 @@ export default function ChatBox() {
         </Menu>
       </div>
       {containMessage ? (
-        <div className={cx("messages")}>
+        <div className={cx("messages")} ref={messagesEndRef}>
           {messages.map((message: MessagesUser, index: number) => {
             return (
               <div
@@ -158,7 +184,7 @@ export default function ChatBox() {
         </div>
       ) : (
         <div className={cx("initial")}>
-          <h2>CHÀO "Tên người dùng"!</h2>
+          <h2>CHÀO {username ? username : "Tên người dùng"}!</h2>
           {isOpenSubbox && (
             <div className={cx("sub-box")}>
               <p>
@@ -185,12 +211,14 @@ export default function ChatBox() {
           )}
         </div>
       )}
+      
 
       <div className={cx("input-message")}>
         <input
           type="text"
           placeholder="Bạn cần DTU AI giúp gì không?"
           value={inputMessage}
+          onKeyDown={handleKeyDown}
           onChange={handleInputMessage}
         />
         <img
