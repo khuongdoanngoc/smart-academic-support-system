@@ -19,8 +19,8 @@ interface initState {
   loading: boolean;
   error: string | null;
   success: boolean | null;
-  searchFaculty: SearchFaculty[];
-  searchFolder: SearchFolder[];
+  searchFaculty: SearchFaculty[] ;
+  searchFolder: SearchFolder[] ;
   searchSubject: SearchSubject[];
 }
 
