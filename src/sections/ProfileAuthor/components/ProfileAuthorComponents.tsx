@@ -13,10 +13,10 @@ import {
   PaginationRenderItemParams,
 } from "@mui/material";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
-import { FollowProFileAction } from "../../../redux/EditProFileSlice/EditProFileSlice";
-import { DownloadDocumentAction } from "../../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
+// import { useSelecto } from "react-redux";
+import {  useAppDispatch, useAppSelector } from "../../../redux/store";
+// import { FollowProFileAction } from "../../../redux/EditProFileSlice/EditProFileSlice";
+import { DownloadDocumentAuthorAction, FollowAuthorAction, UnFollowAuthorAction } from "../../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
 import { useGlobalContextLoin } from "../../../layouts/useContext";
 // import { RootState } from "@reduxjs/toolkit/query";
 const cx = classnames.bind(styles);
@@ -25,7 +25,7 @@ interface Subject {
   title: string;
 }
 interface FollowButtonProps {
-  userId: number;
+  email:string;
 }
 
 const fakeSubjects: Subject[] = [
@@ -103,7 +103,7 @@ const fakeSubjects: Subject[] = [
   },
 ];
 
-const ProfilePersonalComponents = ({ userId }: FollowButtonProps) => {
+const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
   const alphabet = Array.from("1234567");
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -111,24 +111,32 @@ const ProfilePersonalComponents = ({ userId }: FollowButtonProps) => {
   const [shareAnimation, setShareAnimation] = useState<boolean>(false);
   const [shareCloseAnimation, setShareCloseAnimation] =
     useState<boolean>(false);
-  const { isLoading } = useSelector((state: RootState) => state.editProFile);
-  const dispatch = useDispatch<AppDispatch>();
+
+  const dispatch = useAppDispatch();
   // const [listItemFile, setListItemFile] = useState(4);
   const { setIsFormLogin } = useGlobalContextLoin();
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
+  const isloading = useAppSelector((state)=>state.profileAuthor.isloading)
+  const isFollow = useAppSelector((state)=>state.profileAuthor.followUser.includes(email))
   const filteredDataList = (data: Subject[]) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-
+ 
   const handleFollow = () => {
-    dispatch(FollowProFileAction(userId)).unwrap();
+    if(isFollow){
+      dispatch(UnFollowAuthorAction(email));
+    }else{
+      dispatch(FollowAuthorAction(email));
+    }
   };
+  const titleButtonFollow = isloading ? "Following...":isFollow?"Followed":"+Follow";
+  
   const handleDownLoad = (id: number) => {
-    dispatch(DownloadDocumentAction(id)).unwrap();
+    dispatch(DownloadDocumentAuthorAction(id)).unwrap();
   };
   const handleOpenShare = () => {
     setIsOpenShare(!isOpenShare);
@@ -174,7 +182,7 @@ const ProfilePersonalComponents = ({ userId }: FollowButtonProps) => {
             </div>
             <div className={cx("left-profile-button")} onClick={handleFollow}>
               <Button
-                text={isLoading ? "Following..." : "+ Follow"}
+                text={titleButtonFollow}
                 paddingX={29}
                 paddingY={6}
                 fontSize={16}

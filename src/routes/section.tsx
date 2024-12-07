@@ -9,6 +9,13 @@ import ForgotPassWord from "../pages/ForgotPassWord";
 import { ProfileAuthor, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import ProtectedRoute from "./ProtectedRoute";
+<<<<<<< Updated upstream
+=======
+import DocumentStorage from "../pages/DocumentStorage";
+import ProfilePersonal from "../pages/ProfilePersonal";
+import PersonalTeacher from "../pages/PersonalTeacher";
+import SearchUser from "../pages/SearchUser";
+>>>>>>> Stashed changes
 
 export default function Router() {
   const routes = useRoutes([
@@ -43,6 +50,15 @@ export default function Router() {
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
         { path: "/document/profileauthor", element: <ProfileAuthor /> },
+        { path: "/document/profilepersonal", element: <ProfilePersonal /> },
+        {
+          path: "/document/profilepersonalteacher",
+          element: <PersonalTeacher />,
+        },
+        {
+          path: "/document/searchuser",
+          element: <SearchUser />,
+        },
         { path: "/document/uploadfile", element: <UploadFile />, index: true },
         {
           path: "/document/documentstorage",

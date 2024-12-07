@@ -3,7 +3,7 @@ import { axiosInstance } from "../../utils/AxiosInterceptor"
 
 
 
-export const ProfileAuthorApi=async(documentId:number)=>{
+export const DownloadDocumentAuthorApi=async(documentId:number)=>{
   try {
     const response = await axiosInstance.get(`/download/${documentId}`)
     return response
@@ -13,3 +13,29 @@ export const ProfileAuthorApi=async(documentId:number)=>{
     
   }
 }
+
+
+export const FollowAuthorApi=async(email:string)=>{
+  try {
+    const response = await axiosInstance.post(`/follow/follow-by-email${email}`,null,{
+      params:{email}
+    })
+    return response
+  } catch (err:unknown) {
+    const error= err as AxiosError<{message?:string}>
+    throw new Error(error.response?.data.message || error.message)
+    
+  }
+}
+
+export const UnFollowAuthorApi=async(email:string)=>{
+  try {
+    const response = await axiosInstance.delete(`/follow/unfollow-by-email${email}`)
+    return response
+  } catch (err:unknown) {
+    const error= err as AxiosError<{message?:string}>
+    throw new Error(error.response?.data.message || error.message)
+    
+  }
+}
+

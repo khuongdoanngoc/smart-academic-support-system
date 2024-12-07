@@ -153,7 +153,7 @@ const ProfileAuthorComponent = () => {
             </div>
           </div>
           <div className={cx("information-right-search")}>
-            <input type="text" placeholder="Tìm kiếm tài liệu..." />
+            <input type="text" placeholder="Tìm kiếm tài liệu của Huy" />
             <SearchIcon className={cx("search-icon")} />
           </div>
         </div>
