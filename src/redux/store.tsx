@@ -6,8 +6,8 @@ import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { useDispatch, useSelector } from "react-redux";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
-import EditProFileReducer from "./EditProFileSlice/EditProFileSlice";
-import ProfileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
+import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
+
 const store = configureStore({
   reducer: {
     uploadFile: UploadFileReducer,
@@ -16,8 +16,7 @@ const store = configureStore({
     notication: NoticatonReducer,
     chatbot: ChatBotReducer,
     authentication: authenticationReducer,
-    editProFile: EditProFileReducer,
-    downloadDocument: ProfileAuthorReducer,
+    searchUser:searchUserReducer
   },
 });
 

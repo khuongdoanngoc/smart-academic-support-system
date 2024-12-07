@@ -9,7 +9,6 @@ import ForgotPassWord from "../pages/ForgotPassWord";
 import { ProfileAuthor, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import ProtectedRoute from "./ProtectedRoute";
-import DocumentStorage from "../pages/DocumentStorage";
 
 export default function Router() {
   const routes = useRoutes([
@@ -50,6 +49,7 @@ export default function Router() {
           element: <DocumentStorage />,
           index: true,
         },
+        { path: "/document/notication", element: <Notication />, index: true },
       ],
     },
   ]);
