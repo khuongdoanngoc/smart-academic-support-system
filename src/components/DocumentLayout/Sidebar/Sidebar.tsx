@@ -84,6 +84,10 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
     const { username } = useAppSelector((state) => state.authentication);
     const isOpenAndModal = isModal && isOpen;
+    
+    const handleClickUpFIle = ()=>{
+        navigate("/document/upload-file");
+    }
 
     const uploadFileDropdown = (
         <AnimatePresence>
@@ -94,7 +98,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                     animate="visible"
                     exit="hidden"
                     className={cx("uploadfile-dropdown")}>
-                    <div className={cx("item")}>
+                    <div className={cx("item")} onClick={handleClickUpFIle}>
                         <UploadFileIcon
                             sx={{ width: "22px", height: "22px" }}
                         />

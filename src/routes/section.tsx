@@ -52,15 +52,15 @@ export default function Router() {
             ),
             children: [
                 { index: true, element: <DocumentPage /> },
-                { path: "/directory", element: <Directory /> },
+                { path: "directory", element: <Directory /> },
                 { path: "support", element: <SupportPage /> },
                 { path: "ai-support", element: <AISupportPage /> },
                 {
-                    path: "uploadfile",
+                    path: "upload-file",
                     element: <UploadFile />,
                 },
                 {
-                    path: "changepassword",
+                    path: "change-password",
                     element: <ChangePassWord />,
                 },
                 {

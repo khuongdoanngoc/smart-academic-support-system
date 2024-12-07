@@ -18,7 +18,7 @@ export default function DocumentLayout(props: PropsType) {
         <div className={cx("layout-wrapper")}>
             <DocumentHeader />
             <Main>{props.children}</Main>
-            {location.pathname !== "/document/uploadfile" && <Footer />}
+            {location.pathname !== "/document/upload-file" && <Footer />}
         </div>
     );
 }

@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function DocumentHeader() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const isLogined = useAppSelector((state) => state.authentication);
+  const {isLogined} = useAppSelector((state) => state.authentication);
 
   const handleClickLogout = () => {
     if (isLogined) {
