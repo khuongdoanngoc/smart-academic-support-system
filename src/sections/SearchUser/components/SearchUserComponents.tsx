@@ -9,12 +9,13 @@ import {
   PaginationRenderItemParams,
 } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
+// import { useDispatch } from "react-redux";
+import {  RootState, useAppDispatch } from "../../../redux/store";
 import {
   clearSearchUser,
   SearchUserAction,
 } from "../../../redux/SearchUserSlice/SearchUserSlice";
+import { useSelector } from "react-redux";
 const cx = classnames.bind(styles);
 interface Subject {
   id: number;
@@ -68,7 +69,8 @@ const fakeSubjects: Subject[] = [
 ];
 const SearchUserComponents = () => {
   const alphabet = Array.from("1234567");
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const {listSearch} =useSelector((state:RootState) => state.searchUser);
 
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -81,6 +83,8 @@ const SearchUserComponents = () => {
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
+  console.log(listSearch);
+  
   const handleChangeSearch = async (value: string) => {
     if (!value.trim()) {
       dispatch(clearSearchUser());
@@ -133,8 +137,8 @@ const SearchUserComponents = () => {
             <button>Theo dõi</button>
           </div>
         </div>
-        {filteredDataList(fakeSubjects).map((item) => (
-          <div className={cx("user-body-list")}>
+        {filteredDataList(fakeSubjects).map((item,index) => (
+          <div className={cx("user-body-list")}  key={index}>
             <div className={cx("user-list-img")}>
               <img src={UserAvatar} alt="avartar" />
             </div>

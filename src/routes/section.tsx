@@ -12,6 +12,7 @@ import AISupportPage from "../pages/AISupport";
 import EditProfile from "../pages/EditProfile";
 import Notication from "../pages/Notication";
 import ProtectedRoute from "./ProtectedRoute";
+import SearchUser from "../pages/SearchUser";
 
 export default function Router() {
   const routes = useRoutes([
@@ -62,6 +63,7 @@ export default function Router() {
           index: true,
         },
         { path: "/document/notication", element: <Notication />, index: true },
+        { path: "/document/searchuser", element: <SearchUser />, index: true },
       ],
     },
   ]);

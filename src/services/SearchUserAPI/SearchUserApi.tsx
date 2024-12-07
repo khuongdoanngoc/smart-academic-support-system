@@ -6,6 +6,7 @@ export interface SearchInterface {
   firstName: string;
   lastName:string;
   email:string;
+  profilePicture:string;
 }
 
 export const SearchUserAPI = async (data: string) => {

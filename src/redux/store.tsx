@@ -6,6 +6,7 @@ import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { useDispatch,useSelector } from "react-redux";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
+import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     notication: NoticatonReducer,
     chatbot: ChatBotReducer,
     authentication: authenticationReducer,
+    searchUser:searchUserReducer
   },
 });
 
