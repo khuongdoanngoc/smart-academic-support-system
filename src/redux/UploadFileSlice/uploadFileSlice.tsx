@@ -1,47 +1,37 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-// import { axiosInstance } from "../../utils/AxiosInterceptor";
 import { toast } from "react-toastify";
-// import { AxiosError } from "axios";
-import { postFile } from "../../services/UploadFileAPI/UploadFileAPI";
+import {
+  postFile,
+  SearchFaculty,
+  searchFaculty,
+  searchFolder,
+  SearchFolder,
+  searchSubject,
+  SearchSubject,
+} from "../../services/UploadFileAPI/UploadFileAPI";
 import { AxiosError } from "axios";
 export interface FileItem {
   name: string;
   size: number;
 }
 
-interface FileUploadState {
-  valueRow: string;
-  valueRowYear: string;
-  fileList: FileItem[];
-  specialized: string;
-  subject: string;
-  folder: string;
-  documentType: string;
-  title: string;
-  academicYear: string;
-  description: string;
-}
 interface initState {
   loading: boolean;
   error: string | null;
-  fileUploadState: FileUploadState;
+  success: boolean | null;
+  searchFaculty: SearchFaculty[];
+  searchFolder: SearchFolder[];
+  searchSubject: SearchSubject[];
 }
 
 const initialState: initState = {
   loading: false,
   error: "",
-  fileUploadState: {
-    valueRow: "",
-    valueRowYear: "",
-    fileList: [],
-    specialized: "",
-    subject: "",
-    folder: "",
-    documentType: "",
-    title: "",
-    academicYear: "",
-    description: "",
-  },
+  success: false,
+  searchFaculty: [],
+  searchFolder: [],
+  searchSubject: [],
 };
 interface ApiPostFile {
   file: File;
@@ -60,7 +50,6 @@ export const UploadFileAction = createAsyncThunk<
   try {
     const response = await postFile(data);
     if (response !== undefined) {
-      toast.success("Login account successfully");
       return response as unknown as string;
     }
   } catch (err: unknown) {
@@ -72,41 +61,59 @@ export const UploadFileAction = createAsyncThunk<
   }
 });
 
+export const SearchFacultyAction = createAsyncThunk<SearchFaculty[], string>(
+  "SearchFacultyAction",
+  async (facultyName: string) => {
+    try {
+      const response = await searchFaculty(facultyName);
+      return response as unknown as SearchFaculty[];
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.message);
+    }
+  }
+);
+
+export const SearchFolderAction = createAsyncThunk<SearchFolder[], string>(
+  "SearchFolderAction",
+  async (folderName: string) => {
+    try {
+      const response = await searchFolder(folderName);
+      return response as unknown as SearchFolder[];
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.message);
+    }
+  }
+);
+
+export const SearchSubjectAction = createAsyncThunk<SearchSubject[], string>(
+  "SearchSubjectAction",
+  async (subject: string) => {
+    try {
+      const response = await searchSubject(subject);
+      console.log("response", response);
+
+      return response as unknown as SearchSubject[];
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.message);
+    }
+  }
+);
+
 const uploadFileSlice = createSlice({
   name: "uploadFile",
   initialState,
   reducers: {
-    setFileList: (state, action: PayloadAction<FileItem[]>) => {
-      state.fileUploadState.fileList = action.payload;
+    clearSearchFaculty: (state) => {
+      state.searchFaculty = [];
     },
-
-    setValueRow: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.valueRow = action.payload;
+    clearSearchFolder: (state) => {
+      state.searchFolder = [];
     },
-    setvalueRowYear: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.valueRowYear = action.payload;
-    },
-    setSpecialized: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.specialized = action.payload;
-    },
-
-    setSubject: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.subject = action.payload;
-    },
-    setFolder: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.folder = action.payload;
-    },
-    setDocumentType: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.documentType = action.payload;
-    },
-    setTitle: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.title = action.payload;
-    },
-    setAcademicYear: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.academicYear = action.payload;
-    },
-    setDescription: (state, action: PayloadAction<string>) => {
-      state.fileUploadState.description = action.payload;
+    clearSearchSubject: (state) => {
+      state.searchSubject = [];
     },
   },
   extraReducers: (builder) => {
@@ -115,33 +122,67 @@ const uploadFileSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+      .addCase(SearchFacultyAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(SearchFolderAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(SearchSubjectAction.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(UploadFileAction.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+        toast.success("File uploaded successfully!");
+      })
       .addCase(
-        UploadFileAction.fulfilled,
-        (state, action: PayloadAction<string | undefined>) => {
+        SearchFacultyAction.fulfilled,
+        (state, action: PayloadAction<SearchFaculty[]>) => {
           state.loading = false;
-          console.log(action.payload);
+          state.searchFaculty = action.payload;
+        }
+      )
 
-          toast.success("File uploaded successfully!");
+      .addCase(
+        SearchFolderAction.fulfilled,
+        (state, action: PayloadAction<SearchFolder[]>) => {
+          state.loading = false;
+          state.searchFolder = action.payload;
+        }
+      )
+      .addCase(
+        SearchSubjectAction.fulfilled,
+        (state, action: PayloadAction<SearchSubject[]>) => {
+          state.loading = false;
+          state.searchSubject = action.payload;
         }
       )
       .addCase(UploadFileAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(SearchFacultyAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.searchFaculty = [];
+      })
+      .addCase(SearchFolderAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.searchFolder = [];
+      })
+      .addCase(SearchSubjectAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.searchFolder = [];
       });
   },
 });
 
-export const {
-  setFileList,
-  setValueRow,
-  setvalueRowYear,
-  setSpecialized,
-  setSubject,
-  setFolder,
-  setDocumentType,
-  setTitle,
-  setAcademicYear,
-  setDescription,
-} = uploadFileSlice.actions;
-
+export const { clearSearchFaculty, clearSearchFolder, clearSearchSubject } =
+  uploadFileSlice.actions;
 export default uploadFileSlice.reducer;

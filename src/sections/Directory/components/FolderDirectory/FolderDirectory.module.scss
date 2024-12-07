@@ -1,0 +1,85 @@
+.folder-directory {
+  width: 97%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  & > .directory-title {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    & > h2 {
+      color: #00000099;
+      font-size: 24px;
+    }
+    & > span {
+      text-decoration: underline;
+      color: #eb2930;
+      cursor: pointer;
+    }
+  }
+  & > .directory-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 35px;
+    width: 100%;
+    margin: 0 auto;
+    & > .cards-list {
+      width: 100%;
+      padding: 7px;
+      border-radius: 5px;
+      border: 1px solid #000;
+      & > :nth-child(1),
+      :nth-child(2),
+      :nth-child(3),
+      :nth-child(4) {
+        display: flex;
+        align-items: center;
+        & > img {
+          margin-right: 5px;
+        }
+        & > p {
+          font-size: 12px;
+          color: #000000b2;
+          line-height: 14px;
+          font-weight: 500;
+        }
+      }
+      & > .list-title {
+        & > p {
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 20px;
+        }
+      }
+      & > .list-name {
+        margin: 5px 0;
+      }
+      & > .list-number {
+        & > div {
+          display: flex;
+          align-items: center;
+          & > img {
+            margin-right: 9px;
+          }
+          & > p {
+            font-size: 12px;
+            color: #000000b2;
+            line-height: 14px;
+            font-weight: 500;
+          }
+        }
+        & > .list-number-docs {
+          margin-right: 25px;
+        }
+      }
+      & > .list-button {
+        text-align: right;
+        margin-top: 6px;
+      }
+    }
+  }
+}

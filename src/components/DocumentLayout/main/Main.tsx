@@ -51,7 +51,7 @@ export default function Main(props: PropsType) {
   return (
     <>
       <div style={{ marginTop: "100px", width: "100%", display: "flex" }}>
-        {location.pathname !== "/document/uploadfile" && (
+        {location.pathname !== "/document/upload-file" && (
           <Sidebar
             isOpen={isOpen}
             setIsOpen={setIsOpen}
