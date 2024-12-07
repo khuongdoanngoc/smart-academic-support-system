@@ -16,6 +16,7 @@ const store = configureStore({
     notication: NoticatonReducer,
     chatbot: ChatBotReducer,
     authentication: authenticationReducer,
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     searchUser:searchUserReducer
 =======
@@ -23,6 +24,9 @@ const store = configureStore({
     downloadDocument: ProfileAuthorReducer,
     profileAuthor: ProfileAuthorReducer,
 >>>>>>> Stashed changes
+=======
+    searchUser:searchUserReducer
+>>>>>>> fixupload
   },
 });
 
