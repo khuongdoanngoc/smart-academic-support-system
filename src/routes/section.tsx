@@ -17,6 +17,7 @@ import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 import AdminHome from "../pages/Admin/AdminHome";
 import AdminDocumenPage from "../pages/Admin/AdminDocument";
 import AdminUsers from "../pages/Admin/AdminUsers";
+import CreateFolderPage from "../pages/CreateFolder";
 
 import Directory from "../pages/Directory";
 
@@ -74,6 +75,10 @@ export default function Router() {
                 {
                     path: ":majorSlug/:folderSlug/:id",
                     element: <DocumentDetailPage />,
+                },
+                {
+                    path: "create-folder",
+                    element: <CreateFolderPage />,
                 },
             ],
         },

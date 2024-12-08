@@ -11,9 +11,9 @@ export const GetAllFolders = async () => {
 
 export const CreateFolder = async (folderName: string) => {
     try {
-        const res = await axiosInstance.post(`${baseUrl}/folder/create`, {
-            folderName,
-        });
+        const res = await axiosInstance.post(
+            `${baseUrl}/folder/create?folderName=${folderName}`
+        );
         return res;
     } catch (error: any) {
         throw Error(error.message);
@@ -23,10 +23,7 @@ export const CreateFolder = async (folderName: string) => {
 export const UpdateFolder = async (folderId: number, folderName: string) => {
     try {
         const res = await axiosInstance.put(
-            `${baseUrl}/folder/update/${folderId}`,
-            {
-                folderName,
-            }
+            `${baseUrl}/folder/update/${folderId}?folderName=${folderName}`
         );
         return res;
     } catch (error: any) {
