@@ -5,122 +5,55 @@ import { useEffect, useState } from "react";
 import CensorDropdown from "../components/CensorDropdown";
 import SearchIcon from "@mui/icons-material/Search";
 import DataTable from "../components/DataTable";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch } from "../../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { getAllDocuments } from "../../../../redux/DocumentSlice/documentSlice";
 
 const columns: any[] = [
-    { id: "name", label: "Tên tài liệu", minWidth: 170 },
+    {
+        id: "docId",
+        label: "ID",
+        minWidth: 50,
+        align: "center",
+    },
+    { id: "title", label: "Tên tài liệu", minWidth: 170 },
     { id: "subject", label: "Môn học", minWidth: 100 },
     {
-        id: "folder",
-        label: "Thư mục",
+        id: "facultyName",
+        label: "Khoa",
         minWidth: 100,
         align: "center",
     },
     {
-        id: "author",
+        id: "accountId",
         label: "Tác giả",
         minWidth: 100,
         align: "center",
     },
     {
-        id: "createdAt",
-        label: "Ngày đăng",
+        id: "type",
+        label: "Loại",
         minWidth: 100,
         align: "center",
     },
     {
-        id: "isDisplayed",
+        id: "isActive",
         label: "Hiển thị",
         minWidth: 100,
         align: "center",
     },
-    {
-        id: "reviewer",
-        label: "Người duyệt",
-        minWidth: 100,
-        align: "center",
-    },
-];
-
-interface Data {
-    id: number;
-    name: string;
-    subject: string;
-    folder: string;
-    author: string;
-    createdAt: string;
-    isDisplayed: boolean;
-    reviewer: string;
-}
-
-function createData(
-    id: number,
-    name: string,
-    subject: string,
-    folder: string,
-    author: string,
-    createdAt: string,
-    isDisplayed: boolean,
-    reviewer: string
-): Data {
-    return {
-        id,
-        name,
-        subject,
-        folder,
-        author,
-        createdAt,
-        isDisplayed,
-        reviewer,
-    };
-}
-
-const rows = [
-    createData(
-        1,
-        "Tài liệu 1",
-        "Toán",
-        "Thư mục 1",
-        "Tác giả 1",
-        "2024-01-01",
-        true,
-        "Người duyệt 1"
-    ),
-    createData(
-        2,
-        "Tài liệu 2",
-        "Văn",
-        "Thư mục 2",
-        "Tác giả 2",
-        "2024-01-02",
-        false,
-        "Người duyệt 2"
-    ),
-    createData(
-        3,
-        "Tài liệu 3",
-        "Lý",
-        "Thư mục 3",
-        "Tác giả 3",
-        "2024-01-03",
-        true,
-        "Người duyệt 3"
-    ),
 ];
 
 export default function DocumentsView() {
     const [censor, setCensor] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>("");
-    // const documents = useSelector((state: any) => state.document.Documents);
+    const documents = useAppSelector((state: any) => state.document.Documents);
 
-    // console.log(documents);
+    console.log(documents);
 
-    // const dispatch = useDispatch<AppDispatch>();
-    // useEffect(() => {
-    //     dispatch(getAllDocuments());
-    // }, []);
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(getAllDocuments());
+    }, []);
 
     const filterByClassify: any = (
         rows: any[],
@@ -176,7 +109,7 @@ export default function DocumentsView() {
             </div>
             <DataTable
                 columns={columns}
-                rows={filterByClassify(rows, censor, searchValue)}
+                rows={filterByClassify(documents, censor, searchValue)}
             />
         </div>
     );

@@ -3,19 +3,17 @@ import { AutoLoginAction } from "../redux/AuthenticationSlice/AuthenticationSlic
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const dispatch = useAppDispatch();
-  const isLogined = useAppSelector((state) => state.authentication);
-  console.log(isLogined);
+    const dispatch = useDispatch();
+    const { isLogined } = useAppSelector((state) => state.authentication);
+    useEffect(() => {
+        if (!isLogined) {
+            dispatch(AutoLoginAction());
+        }
+    }, [dispatch, isLogined]);
 
-  useEffect(() => {
-    if (!isLogined) {
-      dispatch(AutoLoginAction());
-    }
-  }, [dispatch, isLogined]);
-
-  return <>{children}</>;
+    return <>{children}</>;
 };
 export default ProtectedRoute;
