@@ -139,8 +139,14 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
   };
   const titleButtonFollow = isloading ? "Following...":isFollow?"Followed":"+Follow";
   
-  const handleDownLoad = (id: number) => {
-    dispatch(DownloadDocumentAuthorAction(id)).unwrap();
+  const handleDownLoad = async (id: number) => {
+    const file = await dispatch(DownloadDocumentAuthorAction(id)).unwrap();
+    const link = document.createElement("a");
+    link.href = file;
+    link.download = ""; // Tên file (tùy chỉnh nếu cần)
+    document.body.appendChild(link);
+    link.click(); // Kích hoạt tải file
+    document.body.removeChild(link); 
   };
   const handleOpenShare = () => {
     setIsOpenShare(!isOpenShare);
@@ -169,7 +175,9 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
               <div className={cx("author-name")}>
                 <img src={Avatar} />
                 <div>
-                  <h3>`${userDetails.firstName } ${userDetails.lastName}`</h3>
+                  <h3>
+                    {userDetails?.firstName} {userDetails?.lastName}
+                  </h3>
                   <p>Software Technology CMU</p>
                 </div>
               </div>

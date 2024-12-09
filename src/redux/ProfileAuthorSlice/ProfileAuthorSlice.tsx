@@ -7,13 +7,14 @@ interface initialState {
   isloading: boolean;
   error: string | null;
   success: boolean;
-  followUser:string[]
+  followUser:string[],
+  
 }
 const initialState: initialState = {
   isloading: false,
   error: null,
   success: false,
-  followUser:[] as string[]
+  followUser:[] as string[],
 };
 
 export interface IViewProfile{
@@ -30,8 +31,14 @@ export interface IViewProfile{
 export const DownloadDocumentAuthorAction = createAsyncThunk<string, number>(
   "ProfileAuthorSlice/DownloadDocumentAuthorAction",
   async (documentId: number) => {
-    const res = await DownloadDocumentAuthorApi(documentId);
-    return res as unknown as string;
+    try {
+      const res = await DownloadDocumentAuthorApi(documentId);
+      return res as unknown as string;
+    } catch (error) {
+      const res = error as AxiosError<{message?:string}>
+      throw new Error(res.response?.data.message || res.message)
+    }
+
   }
 );
 
@@ -95,8 +102,9 @@ export const ProfileAuthorSlice = createSlice({
         state.isloading = false;
         state.success = true;
         if (action.payload) {
-          toast.success("Document downloaded successfully");
+          toast.success("Download success");
         }
+        
       }
     )
     .addCase(FollowAuthorAction.fulfilled, (state, action: PayloadAction<string>) => {

@@ -6,7 +6,7 @@ import { axiosInstance } from "../../utils/AxiosInterceptor"
 
 export const DownloadDocumentAuthorApi=async(documentId:number)=>{
   try {
-    const response = await axiosInstance.get(`/download/${documentId}`)
+    const response = await axiosInstance.get<{filePath:string}>(`/download/${documentId}`)
     return response
   } catch (err:unknown) {
     const error= err as AxiosError<{message?:string}>
