@@ -1,102 +1,125 @@
 import classnames from "classnames/bind";
 import styles from "./SearchUserComponents.module.scss";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { debounce } from "lodash";
 import UserAvatar from "../../../assets/images/avatar.png";
 import {
   Pagination,
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useState } from "react";
-// import { useDispatch } from "react-redux";
+import { useCallback, useState } from "react";
 import {  RootState, useAppDispatch } from "../../../redux/store";
 import {
   clearSearchUser,
   SearchUserAction,
+  SearchUserInformationAction,
 } from "../../../redux/SearchUserSlice/SearchUserSlice";
 import { useSelector } from "react-redux";
+import { SearchInterface } from "../../../services/SearchUserAPI/SearchUserApi";
+import { useNavigate } from "react-router-dom";
+
+
 const cx = classnames.bind(styles);
-interface Subject {
-  id: number;
-  name: string;
-  position: string;
-  department: string;
-  major: string;
-  email: string;
-}
-const fakeSubjects: Subject[] = [
-  {
-    id: 1,
-    name: "Nguyễn Văn A",
-    position: "Giảng Viên",
-    department: "Đào tạo Quốc tế",
-    major: "Công nghệ phần mềm CMU",
-    email: "Enguyenvana@gmail.com",
-  },
-  {
-    id: 2,
-    name: "Nguyễn Văn A",
-    position: "Giảng Viên",
-    department: "Đào tạo Quốc tế",
-    major: "Công nghệ phần mềm CMU",
-    email: "Enguyenvana@gmail.com",
-  },
-  {
-    id: 3,
-    name: "Nguyễn Văn A",
-    position: "Giảng Viên",
-    department: "Đào tạo Quốc tế",
-    major: "Công nghệ phần mềm CMU",
-    email: "Enguyenvana@gmail.com",
-  },
-  {
-    id: 4,
-    name: "Nguyễn Văn A",
-    position: "Giảng Viên",
-    department: "Đào tạo Quốc tế",
-    major: "Công nghệ phần mềm CMU",
-    email: "Enguyenvana@gmail.com",
-  },
-  {
-    id: 5,
-    name: "Nguyễn Văn A",
-    position: "Giảng Viên",
-    department: "Đào tạo Quốc tế",
-    major: "Công nghệ phần mềm CMU",
-    email: "Enguyenvana@gmail.com",
-  },
-];
+//   id: number;
+//   name: string;
+//   position: string;
+//   department: string;
+//   major: string;
+//   email: string;
+// }
+// const fakeSubjects: Subject[] = [
+//   {
+//     id: 1,
+//     name: "Nguyễn Văn A",
+//     position: "Giảng Viên",
+//     department: "Đào tạo Quốc tế",
+//     major: "Công nghệ phần mềm CMU",
+//     email: "Enguyenvana@gmail.com",
+//   },
+//   {
+//     id: 2,
+//     name: "Nguyễn Văn A",
+//     position: "Giảng Viên",
+//     department: "Đào tạo Quốc tế",
+//     major: "Công nghệ phần mềm CMU",
+//     email: "Enguyenvana@gmail.com",
+//   },
+//   {
+//     id: 3,
+//     name: "Nguyễn Văn A",
+//     position: "Giảng Viên",
+//     department: "Đào tạo Quốc tế",
+//     major: "Công nghệ phần mềm CMU",
+//     email: "Enguyenvana@gmail.com",
+//   },
+//   {
+//     id: 4,
+//     name: "Nguyễn Văn A",
+//     position: "Giảng Viên",
+//     department: "Đào tạo Quốc tế",
+//     major: "Công nghệ phần mềm CMU",
+//     email: "Enguyenvana@gmail.com",
+//   },
+//   {
+//     id: 5,
+//     name: "Nguyễn Văn A",
+//     position: "Giảng Viên",
+//     department: "Đào tạo Quốc tế",
+//     major: "Công nghệ phần mềm CMU",
+//     email: "Enguyenvana@gmail.com",
+//   },
+// ];
 const SearchUserComponents = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const alphabet = Array.from("1234567");
   const dispatch = useAppDispatch();
-  const {listSearch} =useSelector((state:RootState) => state.searchUser);
+  const navigate =useNavigate();
+  const {listSearch}:{listSearch:SearchInterface[]} =useSelector((state:RootState) => state.searchUser);
 
-  const itemsPerPage = 9;
+
+  console.log(listSearch);
+  
+  const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState<number>(1);
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
+    debounceSearch(searchTerm, itemsPerPage, value); 
   };
 
-  const filteredDataList = (data: Subject[]) => {
+  const filteredDataList = (data: SearchInterface[]) => {
+    if (!Array.isArray(data)) {
+      return [];
+    }
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-  console.log(listSearch);
   
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearch=useCallback(debounce((value:string,pageSize:number,pageNum:number)=>dispatch(SearchUserAction({name:value,pageSize,pageNum})),1000),[dispatch])
   const handleChangeSearch = async (value: string) => {
+    setSearchTerm(value);
     if (!value.trim()) {
       dispatch(clearSearchUser());
       return;
     }
     try {
-      await dispatch(SearchUserAction(value)).unwrap();
+      debounceSearch(value,itemsPerPage,currentPage)
     } catch (error) {
       console.log(error);
     }
-
-    dispatch(SearchUserAction(value));
+  };
+  const handleNavigateUser = (email: string) => {
+    try {
+      const res=dispatch(SearchUserInformationAction((email)))
+      if(res){
+        navigate(`/document/profileauthor/${email}`,{state:res}) 
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className={cx("search-user")}>
@@ -112,49 +135,24 @@ const SearchUserComponents = () => {
         </div>
       </div>
       <div className={cx("search-user-body")}>
-        <div className={cx("user-body-list")}>
-          <div className={cx("user-list-img")}>
-            <img src={UserAvatar} alt="avartar" />
-          </div>
-          <div className={cx("user-list-info")}>
-            <div className={cx("user-list-name")}>
-              <div className={cx("list-name-text")}>Nguyễn Văn A</div>
-              <div className={cx("list-name-position")}>Chức vụ:Giảng Viên</div>
-            </div>
-            <div className={cx("user-list-department")}>
-              <div className={cx("list-department-text")}>
-                Khoa: Đào tạo Quốc tế
-              </div>
-              <div className={cx("list-department-position")}>
-                Ngành: Công nghệ phần mềm CMU
-              </div>
-            </div>
-            <div className={cx("user-list-email")}>
-              Email: Enguyenvana@gmail.com
-            </div>
-          </div>
-          <div className={cx("user-list-button")}>
-            <button>Theo dõi</button>
-          </div>
-        </div>
-        {filteredDataList(fakeSubjects).map((item,index) => (
-          <div className={cx("user-body-list")}  key={index}>
+        {filteredDataList(listSearch).map((item,index) => (
+          <div className={cx("user-body-list")}  key={index} onClick={() => handleNavigateUser(item.email)} >
             <div className={cx("user-list-img")}>
               <img src={UserAvatar} alt="avartar" />
             </div>
             <div className={cx("user-list-info")}>
               <div className={cx("user-list-name")}>
-                <div className={cx("list-name-text")}>{item.name}</div>
+                <div className={cx("list-name-text")}>{`${item.lastName} ${item.firstName}`}</div>
                 <div className={cx("list-name-position")}>
-                  Chức vụ: {item.position}
+                  Chức vụ: Giang viên
                 </div>
               </div>
               <div className={cx("user-list-department")}>
                 <div className={cx("list-department-text")}>
-                  Khoa: {item.department}
+                  Khoa: Đào tạo quôc tế
                 </div>
                 <div className={cx("list-department-position")}>
-                  Ngành: {item.major}
+                  Ngành:Công nghệ phần mềm CMU
                 </div>
               </div>
               <div className={cx("user-list-email")}>Email: {item.email}</div>
@@ -164,62 +162,16 @@ const SearchUserComponents = () => {
             </div>
           </div>
         ))}
-        {/* <div className={cx("user-body-list")}>
-          <div className={cx("user-list-img")}>
-            <img src={UserAvatar} alt="avartar" />
-          </div>
-          <div className={cx("user-list-info")}>
-            <div className={cx("user-list-name")}>
-              <div className={cx("list-name-text")}>Nguyễn Văn A</div>
-              <div className={cx("list-name-position")}>Chức vụ:Giảng Viên</div>
-            </div>
-            <div className={cx("user-list-department")}>
-              <div className={cx("list-department-text")}>
-                Khoa: Đào tạo Quốc tế
-              </div>
-              <div className={cx("list-department-position")}>
-                Ngành: Công nghệ phần mềm CMU
-              </div>
-            </div>
-            <div className={cx("user-list-email")}>
-              Email: Enguyenvana@gmail.com
-            </div>
-          </div>
-          <div className={cx("user-list-button")}>
-            <button>Theo dõi</button>
-          </div>
-        </div>
-        <div className={cx("user-body-list")}>
-          <div className={cx("user-list-img")}>
-            <img src={UserAvatar} alt="avartar" />
-          </div>
-          <div className={cx("user-list-info")}>
-            <div className={cx("user-list-name")}>
-              <div className={cx("list-name-text")}>Nguyễn Văn A</div>
-              <div className={cx("list-name-position")}>Chức vụ:Giảng Viên</div>
-            </div>
-            <div className={cx("user-list-department")}>
-              <div className={cx("list-department-text")}>
-                Khoa: Đào tạo Quốc tế
-              </div>
-              <div className={cx("list-department-position")}>
-                Ngành: Công nghệ phần mềm CMU
-              </div>
-            </div>
-            <div className={cx("user-list-email")}>
-              Email: Enguyenvana@gmail.com
-            </div>
-          </div>
-          <div className={cx("user-list-button")}>
-            <button>Theo dõi</button>
-          </div>
-        </div> */}
+        
       </div>
+      {
+        listSearch.length >0 && 
       <div className={cx("search-user-footer")}>
         <Pagination
-          count={alphabet.length}
-          defaultPage={1}
-          siblingCount={7}
+         count={alphabet.length}
+          page={currentPage}
+          siblingCount={1}
+         
           onChange={handlePageChange}
           variant="outlined"
           renderItem={(item: PaginationRenderItemParams) => (
@@ -229,11 +181,12 @@ const SearchUserComponents = () => {
                 fontFamily: "Inter",
               }}
               {...item}
-              page={item.page ? alphabet[item.page - 1] : null}
+              // page={item.page ? alphabet[item.page - 1] : null}
             />
           )}
         />
       </div>
+      }
     </div>
   );
 };

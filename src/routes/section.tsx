@@ -9,17 +9,14 @@ import ForgotPassWord from "../pages/ForgotPassWord";
 import { ProfileAuthor, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import ProtectedRoute from "./ProtectedRoute";
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
 import DocumentStorage from "../pages/DocumentStorage";
 import ProfilePersonal from "../pages/ProfilePersonal";
 import PersonalTeacher from "../pages/PersonalTeacher";
 import SearchUser from "../pages/SearchUser";
->>>>>>> Stashed changes
-=======
-import SearchUser from "../pages/SearchUser";
->>>>>>> fixupload
+import Notication from "../pages/Notication";
+import EditProfile from "../pages/EditProfile";
+
+
 
 export default function Router() {
   const routes = useRoutes([
@@ -54,6 +51,7 @@ export default function Router() {
         { path: "/document/directory", element: <DocumentPage /> },
         { path: "/document/support", element: <SupportPage /> },
         { path: "/document/profileauthor", element: <ProfileAuthor /> },
+        { path: "/document/profileauthor:email", element: <ProfileAuthor /> },
         { path: "/document/profilepersonal", element: <ProfilePersonal /> },
         {
           path: "/document/profilepersonalteacher",
@@ -69,8 +67,13 @@ export default function Router() {
           element: <DocumentStorage />,
           index: true,
         },
+        {
+          path: "/document/editprofile",
+          element: <EditProfile />,
+          index: true,
+        },
+       
         { path: "/document/notication", element: <Notication />, index: true },
-        { path: "/document/searchuser", element: <SearchUser />, index: true },
       ],
     },
   ]);

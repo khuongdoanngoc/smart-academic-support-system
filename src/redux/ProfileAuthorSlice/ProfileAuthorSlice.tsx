@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FollowAuthorApi, DownloadDocumentAuthorApi, UnFollowAuthorApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
+import { FollowAuthorApi, DownloadDocumentAuthorApi, UnFollowAuthorApi, ViewProfileAuthorApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
@@ -15,6 +15,17 @@ const initialState: initialState = {
   success: false,
   followUser:[] as string[]
 };
+
+export interface IViewProfile{
+  firstName: string;
+  lastName: string;
+  email: string;
+  profilePicture: string;
+  faculty: string;
+  role: string;
+  Followers:string;
+  Following:string;
+}
 
 export const DownloadDocumentAuthorAction = createAsyncThunk<string, number>(
   "ProfileAuthorSlice/DownloadDocumentAuthorAction",
@@ -50,6 +61,19 @@ export const UnFollowAuthorAction = createAsyncThunk<string, string>(
     }
   }
 )
+
+export const ViewProfileAuthorAction = createAsyncThunk(
+  "ProfileAuthorSlice/ViewProfileAuthorAction",
+  async () => {
+    try {
+      const res = await ViewProfileAuthorApi();
+      return res as unknown as string
+    } catch (err:unknown) {
+      const error = err as AxiosError<{message?:string}>
+      throw new Error(error.response?.data.message || error.message)
+    }
+  }
+);
 
 export const ProfileAuthorSlice = createSlice({
   name: "ProfileAuthorSlice",

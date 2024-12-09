@@ -3,6 +3,7 @@ import { axiosInstance } from "../../utils/AxiosInterceptor"
 
 
 
+
 export const DownloadDocumentAuthorApi=async(documentId:number)=>{
   try {
     const response = await axiosInstance.get(`/download/${documentId}`)
@@ -39,3 +40,13 @@ export const UnFollowAuthorApi=async(email:string)=>{
   }
 }
 
+export const ViewProfileAuthorApi=async()=>{
+  try {
+    const response = await axiosInstance.post(`/user/profile`)
+    return response
+  } catch (err:unknown) {
+    const error= err as AxiosError<{message?:string}>
+    throw new Error(error.response?.data.message || error.message)
+    
+  }
+}

@@ -18,6 +18,8 @@ import {  useAppDispatch, useAppSelector } from "../../../redux/store";
 // import { FollowProFileAction } from "../../../redux/EditProFileSlice/EditProFileSlice";
 import { DownloadDocumentAuthorAction, FollowAuthorAction, UnFollowAuthorAction } from "../../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
 import { useGlobalContextLoin } from "../../../layouts/useContext";
+import { useLocation } from "react-router-dom";
+import { SearchViewUserInterface } from "../../../services/SearchUserAPI/SearchUserApi";
 // import { RootState } from "@reduxjs/toolkit/query";
 const cx = classnames.bind(styles);
 interface Subject {
@@ -114,6 +116,8 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
 
   const dispatch = useAppDispatch();
   // const [listItemFile, setListItemFile] = useState(4);
+  const location = useLocation()
+  const userDetails = location.state as SearchViewUserInterface
   const { setIsFormLogin } = useGlobalContextLoin();
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
@@ -165,7 +169,7 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
               <div className={cx("author-name")}>
                 <img src={Avatar} />
                 <div>
-                  <h3>Nguyen Quoc Huy</h3>
+                  <h3>`${userDetails.firstName } ${userDetails.lastName}`</h3>
                   <p>Software Technology CMU</p>
                 </div>
               </div>

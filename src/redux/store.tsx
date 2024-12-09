@@ -6,7 +6,9 @@ import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { useDispatch, useSelector } from "react-redux";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
+import editProFileReducer from "./EditProFileSlice/EditProFileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
+import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 
 const store = configureStore({
   reducer: {
@@ -16,17 +18,11 @@ const store = configureStore({
     notication: NoticatonReducer,
     chatbot: ChatBotReducer,
     authentication: authenticationReducer,
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    searchUser:searchUserReducer
-=======
-    editProFile: EditProFileReducer,
-    downloadDocument: ProfileAuthorReducer,
-    profileAuthor: ProfileAuthorReducer,
->>>>>>> Stashed changes
-=======
-    searchUser:searchUserReducer
->>>>>>> fixupload
+    searchUser:searchUserReducer,
+    editProFile: editProFileReducer,
+    // downloadDocument: profileAuthorReducer,
+    profileAuthor: profileAuthorReducer,
+
   },
 });
 
