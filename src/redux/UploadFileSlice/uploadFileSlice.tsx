@@ -19,6 +19,7 @@ interface initState {
   loading: boolean;
   error: string | null;
   success: boolean | null;
+  isUpload: boolean | null;
   searchFaculty: SearchFaculty[] ;
   searchFolder: SearchFolder[] ;
   searchSubject: SearchSubject[];
@@ -28,6 +29,7 @@ const initialState: initState = {
   loading: false,
   error: "",
   success: false,
+  isUpload: false,
   searchFaculty: [],
   searchFolder: [],
   searchSubject: [],
@@ -119,6 +121,7 @@ const uploadFileSlice = createSlice({
     builder
       .addCase(UploadFileAction.pending, (state) => {
         state.loading = true;
+        state.isUpload = false;
         state.error = null;
       })
       .addCase(SearchFacultyAction.pending, (state) => {
@@ -136,6 +139,8 @@ const uploadFileSlice = createSlice({
       .addCase(UploadFileAction.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
+        state.isUpload = true;
+        state.error = null;
         toast.success("File uploaded successfully!");
       })
       .addCase(
@@ -163,6 +168,8 @@ const uploadFileSlice = createSlice({
       .addCase(UploadFileAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        state.success = false;
+        state.isUpload = false;
       })
       .addCase(SearchFacultyAction.rejected, (state, action) => {
         state.loading = false;

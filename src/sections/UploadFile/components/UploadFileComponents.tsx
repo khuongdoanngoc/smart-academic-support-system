@@ -7,7 +7,7 @@ import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboa
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
 // import { AppDispatch } from "../../../redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -37,6 +37,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -78,7 +79,9 @@ const UploadFileComponents = () => {
   const searchFolder =
     useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
   const success = useSelector((state: RootState) => state.uploadFile.success); //use selector hiển thị kết quả upload file
-
+const isloading=useSelector((state:RootState)=>state.uploadFile.loading)
+const error=useSelector((state:RootState)=>state.uploadFile.error)
+const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
     if (newFile) {
@@ -95,7 +98,6 @@ const UploadFileComponents = () => {
         }, 3000);
         return;
       }
-
       if (fileSelected === null) {
         //kiểm tra file đã được chọn chưa
         setFileSelected(newFile);
@@ -132,7 +134,6 @@ const UploadFileComponents = () => {
           }, 3000);
           return;
         }
-
         if (fileList.length >= 1) {
           setInformationAlert("Only 1 file can be uploaded.");
           setAlertFile(true);
@@ -187,12 +188,16 @@ const UploadFileComponents = () => {
       setFacultyId(generateRandomId()); // Tự động tạo ID nếu chưa có
     }
     if (isColorItemButton === 2) {
-      if (defaultUploadFile && !fileDetailLoad) {
-        setFileDetailLoad(true);
+      if (isUpload && success && error === null && isloading === false) {
+        setUploadFileSuccess(true);
         return;
+      }else if(error && isUpload === false && isloading === false && success === false){
+        toast.error("Upload file fail");
+        setDefaultUploadFile(false);
+        setUploadFileSuccess(false);
       }
       setDefaultUploadFile(false);
-      if (fileSelected !== null && facultyId !== null) {
+      if (fileSelected !== null && facultyId !== null ) {
         const data = {
           file: fileSelected,
           title: titleFile,
@@ -202,24 +207,22 @@ const UploadFileComponents = () => {
           subject: subjectFile,
           facultyId: facultyId,
         };
-        console.log(data);
 
         dispatch(UploadFileAction(data));
 
-        console.log(success);
       }
     }
     setIsColorItemButton((item) => Math.min(item + 1, 3));
   };
-  useEffect(() => {
-    if (success === true) {
-      setUploadFileSuccess(true);
-    }
-  }, [success]);
+  // useEffect(() => {
+  //   if (success === true) {
+  //     setUploadFileSuccess(true);
+  //   }
+  // }, [success]);
   const handleItemBack = () => {
     setIsColorItemButton((item) => Math.max(item - 1, 1));
     if (isColorItemButton === 2) {
-      console.log("setDefaultUploadFile");
+    
 
       setDefaultUploadFile(false);
       setFileDetailLoad(false);
@@ -261,7 +264,6 @@ const UploadFileComponents = () => {
       dispatch(clearSearchSubject());
       return;
     }
-
     try {
       await dispatch(SearchSubjectAction(value)).unwrap();
     } catch (error) {
@@ -274,7 +276,6 @@ const UploadFileComponents = () => {
       dispatch(clearSearchFolder());
       return;
     }
-
     try {
       await dispatch(SearchFolderAction(value)).unwrap();
     } catch (error) {
