@@ -6,7 +6,7 @@ interface ProtectedRouteProps {
     children: React.ReactNode;
 }
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { isLogined } = useAppSelector((state) => state.authentication);
     useEffect(() => {
         if (!isLogined) {
