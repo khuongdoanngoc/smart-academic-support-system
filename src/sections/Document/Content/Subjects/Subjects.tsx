@@ -22,8 +22,6 @@ export default function Subjects() {
     const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     const [currentPage, setCurrentPage] = useState<string>(alphabet[0]);
 
-    console.log(currentPage);
-
     const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
         setCurrentPage(alphabet[value - 1]);
     };

@@ -15,57 +15,95 @@ import ProtectedRoute from "./ProtectedRoute";
 import SearchUser from "../pages/SearchUser";
 
 export default function Router() {
-  const routes = useRoutes([
-    {
-      element: (
-        <Layout>
-          <Outlet />
-        </Layout>
-      ),
-      children: [
-        { element: <HomePage />, index: true },
-        { path: "/login", element: <Login />, index: true },
-        { path: "/register", element: <Register />, index: true },
-        { path: "/forgotpass", element: <ForgotPassWord />, index: true },
-        { path: "/newpassword", element: <NewPassword />, index: true },
-      ],
-    },
+    const routes = useRoutes([
+        {
+            path: "/",
+            element: (
+                <Layout>
+                    <Outlet />
+                </Layout>
+            ),
+            children: [
+                { element: <HomePage />, index: true },
+                { path: "login", element: <Login />, index: true },
+                { path: "register", element: <Register />, index: true },
+                {
+                    path: "forgot-password",
+                    element: <ForgotPassWord />,
+                },
+                { path: "new-password", element: <NewPassword />, index: true },
+            ],
+        },
 
-    {
-      element: (
-        <ProtectedRoute>
-          <DocumentLayout>
-            <Outlet />
-          </DocumentLayout>
-        </ProtectedRoute>
-      ),
-      children: [
         {
-          path: "/document",
-          element: <DocumentPage />,
+            path: "/document",
+            element: (
+                <ProtectedRoute>
+                    <DocumentLayout>
+                        <Outlet />
+                    </DocumentLayout>
+                </ProtectedRoute>
+            ),
+            children: [
+                { index: true, element: <DocumentPage /> },
+                // { path: "/directory", element: <Directory /> },
+                { path: "support", element: <SupportPage /> },
+                { path: "ai-support", element: <AISupportPage /> },
+                {
+                    path: "uploadfile",
+                    element: <UploadFile />,
+                },
+                {
+                    path: "changepassword",
+                    element: <ChangePassWord />,
+                },
+                {
+                    path: "editprofile",
+                    element: <EditProfile />,
+                },
+                {
+                    path: "notication",
+                    element: <Notication />,
+                },
+                // {
+                //     path: ":majorSlug/:folderSlug/:id",
+                //     element: <DocumentDetailPage />,
+                // },
+                { path: "/document/notication", element: <Notication />, index: true },
+                { path: "/document/searchuser", element: <SearchUser />, index: true },
+            ],
         },
-        { path: "/document/directory", element: <DocumentPage /> },
-        { path: "/document/support", element: <SupportPage /> },
-        { path: "/document/ai-support", element: <AISupportPage /> },
-        {
-          path: "/document/uploadfile",
-          element: <UploadFile />,
-          index: true,
-        },
-        {
-          path: "/document/changepassword",
-          element: <ChangePassWord />,
-          index: true,
-        },
-        {
-          path: "/document/editprofile",
-          element: <EditProfile />,
-          index: true,
-        },
-        { path: "/document/notication", element: <Notication />, index: true },
-        { path: "/document/searchuser", element: <SearchUser />, index: true },
-      ],
-    },
+        // {
+        //     path: "/admin",
+        //     element: (
+        //         <DashboardLayout>
+        //             <Outlet />
+        //         </DashboardLayout>
+        //     ),
+        //     children: [
+        //         {
+        //             path: "dashboard",
+        //             element: <AdminHome />,
+        //         },
+        //         {
+        //             path: "documents",
+        //             element: <AdminDocumenPage />,
+        //         },
+        //         {
+        //             path: "users",
+        //             element: <AdminUsers />,
+        //         },
+        //     ],
+        // },
+        // {
+        //   path: "/document/editprofile",
+        //   element: <EditProfile />,
+        //   index: true,
+        // },
+        // { path: "/document/notication", element: <Notication />, index: true },
+        // { path: "/document/searchuser", element: <SearchUser />, index: true },
+    //   ],
+    // },
   ]);
   return routes;
 }

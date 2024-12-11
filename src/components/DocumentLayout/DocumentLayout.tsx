@@ -8,17 +8,17 @@ import { Footer } from "../../layouts/footer";
 const cx = classnames.bind(styles);
 
 interface PropsType {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export default function DocumentLayout(props: PropsType) {
-  const location = useLocation();
+    const location = useLocation();
 
-  return (
-    <div className={cx("layout-wrapper")}>
-      <DocumentHeader />
-      <Main>{props.children}</Main>
-      {location.pathname !== "/document/uploadfile" && <Footer />}
-    </div>
-  );
+    return (
+        <div className={cx("layout-wrapper")}>
+            <DocumentHeader />
+            <Main>{props.children}</Main>
+            {location.pathname !== "/document/uploadfile" && <Footer />}
+        </div>
+    );
 }

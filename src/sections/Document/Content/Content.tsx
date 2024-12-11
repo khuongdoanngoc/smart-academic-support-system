@@ -7,8 +7,19 @@ import { Docs } from "./Docs";
 
 import staticDocs from "./static-docs.json";
 import { Subjects } from "./Subjects";
+// import { useEffect } from "react";
+// import { AppDispatch } from "../../../redux/store";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getAllDocuments } from "../../../redux/DocumentSlice/documentSlice";
 
 export default function Content() {
+    // const dispatch = useDispatch<AppDispatch>();
+    // const documents = useSelector((state: any) => state.document.Documents);
+
+    // useEffect(() => {
+    //     dispatch(getAllDocuments());
+    // }, []);
+
     return (
         <div className={cx("content")}>
             <img src={Background} alt="bg" />

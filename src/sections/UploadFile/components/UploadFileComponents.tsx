@@ -6,8 +6,13 @@ import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 
+import * as React from "react";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 // import { AppDispatch } from "../../../redux/store";
-import { useRef, useState } from "react";
+import { useRef, useState,useCallback } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -26,18 +31,21 @@ import { HeaderUploadFile } from "../../../layouts/header/HeaderUploadFile";
 
 import {
   clearSearchFaculty,
-  clearSearchFolder,
+  // clearSearchFolder,
   clearSearchSubject,
   FileItem,
   SearchFacultyAction,
-  SearchFolderAction,
+  // SearchFolderAction,
   SearchSubjectAction,
   UploadFileAction,
+  // setFileList,
+  // setValueRow,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { debounce } from "@mui/material";
+// import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -76,12 +84,13 @@ const UploadFileComponents = () => {
     useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
   const searchSubject =
     useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
-  const searchFolder =
-    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
-  const success = useSelector((state: RootState) => state.uploadFile.success); //use selector hiển thị kết quả upload file
-const isloading=useSelector((state:RootState)=>state.uploadFile.loading)
-const error=useSelector((state:RootState)=>state.uploadFile.error)
-const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
+  // const searchFolder =
+  //   useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+  // const success = useSelector((state: RootState) => state.uploadFile.success); //use selector hiển thị kết quả upload file
+  // const isloading = useSelector((state: RootState) => state.uploadFile.loading);
+  // const error = useSelector((state: RootState) => state.uploadFile.error);
+  // const isUpload = useSelector((state: RootState) => state.uploadFile.isUpload);
+
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
     if (newFile) {
@@ -134,14 +143,15 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
           }, 3000);
           return;
         }
-        if (fileList.length >= 1) {
-          setInformationAlert("Only 1 file can be uploaded.");
-          setAlertFile(true);
-          setTimeout(() => {
-            setAlertFile(false);
-          }, 3000);
-          return;
-        }
+
+        // if (fileList.length >= 1) {
+        //   setInformationAlert("Only 1 file can be uploaded.");
+        //   setAlertFile(true);
+        //   setTimeout(() => {
+        //     setAlertFile(false);
+        //   }, 3000);
+        //   return;
+        // }
       }
     }
 
@@ -156,6 +166,34 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
       : `${(size / (1024 * 1024)).toFixed(0)} MB`;
   };
 
+  // const handleDeleteFile = () => {
+  //     dispatch(setFileList([]));
+  //     setFileSelected(null);
+  //     setMenuDeleButton(false);
+  // };
+  // const handleCancelFile = () => {
+  //     setMenuDeleButton(false);
+  // };
+
+  // const handleMenuDeleteButton = () => {
+  //     setMenuDeleButton(true);
+  // };
+
+  // const handleClearAlert = () => {
+  //     setAlertFile(false);
+  // };
+  // const handleDefaultUpload = () => {
+  //   if (fileList.length >= 1) {
+  //     setInformationAlert("Only 1 file can be uploaded.");
+  //     setAlertFile(true);
+  //     setTimeout(() => {
+  //       setAlertFile(false);
+  //     }, 3000);
+  //     return;
+  //   }
+  // };
+
+  // const handleSubmit=()=>{
   const handleDeleteFile = () => {
     setFileList([]);
     setFileSelected(null);
@@ -188,16 +226,25 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
       setFacultyId(generateRandomId()); // Tự động tạo ID nếu chưa có
     }
     if (isColorItemButton === 2) {
-      if (isUpload && success && error === null && isloading === false) {
-        setUploadFileSuccess(true);
+      if (defaultUploadFile && !fileDetailLoad) {
+        setFileDetailLoad(true);
         return;
-      }else if(error && isUpload === false && isloading === false && success === false){
-        toast.error("Upload file fail");
-        setDefaultUploadFile(false);
-        setUploadFileSuccess(false);
       }
+      // if (isUpload && success && error === null && isloading === false) {
+      //   setUploadFileSuccess(true);
+      //   return;
+      // } else if (
+      //   error &&
+      //   isUpload === false &&
+      //   isloading === false &&
+      //   success === false
+      // ) {
+      //   toast.error("Upload file fail");
+      //   setDefaultUploadFile(false);
+      //   setUploadFileSuccess(false);
+      // }
       setDefaultUploadFile(false);
-      if (fileSelected !== null && facultyId !== null ) {
+      if (fileSelected !== null && facultyId !== null) {
         const data = {
           file: fileSelected,
           title: titleFile,
@@ -209,7 +256,6 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
         };
 
         dispatch(UploadFileAction(data));
-
       }
     }
     setIsColorItemButton((item) => Math.min(item + 1, 3));
@@ -222,8 +268,6 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
   const handleItemBack = () => {
     setIsColorItemButton((item) => Math.max(item - 1, 1));
     if (isColorItemButton === 2) {
-    
-
       setDefaultUploadFile(false);
       setFileDetailLoad(false);
     }
@@ -244,16 +288,27 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
     setMenuCheckItemRowYear(!menuCheckItemRowYear);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchFaculty = useCallback(debounce((value:string)=>dispatch(SearchFacultyAction(value)).unwrap(),1000),[dispatch,SearchFacultyAction]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchSubject = useCallback(debounce((value:string)=>dispatch(SearchSubjectAction(value)).unwrap(),1000),[dispatch,SearchSubjectAction]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
+  const debounceClearFaculty = useCallback(debounce(()=>dispatch(clearSearchFaculty()),1000),[dispatch,clearSearchFaculty]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceClearSubject = useCallback(debounce(()=>dispatch(clearSearchSubject()),1000),[dispatch,clearSearchSubject]);
+
+  
+
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
 
     if (!value.trim()) {
-      dispatch(clearSearchFaculty());
+      debounceClearFaculty()
       return;
     }
 
     try {
-      await dispatch(SearchFacultyAction(value)).unwrap();
+      debounceSearchFaculty(value)
     } catch (error) {
       console.log(error);
     }
@@ -261,27 +316,28 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
   const handleSearchSubject = async (value: string) => {
     setSubjectFile(value);
     if (!value.trim()) {
-      dispatch(clearSearchSubject());
+      debounceClearSubject()
       return;
     }
     try {
-      await dispatch(SearchSubjectAction(value)).unwrap();
+      debounceSearchSubject(value);
     } catch (error) {
       console.log(error);
     }
   };
-  const handleSearchFolder = async (value: string) => {
-    setContentFile(value);
-    if (!value.trim()) {
-      dispatch(clearSearchFolder());
-      return;
-    }
-    try {
-      await dispatch(SearchFolderAction(value)).unwrap();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleSearchFolder = async (value: string) => {
+  //   setContentFile(value);
+  //   if (!value.trim()) {
+  //     dispatch(clearSearchFolder());
+  //     return;
+  //   }
+  //   try {
+  //     await dispatch(SearchFolderAction(value)).unwrap();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   const handleResetUpload = () => {
     setFileList([]);
     setDefaultUploadFile(false);
@@ -304,14 +360,22 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
   const handleClickDefaultUpload = () => {
     handleResetUpload();
   };
+
   const handleDelectFileUpload = () => {
     handleResetUpload();
   };
+
   const handleNavigateDocument = () => {
     navigate("/document");
   };
   const isActiveTitle = (step: number) => isColorItemButton === step;
   const isActiveBorder = (step: number) => isColorItemButton >= step;
+
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value);
+  };
 
   return (
     <div className={cx("file-component-main")}>
@@ -346,7 +410,6 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
             ></div>
           </div>
         </div>
-
         {isDragging ? (
           <div
             className={cx("main-body-center")}
@@ -439,11 +502,10 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
                       )}
                     </div>
                   </div>
-
                   <div className={cx("upload-body-list")}>
                     <p>Thư mục</p>
                     <div className={cx("list-item-search")}>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder="Tiêu đề thư mục"
                         value={contentFile}
@@ -467,8 +529,26 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
                             ))}
                           </ul>
                         </div>
-                      )}
+                      )} */}
+                       <FormControl  >
+                      
+                      <Select
+                        labelId="demo-select-small-label"
+                        id="demo-select-small"
+                        value={age}
+                        label="Age"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={10}>Ten</MenuItem>
+                        <MenuItem value={20}>Twenty</MenuItem>
+                        <MenuItem value={30}>Thirty</MenuItem>
+                      </Select>
+                    </FormControl>
                     </div>
+                   
                   </div>
                 </div>
 
@@ -690,16 +770,22 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
             </div>
           </div>
         )}
+
         {defaultUploadFile ? (
           <div className={cx("main-detail-button")}>
             <button
               className={cx("detail-button-comeback")}
               onClick={handleItemBack}
+              // disabled={isColorItemButton == 1}
             >
               <ArrowBack />
               Quay lại
             </button>
-            <button className={cx("detail-button-go")} onClick={handleItemNext}>
+            <button
+              className={cx("detail-button-go")}
+              onClick={handleItemNext}
+              // disabled={isColorItemButton == 3}
+            >
               Tiếp tục
               <ArrowForward />
             </button>
@@ -707,7 +793,10 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
         ) : uploadFileSuccess ? (
           <></>
         ) : (
-          <div className={cx("main-body-bottom")}>
+          <div
+            className={cx("main-body-bottom")}
+            // style={{ display: defaultUploadFile ? "none" : "block" }}
+          >
             <div className={cx("body-bottom-file")}>
               {fileList.map((item: FileItem, index) => (
                 <div className={cx("bottom-file-list")} key={index}>
@@ -722,7 +811,10 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
                   <div className={cx("bottom-file-title")}>
                     <p>{item.name}</p>
                     <div className={cx("file-title-bar")}>
-                      <div className={cx("bar-list")}></div>
+                      <div
+                        className={cx("bar-list")}
+                        // style={{ width: `${fileLoad}%` }}
+                      ></div>
                     </div>
                   </div>
                   <div className={cx("bottom-file-del")}>
@@ -748,7 +840,6 @@ const isUpload=useSelector((state:RootState)=>state.uploadFile.isUpload)
                 </div>
               ))}
             </div>
-
             <div className={cx("main-body-button")}>
               <button onClick={handleDefaultUpload}>
                 <div>

@@ -74,6 +74,15 @@ const ChatBotSlice= createSlice({
             })
            .addCase(sendMessageAction.rejected, (state, action) => {
                 state.loading = false;
+                const data = {
+                    id: Date.now().toString(),
+                    name: "DTU AI Chat",
+                    avatar: Avatar,
+                    message: "Tôi đang gặp lỗi, vui lòng thử lại sau",
+                    time: new Date().toLocaleTimeString(),
+                    sender: "bot",
+                };
+                state.messages= [...state.messages, data];
                 state.error = action.error.message;
             })
     }
