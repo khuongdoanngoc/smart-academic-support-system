@@ -1,32 +1,35 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
-import EditProfileAPI from "../../../services/EditProfileAPI/EditProfileAPI";
 import { RootState, AppDispatch } from "../../../redux/store";
-import { resetState } from "../../../redux/EditProfileSlice/EditProfileSlice";
+import {
+  EditProfileAction,
+  // resetState,
+} from "../../../redux/EditProfileSlice/EditProfileSlice";
 import avatar from "../../../assets/images/Frame 8720.png";
+import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
 const EditProfileComponents = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { isloading, error, success } = useSelector(
+  const { isloading, success } = useSelector(
     (state: RootState) => state.editProfile
   );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    gender: "",
     birthDate: "",
-    gender: "Nam",
     hometown: "",
     email: "",
     phoneNumber: "",
-    facultyId: 1,
+    facultyId: "",
     major: "Software Technology CMU",
-    position: "Sinh viên",
     enrollmentYear: new Date().getFullYear(),
     classNumber: "27",
     avatar: null as File | null,
@@ -43,25 +46,59 @@ const EditProfileComponents = () => {
   };
 
   const handleSubmit = () => {
-    dispatch(EditProfileAPI(formData));
+    console.log("formData", formData.avatar);
+    dispatch(EditProfileAction(formData));
+    if (success) {
+      toast.success("Cập nhật thông tin thành công!");
+    }
   };
 
+  // useEffect(() => {
+  //   if (success) {
+  //     toast.success("Cập nhật thông tin thành công!");
+  //     setFormData({
+  //       firstName: "",
+  //       lastName: "",
+  //       gender: "",
+  //       birthDate: "",
+  //       hometown: "",
+  //       email: "",
+  //       phoneNumber: "",
+  //       facultyId: "",
+  //       major: "Software Technology CMU",
+  //       enrollmentYear: new Date().getFullYear(),
+  //       classNumber: "27",
+  //       avatar: null,
+  //     });
+  //     dispatch(resetState());
+  //   }
+  //   if (error) {
+  //     toast.error(error);
+  //   }
+  // }, [success, error, dispatch]);
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+
+  // Khi avatar thay đổi, tạo URL mới và giải phóng URL cũ
   useEffect(() => {
-    if (success) {
-      alert("Cập nhật thông tin thành công!");
-      dispatch(resetState());
+    if (formData.avatar) {
+      const newPreview = URL.createObjectURL(formData.avatar);
+      setAvatarPreview((prev) => {
+        if (prev) {
+          URL.revokeObjectURL(prev); // Giải phóng URL cũ
+        }
+        return newPreview;
+      });
     }
-    if (error) {
-      alert("Có lỗi xảy ra: " + error);
-      dispatch(resetState());
-    }
-  }, [success, error, dispatch]);
+  }, [formData.avatar]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, avatar: file });
+    if (e.target.files && e.target.files[0]) {
+      setFormData({ ...formData, avatar: e.target.files[0] });
     }
+  };
+  const handleOpenFileDialog = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -74,17 +111,19 @@ const EditProfileComponents = () => {
           <div className={cx("main-body-top")}>
             <div className={cx("main-body-avatar")}>
               <h3>Ảnh đại diện</h3>
-              <img
-                src={
-                  formData.avatar
-                    ? URL.createObjectURL(formData.avatar)
-                    : avatar
-                }
-                alt="avatar"
-              />
+              <img src={avatarPreview || avatar} alt="avatar" />
               <div className={cx("file-input")}>
-                <input type="file" name="avatar" onChange={handleFileChange} />
-                <button>Đổi ảnh</button>
+                <input
+                  type="file"
+                  name="avatar"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+                <button onClick={handleOpenFileDialog}>
+                  {" "}
+                  {formData.avatar ? "Đổi ảnh" : "Chọn ảnh"}
+                </button>
               </div>
             </div>
             <div className={cx("main-body-individual")}>
@@ -186,8 +225,12 @@ const EditProfileComponents = () => {
                     value={formData.facultyId}
                     onChange={handleInputChange}
                   >
-                    <option value={1}>Đào tạo Quốc Tế 1</option>
-                    <option value={2}>Đào tạo Quốc Tế 2</option>
+                    <option value={"Đào tạo Quốc Tế 1"}>
+                      Đào tạo Quốc Tế 1
+                    </option>
+                    <option value={"Đào tạo Quốc Tế 2"}>
+                      Đào tạo Quốc Tế 2
+                    </option>
                   </select>
                 </div>
                 <div className={cx("input-school-specialized")}>
@@ -197,8 +240,12 @@ const EditProfileComponents = () => {
                     value={formData.major}
                     onChange={handleInputChange}
                   >
-                    <option>Software Technology CMU</option>
-                    <option>Software Technology CMU 2</option>
+                    <option value={"Software Technology CMU"}>
+                      Software Technology CMU
+                    </option>
+                    <option value={"Software Technology CMU 2"}>
+                      Software Technology CMU 2
+                    </option>
                   </select>
                 </div>
               </div>
@@ -208,12 +255,12 @@ const EditProfileComponents = () => {
                   <input
                     type="text"
                     name="position"
-                    value={formData.position}
                     readOnly
-                    onChange={handleInputChange}
-                    min={2000}
-                    max={new Date().getFullYear()}
-                    placeholder="YYYY"
+                    // value={formData.position}
+                    // onChange={handleInputChange}
+                    // min={2000}
+                    // max={new Date().getFullYear()}
+                    placeholder="Sinh viên"
                   />
                 </div>
                 <div className={cx("input-information-year")}>
@@ -236,9 +283,9 @@ const EditProfileComponents = () => {
                     value={formData.classNumber}
                     onChange={handleInputChange}
                   >
-                    <option>27</option>
-                    <option>26</option>
-                    <option>25</option>
+                    <option value={27}>27</option>
+                    <option value={26}>26</option>
+                    <option value={25}>25</option>
                   </select>
                 </div>
               </div>

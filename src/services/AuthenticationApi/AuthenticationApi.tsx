@@ -15,6 +15,11 @@ interface IRegister {
   password: string;
   roleName: string;
 }
+
+export interface IChangePassWord{
+  password:string
+  newpassword:string
+}
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
@@ -61,3 +66,14 @@ export const LogoutApi = async () => {
     throw new Error(error.message);
   }
 };
+
+export const ChangePasswordAPI= async(data:IChangePassWord)=>{
+  try {
+    const res = await axiosInstance.post(`/auth/update/new-password`,data);
+    return res;
+  } catch (err:unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+  
+    throw new Error(error.response?.data.message || error.message);
+  }
+}

@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  IChangePassWord,
   LoginApi,
   LogoutApi,
   RegisterApi,
+  ChangePasswordAPI,
 } from "../../services/AuthenticationApi/AuthenticationApi";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -77,6 +79,19 @@ export const LogoutAction = createAsyncThunk(
   async () => {
     try {
       const response = await LogoutApi();
+      return response;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.message);
+      throw Error(error.message);
+    }
+  }
+);
+export const ChangePasswordAction = createAsyncThunk(
+  "Authentication/ChangePasswordAction",
+  async (value:IChangePassWord) => {
+    try {
+      const response = await ChangePasswordAPI(value);
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;

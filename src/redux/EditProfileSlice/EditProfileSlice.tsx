@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import EditProfileAPI from "../../services/EditProfileAPI/EditProfileAPI";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import EditProfileAPI, { UpdateProfileRequest } from "../../services/EditProfileAPI/EditProfileAPI";
+import { AxiosError } from "axios";
 
 interface EditProfileState {
   isloading: boolean;
@@ -11,6 +12,19 @@ const initialState: EditProfileState = {
   error: null,
   success: false,
 };
+
+export const EditProfileAction = createAsyncThunk(
+  "EditProfileAction",
+  async(data: UpdateProfileRequest)=>{
+    try {
+      const response = EditProfileAPI(data);
+      return response;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.response?.data.message || error.message);
+    }
+  }
+)
 const editProfileSlice = createSlice({
   name: "editProfile",
   initialState,
@@ -19,22 +33,22 @@ const editProfileSlice = createSlice({
       state.isloading = false;
       state.error = null;
       state.success = false;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(EditProfileAPI.pending, (state) => {
+      .addCase(EditProfileAction.pending, (state) => {
         state.isloading = true;
         state.error = null;
       })
-      .addCase(EditProfileAPI.fulfilled, (state) => {
+      .addCase(EditProfileAction.fulfilled, (state) => {
         state.isloading = false;
         state.success = true;
         state.error = null;
       })
-      .addCase(EditProfileAPI.rejected, (state, action) => {
+      .addCase(EditProfileAction.rejected, (state, action) => {
         state.isloading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message||"Cập nhật thất bại";
       });
   },
 });

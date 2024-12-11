@@ -8,8 +8,9 @@ import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button } from "../../../components/Button";
+// import { Button } from "../../../components/Button";
 import { Key } from "@mui/icons-material";
+import { ButtonSubmit } from "../../../components/Button/Button";
 
 const cx = classnames.bind(styles);
 
@@ -141,12 +142,13 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                       </div>
                     </div>
                     <div className={cx("body-button")}>
-                      <Button
+                      <ButtonSubmit
                         titleButton={pop.titleButton}
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
+                        background={"red"}
                       />
                     </div>
                   </div>
