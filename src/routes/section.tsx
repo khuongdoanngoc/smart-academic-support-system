@@ -20,6 +20,8 @@ import AdminUsers from "../pages/Admin/AdminUsers";
 import CreateFolderPage from "../pages/CreateFolder";
 
 import Directory from "../pages/Directory";
+import path from "path";
+import SearchPage from "../pages/SearchPage";
 
 export default function Router() {
     const routes = useRoutes([
@@ -101,6 +103,20 @@ export default function Router() {
                 {
                     path: "users",
                     element: <AdminUsers />,
+                },
+            ],
+        },
+        {
+            path: "/search",
+            element: (
+                <DocumentLayout>
+                    <Outlet />
+                </DocumentLayout>
+            ),
+            children: [
+                {
+                    element: <SearchPage />,
+                    index: true,
                 },
             ],
         },

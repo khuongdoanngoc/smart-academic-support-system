@@ -1,0 +1,141 @@
+.search-view {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+    & > .search-container {
+        max-width: 1170px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        & > .search-by {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid #d3d9e0;
+            margin: 16px 0px;
+            & > button {
+                position: relative;
+                border: none;
+                background-color: white;
+                cursor: pointer;
+                font-size: 15px;
+                color: #2f3e4e;
+                padding: 12px 16px;
+            }
+            & > button::after {
+                opacity: 0;
+                border-radius: 20px;
+                bottom: 0;
+                content: "";
+                height: 4px;
+                left: 0;
+                position: absolute;
+                right: 0;
+                transition: background-color 0.3s, opacity 0.3s;
+                background-color: var(--border-color-active, #3092fa);
+            }
+            & > .active {
+                color: #3092fa;
+            }
+            & > .active::after {
+                opacity: 1 !important;
+            }
+        }
+        & > .docs-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            & > .doc {
+                width: 100%;
+                padding: 16px;
+                border-radius: 20px;
+                display: flex;
+                gap: 16px;
+                & > img {
+                    border-radius: 12px;
+                    height: 96px;
+                    width: 116px;
+                    padding: 8px;
+                    background-color: #e6ebef;
+                }
+                & > .content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    & > .title {
+                        display: inline;
+                        font-size: 16px;
+                        font-weight: 600;
+                        line-height: 130%;
+                        color: #3092fa;
+                        text-decoration: none;
+                    }
+                    & > .title:hover {
+                        color: #0a75e6;
+                        text-decoration: underline;
+                    }
+                    & > .subject {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #4c5966;
+                        text-decoration: none;
+                    }
+                    & > .subject:hover {
+                        text-decoration: underline;
+                        color: #0a75e6;
+                    }
+                    & > .faculty {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        font-size: 14px;
+                        font-weight: 500;
+                        color: #4c5966;
+                        text-decoration: none;
+                    }
+                }
+                & > .outstanding {
+                    margin-left: auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                    color: #9ea9b5;
+                    justify-content: center;
+                    min-width: 140px;
+                    & > div {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                }
+            }
+            & > .subject {
+                width: 100%;
+                padding: 16px;
+                border-radius: 20px;
+                display: flex;
+                gap: 16px;
+                align-items: center;
+                & > a {
+                    display: inline;
+                    font-size: 16px;
+                    font-weight: 600;
+                    line-height: 130%;
+                    color: #3092fa;
+                    text-decoration: none;
+                }
+                & > span {
+                    color: #4c5966;
+                    font-size: 14px;
+                }
+            }
+            & > div:hover {
+                background-color: #f1f7fe;
+            }
+        }
+    }
+}
