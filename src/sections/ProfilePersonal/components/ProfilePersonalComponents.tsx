@@ -14,7 +14,12 @@ import {
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { debounce } from "lodash";
+import { useAppDispatch } from "../../../redux/store";
+// // import { SearchFolderAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
+// import { SearchDocProfilePersonalAPI } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
+import { SearchDocPersonalAction } from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
 const cx = classnames.bind(styles);
 interface Subject {
   id: number;
@@ -100,15 +105,28 @@ const ProfileAuthorComponent = () => {
   const alphabet = Array.from("1234567");
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const dispatch=useAppDispatch()
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debounceSearch=useCallback(debounce((name:string)=>dispatch(SearchDocPersonalAction(name)),1000),[dispatch])
   const filteredDataList = (data: Subject[]) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
   const totalFile = fakeSubjects.length;
+
+
+const handleSearchDoc = async(name:string)=>{
+  try {
+    debounceSearch(name)
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
   return (
     <div className={cx("author-component")}>
       <div className={cx("author-component-information")}>
@@ -153,7 +171,7 @@ const ProfileAuthorComponent = () => {
             </div>
           </div>
           <div className={cx("information-right-search")}>
-            <input type="text" placeholder="Tìm kiếm tài liệu của Huy" />
+            <input type="text" placeholder="Tìm kiếm tài liệu của Huy" onChange={(e)=>handleSearchDoc(e.target.value)}/>
             <SearchIcon className={cx("search-icon")} />
           </div>
         </div>

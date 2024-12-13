@@ -22,7 +22,7 @@ const initialState: SearchInitState = {
 };
 
 export const SearchUserAction = createAsyncThunk<SearchInterface[], {name:string,pageSize:number,pageNum:number}>(
-  "SearchAction",
+  "SearchUserAction",
   async ({name,pageSize,pageNum}) => {
     try {
       const ressponse = await SearchUserAPI(name,pageSize,pageNum);
@@ -35,10 +35,10 @@ export const SearchUserAction = createAsyncThunk<SearchInterface[], {name:string
   }
 );
 export const SearchUserInformationAction = createAsyncThunk<SearchViewUserInterface[], string>(
-  "SearchActionByName",
-  async (name: string) => {
+  "SearchUserInformationAction",
+  async (email: string) => {
     try {
-      const ressponse = await SearchUserInformationAPI(name);
+      const ressponse = await SearchUserInformationAPI(email);
       return ressponse as unknown as SearchViewUserInterface[];
       
     } catch (err: unknown) {

@@ -115,6 +115,7 @@ const SearchUserComponents = () => {
     try {
       const res=dispatch(SearchUserInformationAction((email)))
       if(res){
+        sessionStorage.setItem("userEmail",email)
         navigate(`/document/profileauthor/${email}`,{state:res}) 
       }
     } catch (error) {

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FollowAuthorApi, DownloadDocumentAuthorApi, UnFollowAuthorApi, ViewProfileAuthorApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
+import { FollowAuthorApi, UnFollowAuthorApi, ViewProfileAuthorApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 
@@ -28,19 +28,7 @@ export interface IViewProfile{
   Following:string;
 }
 
-export const DownloadDocumentAuthorAction = createAsyncThunk<string, number>(
-  "ProfileAuthorSlice/DownloadDocumentAuthorAction",
-  async (documentId: number) => {
-    try {
-      const res = await DownloadDocumentAuthorApi(documentId);
-      return res as unknown as string;
-    } catch (error) {
-      const res = error as AxiosError<{message?:string}>
-      throw new Error(res.response?.data.message || res.message)
-    }
 
-  }
-);
 
 export const FollowAuthorAction = createAsyncThunk<string, string>(
   "ProfileAuthorSlice/FollowAuthorAction",
@@ -87,26 +75,13 @@ export const ProfileAuthorSlice = createSlice({
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(DownloadDocumentAuthorAction.pending, (state) => {
-      state.isloading = true;
-    })
-    .addCase(FollowAuthorAction.pending, (state) => {
+    builder.addCase(FollowAuthorAction.pending, (state) => {
       state.isloading = true;
     })
     .addCase(UnFollowAuthorAction.pending, (state) => {
       state.isloading = true;
     })
-    .addCase(
-      DownloadDocumentAuthorAction.fulfilled,
-      (state, action: PayloadAction<string>) => {
-        state.isloading = false;
-        state.success = true;
-        if (action.payload) {
-          toast.success("Download success");
-        }
-        
-      }
-    )
+    
     .addCase(FollowAuthorAction.fulfilled, (state, action: PayloadAction<string>) => {
       state.isloading = false;
       state.success = true;
@@ -121,11 +96,6 @@ export const ProfileAuthorSlice = createSlice({
         toast.success("UnFollow success");
       }
     })
-  .addCase(DownloadDocumentAuthorAction.rejected, (state, action) => {
-      state.isloading = false;
-      state.error = action.error.message || "Failed to download document";
-    })
-
     .addCase(FollowAuthorAction.rejected, (state, action) => {
       state.isloading = false;
       state.error = action.error.message || "Failed to follow user";

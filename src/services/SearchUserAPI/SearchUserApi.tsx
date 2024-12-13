@@ -42,10 +42,10 @@ export const SearchUserAPI = async (name: string,pageSize:number =5,pageNum:numb
 };
 
 
-export const SearchUserInformationAPI = async(data:string)=>{
+export const SearchUserInformationAPI = async(email:string)=>{
   try {
     const response = await axiosInstance.post<SearchViewUserInterface>(
-      `user-search/search-by-name?name=${data}`
+      `user-search/search-by-name?email=${email}`
     );
     return response
   } catch (err:unknown) {
