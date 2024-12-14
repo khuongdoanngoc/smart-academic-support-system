@@ -9,17 +9,19 @@ import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
 import { ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
-import AISupportPage from "../pages/AISupport";
-import EditProfile from "../pages/EditProfile";
-import Notication from "../pages/Notication";
 import ProtectedRoute from "./ProtectedRoute";
+import DocumentStorage from "../pages/DocumentStorage";
+import ProfilePersonal from "../pages/ProfilePersonal";
+import PersonalTeacher from "../pages/PersonalTeacher";
+import SearchUser from "../pages/SearchUser";
+import Notication from "../pages/Notication";
+import EditProfile from "../pages/EditProfile";
 import DocumentDetailPage from "../pages/DocumentDetail";
 import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 import AdminHome from "../pages/Admin/AdminHome";
 import AdminDocumenPage from "../pages/Admin/AdminDocument";
 import AdminUsers from "../pages/Admin/AdminUsers";
 import CreateFolderPage from "../pages/CreateFolder";
-
 import Directory from "../pages/Directory";
 import path from "path";
 import SearchPage from "../pages/SearchPage";
@@ -45,7 +47,6 @@ export default function Router() {
                 { path: "new-password", element: <NewPassword />, index: true },
             ],
         },
-
         {
             path: "/document",
             element: (
@@ -88,6 +89,24 @@ export default function Router() {
                     path: "folder/:id",
                     element: <FolderDetailPage />,
                 },
+              { path: "/document/directory", element: <DocumentPage /> },
+              { path: "/document/support", element: <SupportPage /> },
+              { path: "/document/profileauthor", element: <ProfileAuthor /> },
+              { path: "/document/profileauthor:email", element: <ProfileAuthor /> },
+              { path: "/document/profilepersonal", element: <ProfilePersonal /> },
+              {
+                path: "/document/profilepersonalteacher",
+                element: <PersonalTeacher />,
+              },
+              {
+                path: "/document/searchuser",
+                element: <SearchUser />,
+              },
+              {
+                path: "/document/documentstorage",
+                element: <DocumentStorage />,
+                index: true,
+              }
             ],
         },
         {
@@ -125,7 +144,7 @@ export default function Router() {
                     index: true,
                 },
             ],
-        },
+        }
     ]);
     return routes;
 }

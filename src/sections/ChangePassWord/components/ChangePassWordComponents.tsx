@@ -103,7 +103,7 @@ const ChangePassWordViewComponents = () => {
                     padding={10}
                     fontsize={16}
                     borderRadius={20}
-                    // background={"#0A75E6"}
+                    background={"#0A75E6"}
                   />
                 </div>
               </div>

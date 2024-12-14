@@ -36,7 +36,9 @@ export type ClearTokenRequest= {
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
+
     return res as unknown as ILoginS;
+    // return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
 
@@ -69,11 +71,11 @@ export const LogoutApi = async () => {
   }
 };
 
-export const AutoLoginApi= async ()=>{
-  try{
-    const res= await axiosInstance.get("/auth/autoLogin");
+export const AutoLoginApi = async () => {
+  try {
+    const res = await axiosInstance.get("/auth/autoLogin");
     return res;
-  }catch(err:unknown){
+  } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     throw new Error(error.message);
   }

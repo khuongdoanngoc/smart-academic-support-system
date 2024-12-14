@@ -120,6 +120,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
       } else {
         navigate("/document");
       }
+      console.log("Saved token:", localStorage.getItem("token"));
     } catch (error) {
       console.log(error);
       dispatch(loginFailure());
@@ -254,9 +255,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
             </Formik>
           ))}
         </div>
-        {loading && (
-          <Loader height={100}/>
-        )}
+        {loading && <Loader height={100} />}
       </div>
     </>
   );

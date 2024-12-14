@@ -7,17 +7,25 @@ import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { TypedUseSelectorHook, useDispatch,useSelector } from "react-redux";
 import SearchReducer from "./SearchSlice/searchSlice";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
+import editProFileReducer from "./EditProFileSlice/EditProFileSlice";
+import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
+import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 
 const store = configureStore({
-    reducer: {
-        uploadFile: UploadFileReducer,
-        document: DocumentReducer,
-        tag: TagReducers,
-        notication: NoticatonReducer,
-        chatbot: ChatBotReducer,
-        authentication: authenticationReducer,
-        search: SearchReducer,
-    },
+  reducer: {
+    uploadFile: UploadFileReducer,
+    document: DocumentReducer,
+    tag: TagReducers,
+    notication: NoticatonReducer,
+    chatbot: ChatBotReducer,
+    authentication: authenticationReducer,
+    searchUser:searchUserReducer,
+    editProFile: editProFileReducer,
+    // downloadDocument: profileAuthorReducer,
+    profileAuthor: profileAuthorReducer,
+    search: SearchReducer,
+
+  },
 });
 
 export default store;

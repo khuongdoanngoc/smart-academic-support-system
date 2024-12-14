@@ -1,9 +1,11 @@
+// import { useParams } from "react-router-dom";
 import { ProfileAuthorComponent } from "../components";
 
 const ProfileAuthorView = () => {
+  const userId = 3;
   return (
     <>
-      <ProfileAuthorComponent />
+      <ProfileAuthorComponent userId={userId} />
     </>
   );
 };
