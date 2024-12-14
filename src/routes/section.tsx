@@ -23,6 +23,7 @@ import Directory from "../pages/Directory";
 import path from "path";
 import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
+import TestPage from "../pages/TestPage";
 
 export default function Router() {
     const routes = useRoutes([
@@ -76,7 +77,7 @@ export default function Router() {
                     element: <Notication />,
                 },
                 {
-                    path: ":majorSlug/:folderSlug/:id",
+                    path: "view/:id",
                     element: <DocumentDetailPage />,
                 },
                 {
@@ -121,6 +122,16 @@ export default function Router() {
             children: [
                 {
                     element: <SearchPage />,
+                    index: true,
+                },
+            ],
+        },
+        {
+            path: "/test",
+            element: <Outlet />,
+            children: [
+                {
+                    element: <TestPage />,
                     index: true,
                 },
             ],

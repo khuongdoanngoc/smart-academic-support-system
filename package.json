@@ -22,6 +22,7 @@
     "framer-motion": "^11.11.9",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "pspdfkit": "^2024.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet-async": "^2.0.5",

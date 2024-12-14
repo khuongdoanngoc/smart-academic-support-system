@@ -59,22 +59,7 @@
             }
         }
     }
-    & > .pages-container {
-        content-visibility: visible;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    & > .doc-view-container {
         width: 100%;
-        & > .page {
-            width: 100%;
-            border-radius: 11.9531px;
-            margin-bottom: 20.3203px;
-            content-visibility: auto;
-            max-width: 1024px;
-            height: 1325px;
-            border: 1px solid #e6ebef;
-            box-shadow: unset;
-        }
     }
 }
