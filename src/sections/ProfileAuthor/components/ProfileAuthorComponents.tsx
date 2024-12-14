@@ -4,6 +4,7 @@ import Avatar from "../../../assets/images/avatar.png";
 import File from "../../../assets/images/File_dock.svg";
 import EditIcon from "../../../assets/images/edit-05.png";
 import ImportLight from "../../../assets/images/Import_light.png";
+import Tag from "../../../assets/images/tag.png";
 import Share from "../../../assets/images/fi_share-2.png";
 import Delect from "../../../assets/images/plus-01.png";
 import { Button } from "../../../components/Button";
@@ -12,6 +13,7 @@ import {
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
+
 import { useEffect, useState } from "react";
 // import { useSelecto } from "react-redux";
 import {
@@ -32,11 +34,13 @@ import { SearchUserInformationAction } from "../../../redux/SearchUserSlice/Sear
 import { useSelector } from "react-redux";
 // import { RootState } from "@reduxjs/toolkit/query";
 // import { RootState } from "@reduxjs/toolkit/query";
+        
 const cx = classnames.bind(styles);
 interface Subject {
   id: number;
   title: string;
 }
+
 interface FollowButtonProps {
   email: string;
 }
@@ -159,6 +163,7 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
   }, [dispatch, userDetails]);
 
   const { setIsFormLogin } = useGlobalContextLoin();
+    
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
@@ -167,7 +172,6 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-
   const handleFollow = () => {
     if (isFollow) {
       dispatch(UnFollowAuthorAction(email));

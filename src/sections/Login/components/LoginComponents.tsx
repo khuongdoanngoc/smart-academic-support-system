@@ -80,7 +80,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
   const handleOnClickForgot = () => {
     //hàm onclick để chuyển đến trang quên mật khẩu
     setTimeout(() => {
-      navigate("/forgotpass");
+      navigate("/forgot-password");
       setClickForgotPass(true);
     }, 600);
   };

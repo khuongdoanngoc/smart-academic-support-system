@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
 import Vector1 from "../../../assets/images/Vector 9.png";
@@ -5,9 +7,9 @@ import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
+import { debounce } from "lodash";
 
-// import { AppDispatch } from "../../../redux/store";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -34,9 +36,9 @@ import {
   SearchSubjectAction,
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { SearchFaculty } from "../../../services/UploadFileAPI/UploadFileAPI";
 
 const cx = classNames.bind(styles);
 
@@ -68,19 +70,19 @@ const UploadFileComponents = () => {
   const [facultyFile, setFacultyFile] = useState("");
   const [facultyId, setFacultyId] = useState<number | null>(0);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const searchFaculty =
-    useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
+  const searchFaculty: SearchFaculty[] = useAppSelector(
+    (state) => state.uploadFile.searchFaculty
+  );
   const searchSubject =
-    useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+    useAppSelector((state) => state.uploadFile.searchSubject) || [];
   const searchFolder =
-    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
-  const success = useSelector((state: RootState) => state.uploadFile.success); //use selector hiển thị kết quả upload file
-
+    useAppSelector((state) => state.uploadFile.searchFolder) || [];
+  const success = useAppSelector((state) => state.uploadFile.success);
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFile = e.target.files?.[0]; //lấy file từ input
+    const newFile = e.target.files?.[0];
     if (newFile) {
       const originalName = newFile.name; //lấy tên file
       const sizeFile = newFile.size; //lấy kích thước file
@@ -97,7 +99,6 @@ const UploadFileComponents = () => {
       }
 
       if (fileSelected === null) {
-        //kiểm tra file đã được chọn chưa
         setFileSelected(newFile);
         setTitleFile(originalName);
         const shortenedName =
@@ -241,6 +242,14 @@ const UploadFileComponents = () => {
     setMenuCheckItemRowYear(!menuCheckItemRowYear);
   };
 
+  const debounceSearching = useCallback(
+    debounce(
+      async (nextValue) =>
+        await dispatch(SearchFacultyAction(nextValue)).unwrap(),
+      1000
+    ),
+    [dispatch]
+  );
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
 
@@ -250,11 +259,18 @@ const UploadFileComponents = () => {
     }
 
     try {
-      await dispatch(SearchFacultyAction(value)).unwrap();
+      debounceSearching(value);
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    // Clean up the debounced function on unmount
+    return () => {
+      debounceSearching.cancel();
+    };
+  }, [debounceSearching]);
+  
   const handleSearchSubject = async (value: string) => {
     setSubjectFile(value);
     if (!value.trim()) {
@@ -422,7 +438,7 @@ const UploadFileComponents = () => {
                       {subjectFile.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
-                            {searchSubject.map((result, index) => (
+                            {searchSubject.map((result: any, index: number) => (
                               <li
                                 key={index}
                                 onClick={() => {

@@ -1,9 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AutoLoginApi,
+  ClearTokenApi,
+  ClearTokenRequest,
   LoginApi,
   LogoutApi,
+  NewPasswordRequest,
   RegisterApi,
+  SendAuthOtp,
+  SendOtpRequest,
+  UpdatePasswordApi,
 } from "../../services/AuthenticationApi/AuthenticationApi";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -15,6 +21,7 @@ interface ILogin {
 }
 interface ILoginS {
   //interface login success
+  accountId:number;
   listRoles: string[];
   accessToken: string;
   refreshToken: string;
@@ -31,14 +38,18 @@ interface IRegister {
 interface InitialStateStylesLogin {
   //interface initial state login
   loading: boolean;
+  isRefresh: boolean;
   Error: string;
   isLogined: boolean;
   isRegister: boolean;
   username: string;
   listRoles: string[];
+  accountId: number | null;
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
+  otp: string | null;
+  otpExpires: string | null;
 }
 const getStorageItem = (key: string) => {
   //hàm lấy item từ local storage
@@ -48,15 +59,18 @@ const getStorageItem = (key: string) => {
 const initialState: InitialStateStylesLogin = {
   //initial state login
   loading: false,
+  isRefresh:false,
   Error: "",
   isLogined: false,
   isRegister: false,
   username: "",
   listRoles: [],
   isAuthenticated: !!localStorage.getItem("accessToken"),
-
   accessToken: getStorageItem("accessToken"),
   refreshToken: getStorageItem("refreshToken"),
+  otp: null,
+  otpExpires: null,
+  accountId: 0
 };
 
 export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
@@ -121,6 +135,47 @@ export const AutoLoginAction = createAsyncThunk<ILoginS>(
   }
 );
 
+export const SendAuthOtpAction = createAsyncThunk<string,SendOtpRequest>(
+  "SendAuthOtpAction",
+  async (values: SendOtpRequest) => {
+    try {
+      const response = await SendAuthOtp(values); //SendAuthOtp api
+      console.log(response);
+      
+      return response as unknown as string;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw Error(error.message); //throw error
+    }
+  }
+)
+
+export const UpdatePasswordAction= createAsyncThunk<string,NewPasswordRequest>(
+  "UpdatePasswordAction",
+  async (data: NewPasswordRequest) => {
+    try {
+      const response = await UpdatePasswordApi(data); //UpdatePassword api
+      return response as unknown as string;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw Error(error.message); //throw error
+    }
+  }
+)
+
+export const ClearTokenAction= createAsyncThunk<string,ClearTokenRequest>(
+  "ClearTokenAction",
+  async (data: ClearTokenRequest) => {
+    try {
+      const response = await ClearTokenApi(data); //UpdatePassword api
+      return response as unknown as string;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw Error(error.message); //throw error
+    }
+  }
+)
+
 const AuthenticationSlice = createSlice({
   name: "Authentication", //name slice
   initialState, //initial state
@@ -173,6 +228,14 @@ const AuthenticationSlice = createSlice({
       state.accessToken = null; //accessToken
       state.refreshToken = null; //refreshToken
     },
+    updateOtpState: (state,action)=>{
+      state.otp=action.payload.otp;
+      state.otpExpires=action.payload.otpExpires;
+    },
+    updateStateLoading: (state,action)=>{
+      state.loading=action.payload;
+      state.isRefresh= action.payload;
+    }
   },
   extraReducers(builder) {
     builder
@@ -189,6 +252,15 @@ const AuthenticationSlice = createSlice({
       .addCase(AutoLoginAction.pending, (state) => {
         state.loading = true;
       })
+      .addCase(SendAuthOtpAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(UpdatePasswordAction.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(ClearTokenAction.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         LoginAction.fulfilled,
         (state, action: PayloadAction<ILoginS>) => {
@@ -199,6 +271,7 @@ const AuthenticationSlice = createSlice({
           state.listRoles = action.payload.listRoles;
           state.accessToken = action.payload.accessToken;
           state.refreshToken = action.payload.refreshToken;
+          state.accountId= action.payload.accountId;
         }
       )
       .addCase(RegisterAction.fulfilled, (state) => {
@@ -215,6 +288,7 @@ const AuthenticationSlice = createSlice({
           state.listRoles = [];
           state.accessToken = null;
           state.refreshToken = null;
+          state.accountId= null;
         });
       })
       .addCase(AutoLoginAction.fulfilled, (state, action) => {
@@ -224,6 +298,24 @@ const AuthenticationSlice = createSlice({
         state.listRoles = action.payload.listRoles;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
+        state.accountId= action.payload.accountId;
+      })
+      .addCase(SendAuthOtpAction.fulfilled, (state, action: PayloadAction<string>) => {
+        state.loading = false;
+        toast.success(action.payload);
+      })
+      .addCase(UpdatePasswordAction.fulfilled, (state, action: PayloadAction<string>) => {
+        state.loading = false;
+        state.otp=null;
+        state.otpExpires=null;
+        window.location.href="/login";
+        toast.success(action.payload);
+      })
+      .addCase(ClearTokenAction.fulfilled, (state) => {
+        state.loading = false;
+        state.otp=null;
+        state.otpExpires=null;
+      
       })
       .addCase(LoginAction.rejected, (state) => {
         state.loading = false;
@@ -241,9 +333,21 @@ const AuthenticationSlice = createSlice({
         state.Error = action.error.message || "Logout failed";
       })
       .addCase(AutoLoginAction.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.isLogined = false;
         state.Error = action.error.message || "Auto login failed";
+      })
+      .addCase(SendAuthOtpAction.rejected, (state, action) => {
+        state.loading = false;
+        state.Error = action.error.message || "Send otp failed";
+      })
+      .addCase(UpdatePasswordAction.rejected, (state, action) => {
+        state.loading = false;
+        state.Error = action.error.message || "Update new password failed";
+      })
+      .addCase(ClearTokenAction.rejected, (state, action) => {
+        state.loading = false;
+        state.Error = action.error.message || "Clear token failed";
       });
   },
 });
@@ -260,5 +364,7 @@ export const {
   registerSuccess,
   updateToken,
   logout,
+  updateOtpState,
+  updateStateLoading
 } = AuthenticationSlice.actions;
 export default AuthenticationSlice.reducer;

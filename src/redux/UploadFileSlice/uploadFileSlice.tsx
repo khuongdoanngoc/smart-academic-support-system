@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import {
@@ -182,7 +183,6 @@ const uploadFileSlice = createSlice({
   },
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const { clearSearchFaculty, clearSearchFolder, clearSearchSubject } =
   uploadFileSlice.actions;
 export default uploadFileSlice.reducer;
