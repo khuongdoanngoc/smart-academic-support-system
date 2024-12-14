@@ -9,21 +9,30 @@ export const GetAllFolders = async () => {
     }
 };
 
-export const CreateFolder = async (folderName: string) => {
+export const CreateFolder = async (folderName: string, description: string) => {
     try {
-        const res = await axiosInstance.post(
-            `${baseUrl}/folder/create?folderName=${folderName}`
-        );
+        const res = await axiosInstance.post(`${baseUrl}/folder/create`, {
+            folderName,
+            description,
+        });
         return res;
     } catch (error: any) {
         throw Error(error.message);
     }
 };
 
-export const UpdateFolder = async (folderId: number, folderName: string) => {
+export const UpdateFolder = async (
+    folderId: number,
+    folderName: string,
+    description: string
+) => {
     try {
         const res = await axiosInstance.put(
-            `${baseUrl}/folder/update/${folderId}?folderName=${folderName}`
+            `${baseUrl}/folder/update/${folderId}`,
+            {
+                folderName,
+                description,
+            }
         );
         return res;
     } catch (error: any) {

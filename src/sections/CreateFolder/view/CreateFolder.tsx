@@ -6,23 +6,40 @@ const cx = classNames.bind(styles);
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Background from "../../../assets/images/create-folder-finisher.png";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../redux/store";
+import { createFolder } from "../../../redux/FolderSlice/folderSlice";
 export default function CreateFolder() {
+    const dispatch = useAppDispatch();
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    const [folderName, setFolderName] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
     const navigate = useNavigate();
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        setIsSuccess(true);
+        if (folderName !== "" && description !== "") {
+            dispatch(createFolder({ folderName, description }));
+            setIsSuccess(true);
+        }
     };
 
     const phase1Form = (
         <div className={cx("form")}>
             <div className={cx("item")}>
                 <label>Tên thư mục</label>
-                <input type="text" placeholder="Nhập tên thư mục" />
+                <input
+                    type="text"
+                    value={folderName}
+                    onChange={(e) => setFolderName(e.target.value)}
+                    placeholder="Nhập tên thư mục"
+                />
             </div>
             <div className={cx("item")}>
                 <label>Mô tả</label>
-                <textarea placeholder="Nhập loại thư mục" />
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Nhập loại thư mục"
+                />
             </div>
         </div>
     );
@@ -31,7 +48,7 @@ export default function CreateFolder() {
         <div className={cx("finisher-container")}>
             <img src={Background} alt="bg" />
             <h2>
-                Thư mục : <span>“Tiêu đề thư mục”</span> đã được tạo !
+                Thư mục : <span>“{folderName}”</span> đã được tạo !
             </h2>
             <p>
                 Thư mục của bạn đã được tạo, bạn có thể vào mục{" "}

@@ -22,6 +22,7 @@ import CreateFolderPage from "../pages/CreateFolder";
 import Directory from "../pages/Directory";
 import path from "path";
 import SearchPage from "../pages/SearchPage";
+import FolderDetailPage from "../pages/FolderDetail";
 
 export default function Router() {
     const routes = useRoutes([
@@ -81,6 +82,10 @@ export default function Router() {
                 {
                     path: "create-folder",
                     element: <CreateFolderPage />,
+                },
+                {
+                    path: "folder/:id",
+                    element: <FolderDetailPage />,
                 },
             ],
         },
