@@ -4,7 +4,6 @@ import Avatar from "../../../assets/images/avatar.png";
 import File from "../../../assets/images/File_dock.svg";
 import EditIcon from "../../../assets/images/edit-05.png";
 import ImportLight from "../../../assets/images/Import_light.png";
-import Tag from "../../../assets/images/tag.png";
 import Share from "../../../assets/images/fi_share-2.png";
 import Delect from "../../../assets/images/plus-01.png";
 import { Button } from "../../../components/Button";

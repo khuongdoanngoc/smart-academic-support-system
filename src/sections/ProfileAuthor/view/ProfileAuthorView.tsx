@@ -2,10 +2,10 @@
 import { ProfileAuthorComponent } from "../components";
 
 const ProfileAuthorView = () => {
-  const userId = 3;
+  const userId = "";
   return (
     <>
-      <ProfileAuthorComponent userId={userId} />
+      <ProfileAuthorComponent email={userId} />
     </>
   );
 };

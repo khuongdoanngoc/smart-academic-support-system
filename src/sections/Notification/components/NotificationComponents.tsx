@@ -1,5 +1,5 @@
 import classnames from "classnames/bind";
-import styles from "./NoticationComponent.module.scss";
+import styles from "./NotificationComponent.module.scss";
 import notificationImg from "../../../assets/images/notification-bing.png";
 import frame from "../../../assets/images/Frame 8799.png";
 // import frame1 from "../../../assets/images/Frame 8819.png";
@@ -41,7 +41,7 @@ import { toast } from "react-toastify";
 const cx = classnames.bind(styles);
 
 
-const NoticationComponents = () => {
+const NotificationComponents = () => {
   const dispatch = useAppDispatch();
   const {
     notificationList,
@@ -520,4 +520,4 @@ const NoticationComponents = () => {
   );
 };
 
-export default NoticationComponents;
+export default NotificationComponents;

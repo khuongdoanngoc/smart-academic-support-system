@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 import {
@@ -194,7 +195,6 @@ export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
             throw Error(err.message);
         }
     }
-  }
 );
 
 const initialState: InitialStateStyles = {

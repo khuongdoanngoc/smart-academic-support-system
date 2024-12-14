@@ -1,5 +1,5 @@
 
-import NotiCationComponents from "../components/NoticationComponents";
+import {NotificationComponents} from "../components";
 import { useAppSelector } from "../../../redux/store";
 import {WebsocketConnection} from "../../../utils/Websocket";
 
@@ -7,7 +7,7 @@ const NoticationViews = () => {
   const {isLogined}= useAppSelector(state=>state.authentication);
   return (
     <>
-      <NotiCationComponents />
+      <NotificationComponents />
       {isLogined && <WebsocketConnection />}
     </>
   );
