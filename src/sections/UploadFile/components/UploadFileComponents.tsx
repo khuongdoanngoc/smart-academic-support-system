@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
 import Vector1 from "../../../assets/images/Vector 9.png";

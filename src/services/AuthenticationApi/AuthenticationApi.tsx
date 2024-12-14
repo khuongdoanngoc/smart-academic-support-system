@@ -6,6 +6,7 @@ interface LoginData {
   password: string;
 }
 interface ILoginS {
+  accountId:number;
   listRoles: string[];
   accessToken: string;
   refreshToken: string;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 const cx = classNames.bind(styles);
@@ -21,6 +22,7 @@ import OpenIcon from "../../../assets/images/icons/OpenArrowIcon.png";
 import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContactICON from "../../../assets/images/icons/ContactICON.png";
+import Badge from '@mui/material/Badge';
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -83,6 +85,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const pathName = useLocation().pathname;
     const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
     const { username } = useAppSelector((state) => state.authentication);
+    const {numberOfNotificationsUnRead} = useAppSelector(state=>state.notication);
     const isOpenAndModal = isModal && isOpen;
     
     const handleClickUpFIle = ()=>{
@@ -193,9 +196,14 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 {docItems.map((item, index) => (
                     <Link
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active")}
+                        className={cx(pathName === item.pathAcitve && "active",`${(item.pathAcitve==="/document/notication" && numberOfNotificationsUnRead>0)? "brings": ""}`)}
                         to={item.pathAcitve}>
-                        <item.icon sx={{ width: "22px", height: "22px" }} />
+                        {item.pathAcitve==="/document/notication"?(
+                            <Badge badgeContent={numberOfNotificationsUnRead>0?numberOfNotificationsUnRead:0} color="error">
+                                <item.icon  sx={{ width: "22px", height: "22px"}} />
+                            </Badge>
+                        ):<item.icon  sx={{ width: "22px", height: "22px"}} />}
+                        
                         {isOpen && <h3>{item.title}</h3>}
                     </Link>
                 ))}

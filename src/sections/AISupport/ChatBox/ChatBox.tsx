@@ -14,10 +14,11 @@ import { Button } from "../../../components/Button";
 import Avatar from "../../../assets/images/avatar.png";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
+  resetMessages,
   sendMessageAction,
   setMessagesUser,
 } from "../../../redux/ChatBotSlice/ChatBotSlice";
-const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ", "Báo cáo"];
+const options = ["Làm mới", "Lưu tài liệu", "Tải xuống", "Chia sẻ"];
 const ITEM_HEIGHT = 48;
 
 type MessagesUser = {
@@ -84,6 +85,23 @@ export default function ChatBox() {
     dispatch(sendMessageAction(data));
   };
 
+  const handleClickOptions= (key:string)=>{
+    setIsOpenSubbox(false);
+    handleClose();
+    if(key==="Làm mới"){
+      dispatch(resetMessages());
+    }
+    if(key==="Lưu tài liệu"){
+      // call API save file
+    }
+    if(key==="Tải xuống"){
+      // call API download file
+    }
+    if(key==="Chia s��"){
+      // call API share file
+    }
+  }
+
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -133,7 +151,7 @@ export default function ChatBox() {
             <MenuItem
               key={option}
               selected={option === "Pyxis"}
-              onClick={handleClose}
+              onClick={()=>handleClickOptions(option)}
             >
               {option}
             </MenuItem>

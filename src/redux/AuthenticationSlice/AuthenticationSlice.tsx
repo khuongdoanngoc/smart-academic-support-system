@@ -21,6 +21,7 @@ interface ILogin {
 }
 interface ILoginS {
   //interface login success
+  accountId:number;
   listRoles: string[];
   accessToken: string;
   refreshToken: string;
@@ -37,11 +38,13 @@ interface IRegister {
 interface InitialStateStylesLogin {
   //interface initial state login
   loading: boolean;
+  isRefresh: boolean;
   Error: string;
   isLogined: boolean;
   isRegister: boolean;
   username: string;
   listRoles: string[];
+  accountId: number | null;
   isAuthenticated: boolean;
   accessToken: string | null;
   refreshToken: string | null;
@@ -56,6 +59,7 @@ const getStorageItem = (key: string) => {
 const initialState: InitialStateStylesLogin = {
   //initial state login
   loading: false,
+  isRefresh:false,
   Error: "",
   isLogined: false,
   isRegister: false,
@@ -65,7 +69,8 @@ const initialState: InitialStateStylesLogin = {
   accessToken: getStorageItem("accessToken"),
   refreshToken: getStorageItem("refreshToken"),
   otp: null,
-  otpExpires: null
+  otpExpires: null,
+  accountId: 0
 };
 
 export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
@@ -226,6 +231,10 @@ const AuthenticationSlice = createSlice({
     updateOtpState: (state,action)=>{
       state.otp=action.payload.otp;
       state.otpExpires=action.payload.otpExpires;
+    },
+    updateStateLoading: (state,action)=>{
+      state.loading=action.payload;
+      state.isRefresh= action.payload;
     }
   },
   extraReducers(builder) {
@@ -262,6 +271,7 @@ const AuthenticationSlice = createSlice({
           state.listRoles = action.payload.listRoles;
           state.accessToken = action.payload.accessToken;
           state.refreshToken = action.payload.refreshToken;
+          state.accountId= action.payload.accountId;
         }
       )
       .addCase(RegisterAction.fulfilled, (state) => {
@@ -278,6 +288,7 @@ const AuthenticationSlice = createSlice({
           state.listRoles = [];
           state.accessToken = null;
           state.refreshToken = null;
+          state.accountId= null;
         });
       })
       .addCase(AutoLoginAction.fulfilled, (state, action) => {
@@ -287,6 +298,7 @@ const AuthenticationSlice = createSlice({
         state.listRoles = action.payload.listRoles;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
+        state.accountId= action.payload.accountId;
       })
       .addCase(SendAuthOtpAction.fulfilled, (state, action: PayloadAction<string>) => {
         state.loading = false;
@@ -321,7 +333,7 @@ const AuthenticationSlice = createSlice({
         state.Error = action.error.message || "Logout failed";
       })
       .addCase(AutoLoginAction.rejected, (state, action) => {
-        state.loading = false;
+        // state.loading = false;
         state.isLogined = false;
         state.Error = action.error.message || "Auto login failed";
       })
@@ -352,6 +364,7 @@ export const {
   registerSuccess,
   updateToken,
   logout,
-  updateOtpState
+  updateOtpState,
+  updateStateLoading
 } = AuthenticationSlice.actions;
 export default AuthenticationSlice.reducer;

@@ -175,12 +175,12 @@
                     align-items: center;
                     cursor: pointer;
                   }
-                  > li:nth-child(2) {
-                    border-top: 1px solid #000;
+                  > li:first-child {
                     border-bottom: 1px solid #000;
                     color: #eb2930;
                   }
                   & > li:last-child {
+                    border-top: 1px solid #000;
                     color: #c06868;
                   }
                 }
@@ -209,6 +209,9 @@
                     border-radius: 50%;
                     margin-left: 25px;
                     margin-right: 5px;
+                  }
+                  & > span.isRead {
+                    background: #bdc1be;
                   }
                   & > p {
                     font-size: 14px;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Outlet, useRoutes } from "react-router-dom";
 import Layout from "../layouts";
 import HomePage from "../pages/Home";
