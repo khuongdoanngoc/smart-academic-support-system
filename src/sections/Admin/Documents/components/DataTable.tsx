@@ -83,13 +83,13 @@ export default function DataTable({ columns, rows }: IDataTable) {
                                 page * rowsPerPage,
                                 page * rowsPerPage + rowsPerPage
                             )
-                            .map((row) => {
+                            .map((row, index) => {
                                 return (
                                     <TableRow
                                         hover
                                         role="checkbox"
                                         tabIndex={-1}
-                                        key={row.name}>
+                                        key={index}>
                                         <TableCell align="center">
                                             <Checkbox
                                                 checked={selectedDocuments.includes(

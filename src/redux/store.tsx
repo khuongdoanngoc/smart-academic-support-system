@@ -5,17 +5,19 @@ import TagReducers from "./TagSlice/TagSlice";
 import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { TypedUseSelectorHook, useDispatch,useSelector } from "react-redux";
+import SearchReducer from "./SearchSlice/searchSlice";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 
 const store = configureStore({
-  reducer: {
-    uploadFile: UploadFileReducer,
-    document: DocumentReducer,
-    tag: TagReducers,
-    notication: NoticatonReducer,
-    chatbot: ChatBotReducer,
-    authentication: authenticationReducer,
-  },
+    reducer: {
+        uploadFile: UploadFileReducer,
+        document: DocumentReducer,
+        tag: TagReducers,
+        notication: NoticatonReducer,
+        chatbot: ChatBotReducer,
+        authentication: authenticationReducer,
+        search: SearchReducer,
+    },
 });
 
 export default store;

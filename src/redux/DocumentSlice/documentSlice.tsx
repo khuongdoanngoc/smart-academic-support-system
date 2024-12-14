@@ -21,7 +21,7 @@ export const getDocumentByID = createAsyncThunk<DocumentResponse, number>(
     "documents/getDocumentByID",
     async (id: number) => {
         try {
-            const response = await GetDocumentByID(id);
+            const response: any = await GetDocumentByID(id);
             return response.data as DocumentResponse;
         } catch (err: any) {
             throw Error(err.message);
@@ -29,12 +29,12 @@ export const getDocumentByID = createAsyncThunk<DocumentResponse, number>(
     }
 );
 
-export const getAllDocuments = createAsyncThunk<DocumentResponse[]>(
+export const getAllDocuments = createAsyncThunk<any>(
     "documents/getAllDocuments",
     async () => {
         try {
             const response = await GetAllDocuments();
-            return response.data as DocumentResponse[];
+            return response;
         } catch (error: any) {
             throw Error(error.message);
         }

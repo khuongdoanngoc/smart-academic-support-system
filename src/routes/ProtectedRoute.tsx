@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../redux/store";
 import { CountNotificationAction } from "../redux/Notication/NoticationSlice";
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const dispatch = useAppDispatch();
@@ -17,6 +17,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
   }, [dispatch, isLogined]);
 
-  return <>{children}</>;
+    return <>{children}</>;
 };
 export default ProtectedRoute;

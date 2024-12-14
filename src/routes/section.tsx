@@ -18,8 +18,12 @@ import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 import AdminHome from "../pages/Admin/AdminHome";
 import AdminDocumenPage from "../pages/Admin/AdminDocument";
 import AdminUsers from "../pages/Admin/AdminUsers";
+import CreateFolderPage from "../pages/CreateFolder";
 
 import Directory from "../pages/Directory";
+import path from "path";
+import SearchPage from "../pages/SearchPage";
+import FolderDetailPage from "../pages/FolderDetail";
 
 export default function Router() {
     const routes = useRoutes([
@@ -76,6 +80,14 @@ export default function Router() {
                     path: ":majorSlug/:folderSlug/:id",
                     element: <DocumentDetailPage />,
                 },
+                {
+                    path: "create-folder",
+                    element: <CreateFolderPage />,
+                },
+                {
+                    path: "folder/:id",
+                    element: <FolderDetailPage />,
+                },
             ],
         },
         {
@@ -97,6 +109,20 @@ export default function Router() {
                 {
                     path: "users",
                     element: <AdminUsers />,
+                },
+            ],
+        },
+        {
+            path: "/search",
+            element: (
+                <DocumentLayout>
+                    <Outlet />
+                </DocumentLayout>
+            ),
+            children: [
+                {
+                    element: <SearchPage />,
+                    index: true,
                 },
             ],
         },
