@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  IChangePassWord,
   AutoLoginApi,
   ClearTokenApi,
   ClearTokenRequest,
@@ -7,6 +8,7 @@ import {
   LogoutApi,
   NewPasswordRequest,
   RegisterApi,
+  ChangePasswordAPI,
   SendAuthOtp,
   SendOtpRequest,
   UpdatePasswordApi,
@@ -134,6 +136,19 @@ export const AutoLoginAction = createAsyncThunk<ILoginS>(
     }
   }
 );
+export const ChangePasswordAction = createAsyncThunk(
+  "Authentication/ChangePasswordAction",
+  async (value:IChangePassWord) => {
+    try {
+      const response = await ChangePasswordAPI(value);
+      return response;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      toast.error(error.message);
+      throw Error(error.message);
+    }
+  }
+);
 
 export const SendAuthOtpAction = createAsyncThunk<string,SendOtpRequest>(
   "SendAuthOtpAction",
@@ -175,7 +190,6 @@ export const ClearTokenAction= createAsyncThunk<string,ClearTokenRequest>(
     }
   }
 )
-
 const AuthenticationSlice = createSlice({
   name: "Authentication", //name slice
   initialState, //initial state

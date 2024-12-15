@@ -7,7 +7,7 @@ import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { TypedUseSelectorHook, useDispatch,useSelector } from "react-redux";
 import SearchReducer from "./SearchSlice/searchSlice";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
-import editProFileReducer from "./EditProFileSlice/EditProFileSlice";
+import EditProfileReducer from "./EditProfileSlice/EditProfileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 
@@ -20,7 +20,7 @@ const store = configureStore({
     chatbot: ChatBotReducer,
     authentication: authenticationReducer,
     searchUser:searchUserReducer,
-    editProFile: editProFileReducer,
+    editProfile: EditProfileReducer,
     // downloadDocument: profileAuthorReducer,
     profileAuthor: profileAuthorReducer,
     search: SearchReducer,

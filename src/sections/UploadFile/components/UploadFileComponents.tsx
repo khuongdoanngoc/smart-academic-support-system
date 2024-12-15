@@ -37,7 +37,7 @@ import {
   SearchFacultyAction,
   SearchFolderAction,
   SearchSubjectAction,
-  UploadFileAction,
+  UploadFileAction
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
