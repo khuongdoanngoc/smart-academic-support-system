@@ -151,51 +151,51 @@ export const getAllDocuments = createAsyncThunk<any>(
     }
 );
 
-// Document Searches
-export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
-    "documents/getDocumentByTitle",
-    async (title: string) => {
-        try {
-            const response = await GetDocumentByTitle(title);
-            return response.data as DocumentResponse;
-        } catch (err: any) {
-            throw Error(err.message);
-        }
-    }
-);
-export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
-    "documents/getDocumentBySubject",
-    async (subject: string) => {
-        try {
-            const response = await GetDocumentBySubject(subject);
-            return response.data as DocumentResponse;
-        } catch (err: any) {
-            throw Error(err.message);
-        }
-    }
-);
-export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
-    "documents/getDocumentByFolder",
-    async (folder: string) => {
-        try {
-            const response = await GetDocumentByFolder(folder);
-            return response.data as DocumentResponse;
-        } catch (err: any) {
-            throw Error(err.message);
-        }
-    }
-);
-export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
-    "documents/getDocumentByFalcuty",
-    async (falcuty: string) => {
-        try {
-            const response = await GetDocumentByFalcuty(falcuty);
-            return response.data as DocumentResponse;
-        } catch (err: any) {
-            throw Error(err.message);
-        }
-    }
-);
+// // Document Searches
+// export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
+//     "documents/getDocumentByTitle",
+//     async (title: string) => {
+//         try {
+//             const response = await GetDocumentByTitle(title);
+//             return response.data as DocumentResponse;
+//         } catch (err: any) {
+//             throw Error(err.message);
+//         }
+//     }
+// );
+// export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
+//     "documents/getDocumentBySubject",
+//     async (subject: string) => {
+//         try {
+//             const response = await GetDocumentBySubject(subject);
+//             return response.data as DocumentResponse;
+//         } catch (err: any) {
+//             throw Error(err.message);
+//         }
+//     }
+// );
+// export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
+//     "documents/getDocumentByFolder",
+//     async (folder: string) => {
+//         try {
+//             const response = await GetDocumentByFolder(folder);
+//             return response.data as DocumentResponse;
+//         } catch (err: any) {
+//             throw Error(err.message);
+//         }
+//     }
+// );
+// export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
+//     "documents/getDocumentByFalcuty",
+//     async (falcuty: string) => {
+//         try {
+//             const response = await GetDocumentByFalcuty(falcuty);
+//             return response.data as DocumentResponse;
+//         } catch (err: any) {
+//             throw Error(err.message);
+//         }
+//     }
+// );
 
 const initialState: InitialStateStyles = {
   loading: false,

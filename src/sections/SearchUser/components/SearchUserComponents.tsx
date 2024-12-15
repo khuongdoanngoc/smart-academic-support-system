@@ -93,7 +93,6 @@ const SearchUserComponents = () => {
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   };
-  
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearch=useCallback(debounce((value:string,pageSize:number,pageNum:number)=>dispatch(SearchUserAction({name:value,pageSize,pageNum})),1000),[dispatch])
@@ -167,7 +166,6 @@ const SearchUserComponents = () => {
          count={alphabet.length}
           page={currentPage}
           siblingCount={1}
-         
           onChange={handlePageChange}
           variant="outlined"
           renderItem={(item: PaginationRenderItemParams) => (

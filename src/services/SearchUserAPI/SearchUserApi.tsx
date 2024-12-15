@@ -7,7 +7,6 @@ export interface SearchInterface {
   lastName:string;
   email:string;
   profilePicture:string;
-
 }
 
 
@@ -40,7 +39,6 @@ export const SearchUserAPI = async (name: string,pageSize:number =5,pageNum:numb
     throw new Error(error.message);
   }
 };
-
 
 export const SearchUserInformationAPI = async(email:string)=>{
   try {

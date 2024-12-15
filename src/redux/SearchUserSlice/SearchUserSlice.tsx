@@ -40,7 +40,6 @@ export const SearchUserInformationAction = createAsyncThunk<SearchViewUserInterf
     try {
       const ressponse = await SearchUserInformationAPI(email);
       return ressponse as unknown as SearchViewUserInterface[];
-      
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw new AxiosError(error.message);

@@ -6,7 +6,7 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import { ProfileAuthor, ChangePassWord, Register, UploadFile } from "../pages";
+import { ChangePassWord, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import DocumentStorage from "../pages/DocumentStorage";
@@ -25,7 +25,6 @@ import Directory from "../pages/Directory";
 import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
-
 export default function Router() {
   const routes = useRoutes([
     {
