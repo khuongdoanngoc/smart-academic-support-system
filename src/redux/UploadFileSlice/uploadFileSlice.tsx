@@ -3,8 +3,8 @@ import { toast } from "react-toastify";
 import {
   postFile,
   SearchFaculty,
-  searchFaculty,
-  searchFolder,
+  searchFacultyAPI,
+  searchFolderAPI,
   SearchFolder,
   searchSubject,
   SearchSubject,
@@ -19,7 +19,7 @@ interface initState {
   loading: boolean;
   error: string | null;
   success: boolean | null;
-  isUpload: boolean | null;
+  isupload: boolean | null;
   searchFaculty: SearchFaculty[] ;
   searchFolder: SearchFolder[] ;
   searchSubject: SearchSubject[];
@@ -29,7 +29,7 @@ const initialState: initState = {
   loading: false,
   error: "",
   success: false,
-  isUpload: false,
+  isupload: false,
   searchFaculty: [],
   searchFolder: [],
   searchSubject: [],
@@ -38,10 +38,9 @@ interface ApiPostFile {
   file: File;
   title: string;
   description: string;
-  content: string;
   type: string;
-  subject: string;
-  facultyId: number;
+  subjectName: string;
+  facultyName: string;
 }
 
 export const UploadFileAction = createAsyncThunk<
@@ -56,8 +55,8 @@ export const UploadFileAction = createAsyncThunk<
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     const errorMessage =
-      error.response?.data?.message || "An error occurred while uploading";
-    toast.error(errorMessage);
+      error.response?.data?.message;
+   
     throw new Error(errorMessage);
   }
 });
@@ -66,7 +65,7 @@ export const SearchFacultyAction = createAsyncThunk<SearchFaculty[], string>(
   "SearchFacultyAction",
   async (facultyName: string) => {
     try {
-      const response = await searchFaculty(facultyName);
+      const response = await searchFacultyAPI(facultyName);
       return response as unknown as SearchFaculty[];
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
@@ -75,11 +74,11 @@ export const SearchFacultyAction = createAsyncThunk<SearchFaculty[], string>(
   }
 );
 
-export const SearchFolderAction = createAsyncThunk<SearchFolder[], string>(
+export const SearchFolderAction = createAsyncThunk<SearchFolder[]>(
   "SearchFolderAction",
-  async (folderName: string) => {
+  async () => {
     try {
-      const response = await searchFolder(folderName);
+      const response = await searchFolderAPI();
       return response as unknown as SearchFolder[];
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
@@ -121,7 +120,7 @@ const uploadFileSlice = createSlice({
     builder
       .addCase(UploadFileAction.pending, (state) => {
         state.loading = true;
-        state.isUpload = false;
+        state.isupload = false;
         state.error = null;
       })
       .addCase(SearchFacultyAction.pending, (state) => {
@@ -138,10 +137,7 @@ const uploadFileSlice = createSlice({
       })
       .addCase(UploadFileAction.fulfilled, (state) => {
         state.loading = false;
-        state.success = true;
-        state.isUpload = true;
-        state.error = null;
-        toast.success("File uploaded successfully!");
+        state.isupload=true;
       })
       .addCase(
         SearchFacultyAction.fulfilled,
@@ -168,8 +164,8 @@ const uploadFileSlice = createSlice({
       .addCase(UploadFileAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        state.success = false;
-        state.isUpload = false;
+        toast.error('Upload failed!');
+        state.isupload = false;
       })
       .addCase(SearchFacultyAction.rejected, (state, action) => {
         state.loading = false;
