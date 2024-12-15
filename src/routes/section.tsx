@@ -6,7 +6,7 @@ import { DocumentLayout } from "../components/DocumentLayout";
 import SupportPage from "../pages/Support";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
-import { ChangePassWord, Register, UploadFile } from "../pages";
+import { ChangePassWord, ProfileAuthor, Register, UploadFile } from "../pages";
 import NewPassword from "../pages/NewPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import DocumentStorage from "../pages/DocumentStorage";
