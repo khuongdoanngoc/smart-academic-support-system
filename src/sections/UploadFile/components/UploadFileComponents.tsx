@@ -1,17 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
-// import Avatar from "../../../assets/images/avatar.png";
 import Vector1 from "../../../assets/images/Vector 9.png";
 import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
+import { debounce } from "lodash";
+import * as React from "react";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { useRef, useState, useCallback } from "react";
 
-import { AppDispatch } from "../../../redux/store";
-// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
-// import UploadFileAction  from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { UploadFileAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useRef, useState } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -27,161 +29,76 @@ import {
   TextSnippet,
 } from "@mui/icons-material";
 import { HeaderUploadFile } from "../../../layouts/header/HeaderUploadFile";
-// import axios from "axios";
-import { RootState } from "../../../redux/store";
 
 import {
-  setFileList,
-  // setIsDragging,
-  // setMenuDeleButton,
-  // setAlertFile,
-  // setInformationAlert,
-  // setDefaultUploadFile,
-  // setFileSelected,
-  // setIsColorItemButton,
-  // setFileDetailLoad,
-  setValueRow,
-  // setvalueRowYear,
-  // setmenuCheckItemRow,
-  // setMenuCheckItemRowYear,
-  // setUploadFileSuccess,
+  clearSearchFaculty,
+  clearSearchSubject,
   FileItem,
-  // UploadFileAction,
-  // setSpecialized,
-  // setSubject,
-  // setFolder,
-  // setDocumentType,
-  // setTitle,
-  // setAcademicYear,
-  // setDescription,
-  // postFile,
+  SearchFacultyAction,
+  SearchFolderAction,
+  SearchSubjectAction,
+  UploadFileAction
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useDispatch, useSelector } from "react-redux";
-// import { postFile } from "../../../services/UploadFileAPI/UploadFileAPI";
-// import UploadFileAPI from "../../../services/UploadFileAPI/UploadFileAPI";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "@mui/material";
 
 const cx = classNames.bind(styles);
 
 const UploadFileComponents = () => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  //  const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
-  //      []
-  //    );
-
+  const wrapperRef = useRef<HTMLDivElement>(null); //use ref để kiểm tra khi kéo file vào
+  const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
+    []
+  ); //use state hiển thị list file
+  const [fileSelected, setFileSelected] = useState<File | null>(null); //use state kiểm tra xem file đó đã được chọn chưa
   const [isDragging, setIsDragging] = useState(false); //trạng thái kéo file để hiện component Drop It
+
   const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
   const [alertFile, setAlertFile] = useState(false); //trạng thái hiện thông báo nếu upload file lỗi
   const [informationAlert, setInformationAlert] = useState(""); //use state hiển thị nội dung thông báo file lỗi
   const [defaultUploadFile, setDefaultUploadFile] = useState(false); //use state hiển thị phần chi tiết của default upload file
-  const [fileSelected, setFileSelected] = useState<File | null>(null); //use state kiểm tra xem file đó đã được chọn chưa
   const [isColorItemButton, setIsColorItemButton] = useState(1); //use state  xem đang ở trạng thái tải tài liệu,chi tiết,hay hoàn thành
 
   const [fileDetailLoad, setFileDetailLoad] = useState(false); //use state hiển thị mục 2 của phần chi tiết default upload file
-  // const [valueRow, setValueRow] = useState(""); //use state hiển thị file là tn hay tl
-  // const [valueRowYear, setvalueRowYear] = useState("");//use state hiển thị năm file
+
   const [menuCheckItemRow, setmenuCheckItemRow] = useState(false); //trạng thải ẩn và hiện của nút button tn hay tl
-  const [menuCheckItemRowYear, setMenuCheckItemRowYear] = useState(false); //trạng thải ẩn và hiện của nút button năm file
+
   const [uploadFileSuccess, setUploadFileSuccess] = useState(false); //use state hiển thị component hoàn thành
 
-  const [titleFile, setTitleFile] = useState("");
-
+  const [titleFile, setTitleFile] = useState(fileList[0]?.name || "");
   const [descriptionFile, setDescriptionFile] = useState("");
   const [typeFile, setTypeFile] = useState("");
-  const [contentFile, setContentFile] = useState("");
   const [subjectFile, setSubjectFile] = useState("");
-  const [facultyIdFile, setFacultyIdFile] = useState(2024 - 2024);
+  const [facultyFile, setFacultyFile] = useState("");
+  const [folderFile, setFolderFile] = useState("");
 
-  const dispatch = useDispatch<AppDispatch>();
-  const fileList = useSelector(
-    (state: RootState) => state.uploadFile.fileUploadState.fileList
-  );
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  // const {
-  //   specialized,
-  //   subject,
-  //   folder,
-  //   // documentType,
-  //   title,
-  //   // academicYear,
-  //   description,
-  // } = useSelector((state: RootState) => state.uploadFile.fileUploadState);
-
-  // const handleSendData = async () => {
-  //   const data = {
-  //     specialized,
-  //     subject,
-  //     folder,
-  //     documentType,
-  //     title,
-  //     academicYear,
-  //     description,
-  //   };
-
-  //   try {
-  //     const response = await UploadFileAPI.post("/your-api-endpoint", data);
-  //     console.log("Response:", response.data);
-  //   } catch (error) {
-  //     console.error("Error posting data:", error);
-  //   }
-  // };
-
-  // const {
-  //   // isDragging,
-  //   // menuDeleButton,
-  //   // alertFile,
-  //   // informationAlert,
-  //   // defaultUploadFile,
-  //   // fileSelected,
-  //   // isColorItemButton,
-  //   // fileDetailLoad,
-  //   valueRow,
-  //   valueRowYear,
-  //   // menuCheckItemRow,
-  //   // menuCheckItemRowYear,
-  //   // uploadFileSuccess,
-  // } = useSelector((state: RootState) => state.uploadFile.fileUploadState);
-
-  // const onDragEnter = () => {
-  //   if (wrapperRef.current) {
-  //     wrapperRef.current.classList.add("dragover");
-  //   }
-  //   setIsDragging(true);
-  // };
-  // const onDrapLeave = () => {
-  //   if (wrapperRef.current) {
-  //     wrapperRef.current.classList.remove("dragover");
-  //   }
-  //   setIsDragging(false);
-  // };
-  // const onDrop = () => {
-  //   if (wrapperRef.current) {
-  //     wrapperRef.current.classList.remove("dragover");
-  //   }
-  //   setIsDragging(false);
-  // };
-
+  const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
+  let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFile = e.target.files?.[0];
-
+    console.log(1);
+    
+    const newFile = e.target.files?.[0]; //lấy file từ input
+    console.log("newFile",newFile);
     if (newFile) {
-      const originalName = newFile.name;
-      const sizeFile = newFile.size;
-
-      const fileExtension = originalName.split(".").pop()?.toLowerCase();
-      const allowedExtensions = ["docx", "pdf", "xlsx"];
-
+      const originalName = newFile.name; //lấy tên file
+      const sizeFile = newFile.size; //lấy kích thước file
+      const fileExtension = originalName.split(".").pop()?.toLowerCase(); //lấy đuôi file
+      const allowedExtensions = ["pdf"]; //đuôi file được phép upload
       if (!allowedExtensions.includes(fileExtension || "")) {
-        setInformationAlert("Only docx, pdf, or xlsx files are allowed.");
-
+        //kiểm tra đuôi file nếu không phải pdf thì báo lỗi
+        setInformationAlert("Only docx files are allowed.");
         setAlertFile(true);
         setTimeout(() => {
-          setAlertFile(true);
-        }, 4000);
+          setAlertFile(false);
+        }, 3000);
         return;
       }
-
       if (fileSelected === null) {
         setFileSelected(newFile);
+        setTitleFile(originalName);
         const shortenedName =
           originalName.length > 14
             ? `${originalName.slice(0, 13)}...${originalName.slice(-8)}`
@@ -192,12 +109,12 @@ const UploadFileComponents = () => {
           { name: shortenedName, size: sizeFile },
         ];
 
-        dispatch(setFileList(upDatedList));
+        setFileList(upDatedList);
       } else {
-        let isFileAlreadyUploaded = false;
+       
 
         for (const file of fileList) {
-          if (!file.name.includes(originalName) && file.size === sizeFile) {
+          if (!file.name.includes(originalName) || file.size === sizeFile) {
             isFileAlreadyUploaded = true;
             break;
           }
@@ -211,22 +128,22 @@ const UploadFileComponents = () => {
           setAlertFile(true);
           setTimeout(() => {
             setAlertFile(false);
-          }, 4000);
+          }, 3000);
           return;
         }
-
         if (fileList.length >= 1) {
           setInformationAlert("Only 1 file can be uploaded.");
           setAlertFile(true);
           setTimeout(() => {
             setAlertFile(false);
-          }, 4000);
+          }, 3000);
           return;
         }
       }
     }
 
     e.target.value = "";
+    return;
   };
 
   const formatFileSize = (size: number) => {
@@ -238,9 +155,15 @@ const UploadFileComponents = () => {
   };
 
   const handleDeleteFile = () => {
-    dispatch(setFileList([]));
+    // setFileList([]);
+    handleResetUpload()
+    
     setFileSelected(null);
     setMenuDeleButton(false);
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = ''; // Đặt lại giá trị input file
+    }
   };
   const handleCancelFile = () => {
     setMenuDeleButton(false);
@@ -260,29 +183,42 @@ const UploadFileComponents = () => {
       setIsColorItemButton(2);
     }
   };
+  React.useEffect(() => {
+    if (isUpload) {
+      setUploadFileSuccess(true);
+      return;
+    } else {
+      setDefaultUploadFile(false);
+      setUploadFileSuccess(false);
+    }
+  }, [isUpload]);
+  React.useEffect(()=>{
+    if(isFileAlreadyUploaded){
+      handleResetUpload()
+    }
+  })
+  console.log(fileList);
+  
 
-  // const handleSubmit=()=>{
-
-  // }
   const handleItemNext = () => {
     if (isColorItemButton === 2) {
       if (defaultUploadFile && !fileDetailLoad) {
         setFileDetailLoad(true);
-
         return;
       }
+
       setDefaultUploadFile(false);
-      setUploadFileSuccess(true);
-      if (fileSelected !== null) {
+      if (fileSelected !== null && facultyFile !== null) {
         const data = {
           file: fileSelected,
           title: titleFile,
           description: descriptionFile,
-          content: contentFile,
           type: typeFile,
-          subject: subjectFile,
-          facultyId: facultyIdFile,
+          subjectName: subjectFile,
+          facultyName: facultyFile,
         };
+        console.log("data", data);
+
         dispatch(UploadFileAction(data));
       }
     }
@@ -292,29 +228,123 @@ const UploadFileComponents = () => {
   const handleItemBack = () => {
     setIsColorItemButton((item) => Math.max(item - 1, 1));
     if (isColorItemButton === 2) {
-      console.log("setDefaultUploadFile");
-
       setDefaultUploadFile(false);
       setFileDetailLoad(false);
     }
   };
 
   const handleChangeItemRow = (value: string) => {
-    dispatch(setValueRow(value));
+    setTypeFile(value);
     setmenuCheckItemRow(false);
   };
-  const handleChangeItemRowYear = (value: number) => {
-    setFacultyIdFile(value);
-    // dispatch(setvalueRowYear(value));
-    setMenuCheckItemRowYear(false);
-  };
+
   const handleMenuCheckItemRow = () => {
     setmenuCheckItemRow(!menuCheckItemRow);
   };
-  const handleMenuCheckItemRowYear = () => {
-    setMenuCheckItemRowYear(!menuCheckItemRowYear);
+
+  const searchFaculty =
+    useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
+  const searchSubject =
+    useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+  const searchFolder =
+    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchFaculty = useCallback(
+    debounce(
+      (value: string) => dispatch(SearchFacultyAction(value)).unwrap(),
+      1000
+    ),
+    [dispatch, SearchFacultyAction]
+  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchSubject = useCallback(
+    debounce(
+      (value: string) => dispatch(SearchSubjectAction(value)).unwrap(),
+      1000
+    ),
+    [dispatch, SearchSubjectAction]
+  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceClearFaculty = useCallback(
+    debounce(() => dispatch(clearSearchFaculty()), 1000),
+    [dispatch, clearSearchFaculty]
+  );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceClearSubject = useCallback(
+    debounce(() => dispatch(clearSearchSubject()), 1000),
+    [dispatch, clearSearchSubject]
+  );
+
+  const debounceSearching = useCallback(
+    debounce(
+      async (nextValue) =>
+        await dispatch(SearchFacultyAction(nextValue)).unwrap(),
+      1000
+    ),
+    [dispatch]
+  );
+  const handleSearchFaculty = async (value: string) => {
+    setFacultyFile(value);
+    if (!value.trim()) {
+      debounceClearFaculty();
+      return;
+    }
+    try {
+      debounceSearchFaculty(value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSearchTitle = (value: string) => {
+    setTitleFile(value);
+  };
+  const handleSearchSubject = async (value: string) => {
+    setSubjectFile(value);
+    if (!value.trim()) {
+      debounceClearSubject();
+      return;
+    }
+    try {
+      debounceSearchSubject(value);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  React.useEffect(() => {
+    dispatch(SearchFolderAction());
+  }, [dispatch]);
+
+  const handleSearchFolder = (value: string) => {
+    setFolderFile(value);
   };
 
+  const handleResetUpload = () => {
+    setFileList([]);
+    setDefaultUploadFile(false);
+    setUploadFileSuccess(false);
+    setIsDragging(false);
+    setFileSelected(null); // Reset selected file
+    setIsColorItemButton(1); // Reset step indicator to first step
+    setTitleFile("");
+    setDescriptionFile("");
+    setTypeFile("");
+    setSubjectFile("");
+    setFacultyFile("");
+    setFileDetailLoad(false);
+    setmenuCheckItemRow(false);
+  };
+  const handleClickDefaultUpload = () => {
+    handleResetUpload();
+  };
+
+  const handleDelectFileUpload = () => {
+    handleResetUpload();
+  };
+
+  const handleNavigateDocument = () => {
+    navigate("/document");
+  };
   const isActiveTitle = (step: number) => isColorItemButton === step;
   const isActiveBorder = (step: number) => isColorItemButton >= step;
 
@@ -351,14 +381,12 @@ const UploadFileComponents = () => {
             ></div>
           </div>
         </div>
-
         {isDragging ? (
           <div
             className={cx("main-body-center")}
             onDragOver={(e) => e.preventDefault()}
           >
             <input onChange={onFileDrop} type="file" />
-
             <div className={cx("main-body-hover")}>
               <div>
                 <TextSnippet />
@@ -378,7 +406,10 @@ const UploadFileComponents = () => {
                       <p>{formatFileSize(file.size)}</p>
                     </div>
                   </div>
-                  <div className={cx("upload-header-icon")}>
+                  <div
+                    className={cx("upload-header-icon")}
+                    onClick={handleDelectFileUpload}
+                  >
                     <RestoreFromTrash />
                   </div>
                 </div>
@@ -386,31 +417,81 @@ const UploadFileComponents = () => {
                 <div className={cx("detail-upload-body")}>
                   <div className={cx("upload-body-list")}>
                     <p>Chuyên ngành</p>
-                    <input
-                      type="text"
-                      placeholder="Nhập mã hoặc tên chuyên ngành"
-                      // value={formData.subject}
-                      // onChange={handleInputChange}
-                    />
+                    <div className={cx("list-item-search")}>
+                      <input
+                        type="text"
+                        placeholder="Nhập mã hoặc tên chuyên ngành"
+                        value={facultyFile}
+                        onChange={(e) => handleSearchFaculty(e.target.value)}
+                      />
+
+                      {facultyFile.trim() && searchFaculty?.length > 0 && (
+                        <div className={cx("search-results")}>
+                          <ul>
+                            {searchFaculty.map((result, index) => (
+                              <li
+                                key={index}
+                                onClick={() => {
+                                  setFacultyFile(result.facultyName);
+                                  dispatch(clearSearchFaculty());
+                                }}
+                              >
+                                {result.facultyName}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className={cx("upload-body-list")}>
                     <p>Môn học</p>
-                    <input
-                      type="text"
-                      placeholder="Nhập mã hoặc tên môn học"
-                      // value={subject}
-                      onChange={(e) => setSubjectFile(e.target.value)}
-                    />
+                    <div className={cx("list-item-search")}>
+                      <input
+                        type="text"
+                        placeholder="Nhập mã hoặc tên môn học"
+                        value={subjectFile}
+                        onChange={(e) => handleSearchSubject(e.target.value)}
+                      />
+                      {subjectFile.trim() && searchSubject?.length > 0 && (
+                        <div className={cx("search-results")}>
+                          <ul>
+                            {searchSubject.map((result: any, index: number) => (
+                              <li
+                                key={index}
+                                onClick={() => {
+                                  setSubjectFile(result.subjectName);
+                                  dispatch(clearSearchSubject());
+                                }}
+                              >
+                                {result.subjectName}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
-
                   <div className={cx("upload-body-list")}>
                     <p>Thư mục</p>
-                    <input
-                      type="text"
-                      placeholder="Tiêu đề thư mục"
-                      // value={formData.content}
-                      onChange={(e) => setContentFile(e.target.value)}
-                    />
+                    <div className={cx("list-item-search")}>
+                      <FormControl>
+                        <Select
+                          labelId="demo-select-small-label"
+                          id="demo-select-small"
+                          value={folderFile}
+                          onChange={(e) => {
+                            handleSearchFolder(e.target.value);
+                          }}
+                        >
+                          {searchFolder.map((result, index) => (
+                            <MenuItem key={index} value={result.folderName}>
+                              {result.folderName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </div>
                   </div>
                 </div>
 
@@ -425,8 +506,7 @@ const UploadFileComponents = () => {
                             type="text"
                             readOnly
                             placeholder="Trắc nghiệm hoặc tự luận"
-                            // value={formData.type}
-                            onChange={(e) => setTypeFile(e.target.value)}
+                            value={typeFile}
                             name="row"
                           />
                           <p onClick={handleMenuCheckItemRow}>
@@ -460,102 +540,18 @@ const UploadFileComponents = () => {
                         <p>Tiêu đề</p>
                         <input
                           type="text"
-                          placeholder={file.name}
-                          // value={formData.title}
-                          onChange={(e) => setTitleFile(e.target.value)}
+                          placeholder={titleFile}
+                          value={titleFile}
+                          onChange={(e) => handleSearchTitle(e.target.value)}
                         />
                       </div>
-                      <div className={cx("upload-body-list")}>
-                        <p>Năm học</p>
-                        <div className={cx("body-list-item")}>
-                          <input
-                            type="text"
-                            readOnly
-                            placeholder="2024 - 2024"
-                            // value={formData.facultyId}
-                            name="row"
-                            onChange={(e) =>
-                              setFacultyIdFile(Number(e.target.value))
-                            }
-                          />
-                          <p onClick={handleMenuCheckItemRowYear}>
-                            {menuCheckItemRowYear ? (
-                              <KeyboardArrowUp />
-                            ) : (
-                              <KeyboardArrowDown />
-                            )}
-                          </p>
-                        </div>
 
-                        {menuCheckItemRowYear && (
-                          <div className={cx("list-item-row")}>
-                            <ul>
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2024 - 2024)
-                                }
-                              >
-                                2024 - 2024
-                              </li>
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2023 - 2023)
-                                }
-                              >
-                                2023 - 2023
-                              </li>
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2022 - 2022)
-                                }
-                              >
-                                2022 - 2022
-                              </li>
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2021 - 2021)
-                                }
-                              >
-                                2021 - 2021
-                              </li>
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2020 - 2020)
-                                }
-                              >
-                                2020 - 2020
-                              </li>{" "}
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2019 - 2019)
-                                }
-                              >
-                                2019 - 2019
-                              </li>{" "}
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2018 - 2018)
-                                }
-                              >
-                                2018 - 2018
-                              </li>{" "}
-                              <li
-                                onClick={() =>
-                                  handleChangeItemRowYear(2017 - 2017)
-                                }
-                              >
-                                2017 - 2017
-                              </li>
-                            </ul>
-                          </div>
-                        )}
-                      </div>
                       <div className={cx("upload-body-list")}>
                         <p>Mô tả</p>
                         <textarea
                           placeholder="Nhập mã hoặc tên khoá học"
                           name="description"
-                          // value={formData.description}
+                          value={descriptionFile}
                           onChange={(e) => setDescriptionFile(e.target.value)}
                         />
                       </div>
@@ -583,13 +579,19 @@ const UploadFileComponents = () => {
               </div>
             </div>
             <div className={cx("upload-success-button")}>
-              <button className={cx("success-button-upload")}>
+              <button
+                className={cx("success-button-upload")}
+                onClick={handleClickDefaultUpload}
+              >
                 <div>
                   <ArrowUpward />
                 </div>
                 Tải lên tài liệu khác
               </button>
-              <button className={cx("success-button-back")}>
+              <button
+                className={cx("success-button-back")}
+                onClick={handleNavigateDocument}
+              >
                 Quay lại trang tài liệu
               </button>
             </div>
@@ -598,9 +600,6 @@ const UploadFileComponents = () => {
           <div
             ref={wrapperRef}
             className={cx(`main-body-center`)}
-            // onDragEnter={onDragEnter}
-            // onDragLeave={onDrapLeave}
-            // onDrop={onDrop}
             onDragOver={(e) => e.preventDefault()}
           >
             <input onChange={onFileDrop} type="file" />
@@ -624,32 +623,27 @@ const UploadFileComponents = () => {
                     type="file"
                     onChange={onFileDrop}
                     placeholder="Chọn tệp tài liệu"
-                    // value={}
                   />
                 </div>
                 <div className={cx("list-button-information")}>
-                  <p>Hỗ trợ tài liệu:docx, pdf, xlss,...</p>
+                  <p>Hỗ trợ tài liệu pdf</p>
                   <p>Dung lượng file tải lên không quá xx mb</p>
                 </div>
               </div>
             </div>
           </div>
         )}
+
         {defaultUploadFile ? (
           <div className={cx("main-detail-button")}>
             <button
               className={cx("detail-button-comeback")}
               onClick={handleItemBack}
-              // disabled={isColorItemButton == 1}
             >
               <ArrowBack />
               Quay lại
             </button>
-            <button
-              className={cx("detail-button-go")}
-              onClick={handleItemNext}
-              // disabled={isColorItemButton == 3}
-            >
+            <button className={cx("detail-button-go")} onClick={handleItemNext}>
               Tiếp tục
               <ArrowForward />
             </button>
@@ -657,10 +651,7 @@ const UploadFileComponents = () => {
         ) : uploadFileSuccess ? (
           <></>
         ) : (
-          <div
-            className={cx("main-body-bottom")}
-            // style={{ display: defaultUploadFile ? "none" : "block" }}
-          >
+          <div className={cx("main-body-bottom")}>
             <div className={cx("body-bottom-file")}>
               {fileList.map((item: FileItem, index) => (
                 <div className={cx("bottom-file-list")} key={index}>
@@ -675,10 +666,7 @@ const UploadFileComponents = () => {
                   <div className={cx("bottom-file-title")}>
                     <p>{item.name}</p>
                     <div className={cx("file-title-bar")}>
-                      <div
-                        className={cx("bar-list")}
-                        // style={{ width: `${fileLoad}%` }}
-                      ></div>
+                      <div className={cx("bar-list")}></div>
                     </div>
                   </div>
                   <div className={cx("bottom-file-del")}>
@@ -704,7 +692,6 @@ const UploadFileComponents = () => {
                 </div>
               ))}
             </div>
-
             <div className={cx("main-body-button")}>
               <button onClick={handleDefaultUpload}>
                 <div>

@@ -6,38 +6,90 @@ interface ApiPostFile {
   file: File;
   title: string;
   description: string;
-  content: string;
   type: string;
-  subject: string;
-  facultyId: number;
+  subjectName: string;
+  facultyName: string;
 }
-
+export interface SearchFaculty {
+  id: number;
+  facultyName: string;
+}
+export interface SearchFolder {
+  id: number;
+  folderName: string;
+}
+export interface SearchSubject {
+  id: number;
+  subjectName: string;
+}
 export const postFile = async (data: ApiPostFile) => {
   const formData = new FormData();
   formData.append("file", data.file);
   formData.append("title", data.title);
   formData.append("description", data.description);
-  formData.append("content", data.content);
   formData.append("type", data.type);
-  formData.append("subject", data.subject);
-  formData.append("facultyId", data.facultyId.toString());
+  formData.append("subjectName", data.subjectName);
+  formData.append("facultyName", data.facultyName);
+  console.log("formData", formData);
 
   try {
-    const res = await axiosInstance.post(
-      "/api/v1/document/upload?file=data.file&type=data",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+    const res = await axiosInstance.post("/document/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    const errorMessage = error.response?.data?.message;
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+export const searchFacultyAPI = async (data: string) => {
+  try {
+    const res = await axiosInstance.get<SearchFaculty[]>(
+      `/search/faculty?facultyName=${data}`
     );
-    toast.success("File uploaded successfully!");
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     const errorMessage =
-      error.response?.data?.message || "An error occurred while uploading";
+      error.response?.data?.message ||
+      "An error occurred while searching faculty";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export const searchFolderAPI = async () => {
+  try {
+    const res = await axiosInstance.get(
+      `/folder/all`
+    );
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    const errorMessage =
+      error.response?.data?.message ||
+      "An error occurred while searching faculty";
+    toast.error(errorMessage);
+    throw new Error(errorMessage);
+  }
+};
+
+export const searchSubject = async (data: string) => {
+  try {
+    const res = await axiosInstance.get<SearchSubject[]>(
+      `/search/subject?subject=${encodeURIComponent(data)}`
+    );
+
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    const errorMessage =
+      error.response?.data?.message ||
+      "An error occurred while searching faculty";
     toast.error(errorMessage);
     throw new Error(errorMessage);
   }

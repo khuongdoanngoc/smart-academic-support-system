@@ -20,15 +20,6 @@ export default function Statistics() {
                     <span>{value.toLocaleString("vi-VN")}</span>
                 </div>
             ))}
-            <hr />
-            <div>
-                <p>Tổng số tài liệu đã đọc:</p>
-                <span>...</span>
-            </div>
-            <div>
-                <p>Tổng số sách đã thuê:</p>
-                <span>...</span>
-            </div>
         </div>
     );
 }

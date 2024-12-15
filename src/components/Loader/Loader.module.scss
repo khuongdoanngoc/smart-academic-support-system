@@ -1,0 +1,51 @@
+.main-login-load {
+    position: fixed;
+    top: 0px;
+    background: #000000;
+    width: 100%;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    & > .login-load-item {
+      position: relative;
+      text-align: center;
+      margin-top: 224px;
+      margin-right: 101px;
+    }
+    & > .login-load-item::after,
+    & > .login-load-item::before {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 4px #eb2930;
+      border-style: dotted solid dotted solid;
+      animation: turn-left 1.5s linear infinite;
+    }
+    & > .login-load-item::before {
+      left: calc(50% - 25px);
+      top: calc(50% - 25px);
+      width: 150px;
+      height: 150px;
+      border-style: dotted dotted solid solid;
+      animation: turn-right 1.5s linear infinite;
+    }
+    @keyframes turn-right {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    @keyframes turn-left {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(-360deg);
+      }
+    }
+  }

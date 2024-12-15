@@ -1,5 +1,4 @@
-import { toast } from "react-toastify";
-import { axiosInstance, baseUrl } from "../../utils/AxiosInterceptor";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
 import { AxiosError } from "axios";
 
 interface LoginData {
@@ -7,7 +6,10 @@ interface LoginData {
   password: string;
 }
 interface ILoginS {
+  accountId:number;
   listRoles: string[];
+  accessToken: string;
+  refreshToken: string;
   username: string;
 }
 interface IRegister {
@@ -20,44 +22,50 @@ export interface IChangePassWord{
   password:string
   newpassword:string
 }
+export type SendOtpRequest= {
+  email: string;
+  otp: string;
+}
+
+export type NewPasswordRequest= {
+  email: string;
+  password: string;
+  otp: string;
+}
+
+export type ClearTokenRequest= {
+  otp :string;
+}
+
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
-    if (res) {
-      toast.success("Đăng nhập thành công");
-      return res as unknown as ILoginS;
-    }
-    throw new Error("Đăng nhập thất bại");
+
+    return res as unknown as ILoginS;
+    // return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
+
     if (error.response?.data.message) {
       throw new Error(error.response.data.message);
     }
-    throw new Error("tài khoản hoặc mật khẩu không đúng!");
+    throw new Error(error.message || "Đăng nhập thất bại");
   }
 };
 
 export const RegisterApi = async (data: IRegister) => {
   try {
     const res = await axiosInstance.post("/auth/register", data);
-    if (res) {
-      toast.success("Đăng ký tài khoản thành công công!");
-    }
-
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
-    if (error.response?.status === 400) {
-      toast.error(error.response.data.message || "An error occurred");
-    } else {
-      toast.error("An unexpected error occurred");
-    }
+
     throw new Error(error.response?.data.message || error.message);
   }
 };
 export const LogoutApi = async () => {
   try {
-    const res = await axiosInstance.get(`${baseUrl}/auth/logout`);
+    const res = await axiosInstance.get("/auth/logout");
     if (res) {
       return;
     }
@@ -75,5 +83,45 @@ export const ChangePasswordAPI= async(data:IChangePassWord)=>{
     const error = err as AxiosError<{ message?: string }>;
   
     throw new Error(error.response?.data.message || error.message);
+     }
+}
+
+export const AutoLoginApi = async () => {
+  try {
+    const res = await axiosInstance.get("/auth/autoLogin");
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.message);
+  }
+}
+
+export const SendAuthOtp= async (data: SendOtpRequest)=>{
+  try{
+    const res= await axiosInstance.post("/auth/validate/reset-password",data);
+    return res;
+  }catch(err: unknown){
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.message);
+  }
+}
+
+export const UpdatePasswordApi= async (data: NewPasswordRequest)=>{
+  try{
+    const res= await axiosInstance.post("/auth/update/new-password",data);
+    return res;
+  }catch(err: unknown){
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.message);
+  }
+}
+
+export const ClearTokenApi= async (data: ClearTokenRequest)=>{
+  try{
+    const res= await axiosInstance.post("/auth/delete/clear-token",data);
+    return res;
+  }catch(err: unknown){
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.message);
   }
 }

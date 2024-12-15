@@ -1,0 +1,213 @@
+.folder-detail-view {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & > .header {
+        padding: 15px 30px;
+        width: 100%;
+        background-color: #feebeb;
+        display: flex;
+        align-items: center;
+        & > .information {
+            width: 60%;
+            & > .title {
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 17.07px;
+                & > span {
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 17.07px;
+                    text-decoration: underline;
+                    color: #dc4342;
+                }
+            }
+            & > .content-container {
+                display: flex;
+                align-items: center;
+                padding: 16px 0px;
+                gap: 12px;
+                & > .content {
+                    display: flex;
+                    flex-direction: column;
+                    & > h3 {
+                        font-size: 17px;
+                        font-weight: 500;
+                        line-height: 24.38px;
+                    }
+                    & > .outstanding {
+                        display: flex;
+                        gap: 35px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        line-height: 17.07px;
+                        color: #5b5b5b;
+                        & > div {
+                            display: flex;
+                            align-items: center;
+                            gap: 2px;
+                        }
+                    }
+                }
+            }
+        }
+        & > .functions {
+            display: flex;
+            flex-direction: column;
+            width: 40%;
+            gap: 8px;
+            & > .actions {
+                margin-left: auto;
+                gap: 12px;
+                display: flex;
+            }
+
+            & > .search-container {
+                width: 100%;
+                position: relative;
+                & > input {
+                    width: 100%;
+                    height: 46px;
+                    border: 0.5px solid #00000080;
+                    border-radius: 25px;
+                    padding: 11.5px 19px;
+                    font-family: var(--font-family-secondary);
+                    font-size: 17px;
+                    font-weight: 400;
+                    line-height: 23px;
+                    text-align: left;
+                    transition: ease 0.2s;
+                }
+                & > input:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 2px #b3000080;
+                }
+                & > .search-icon {
+                    position: absolute;
+                    top: 50%;
+                    right: 15px;
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+    & > .body {
+        padding: 15px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        & > h3 {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 19.5px;
+        }
+        & > .docs-list {
+            width: 100%;
+            border-radius: 20px;
+            border: 1px solid #00000080;
+            position: relative;
+            max-height: 440px;
+            overflow-y: auto;
+            & > .list-head {
+                position: sticky;
+                z-index: 9;
+                background-color: white;
+                top: 0;
+                display: flex;
+                width: 100%;
+                border-bottom: 1px solid #00000080;
+                justify-content: space-between;
+                padding: 20px 65px;
+            }
+            & > .list-body {
+                display: flex;
+                flex-direction: column;
+                & > .doc {
+                    padding: 18px 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-top: 1px solid #00000080;
+                    & > .doc-title {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        color: #dc4342;
+                        font-size: 16px;
+                        font-weight: 600;
+                        line-height: 19.5px;
+                    }
+                    & > .actions {
+                        display: flex;
+                        align-items: center;
+                        gap: 30px;
+                        padding-left: 16px;
+                        & > button {
+                            all: initial;
+                            cursor: pointer !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    & > .form-container {
+        & > .form {
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            border: 2px solid #00000080;
+            border-radius: 25px;
+            gap: 14px;
+            margin: 15px 30px;
+            & > .item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 35px;
+                & > label {
+                    font-size: 18px;
+                    font-weight: 500;
+                    line-height: 24.38px;
+                }
+                & > input {
+                    width: 600px;
+                    padding: 15px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 19.5px;
+                    border-radius: 20px;
+                    border: 1.5px solid #00000099;
+                }
+                & > textarea {
+                    resize: vertical;
+                    width: 600px;
+                    padding: 15px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    line-height: 19.5px;
+                    border-radius: 20px;
+                    border: 1.5px solid #00000099;
+                }
+            }
+        }
+        & > .actions {
+            margin: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            & > button {
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 24.2px;
+                color: white;
+                border: none;
+                border-radius: 30px;
+                padding: 10px 30px;
+                cursor: pointer;
+            }
+        }
+    }
+}

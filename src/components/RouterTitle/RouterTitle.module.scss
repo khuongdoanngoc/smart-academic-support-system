@@ -1,0 +1,13 @@
+.router-title {
+  width: 97%;
+  margin: 0 auto;
+  margin-top: 20px;
+  & > span {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  & > .link {
+    color: #dc4342;
+    text-decoration: underline;
+  }
+}

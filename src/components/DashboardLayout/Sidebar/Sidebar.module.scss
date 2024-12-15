@@ -1,0 +1,135 @@
+.sidebar {
+    gap: 16px;
+    padding: 30px 22px;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid #e5e8eb;
+    height: fit-content;
+    position: relative;
+    transition: 0.5s ease;
+    z-index: 9;
+    background-color: white;
+    & > .account {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        & > img {
+            width: 42.5px;
+            height: 42.5px;
+            border-radius: 10px;
+        }
+        // name
+        & > div {
+            & > h3 {
+                font-family: var(--font-family-secondary);
+                font-size: 15px;
+                font-weight: 500;
+                line-height: 18.15px;
+                text-align: left;
+            }
+            & > span {
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 400;
+                line-height: 14.52px;
+                text-align: left;
+                color: #026cb9;
+            }
+        }
+    }
+
+    & > .addDoc-btn {
+        width: 100%;
+        & > button {
+            font-family: "Montserrat";
+            font-size: 16px;
+            width: 100%;
+            font-weight: 700;
+            line-height: 19.5px;
+            text-align: center;
+            background-color: #dc4342b2 !important;
+        }
+    }
+
+    position: relative;
+    & > .toggle {
+        position: absolute;
+        top: 50px;
+        right: -20px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    & > .items {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+
+        & > span {
+            height: 20px;
+        }
+        & > a {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: black;
+            border-radius: 10px;
+            padding: 5px 20px;
+            transition: 0.3s ease;
+            & > h3 {
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19.36px;
+                text-align: left;
+            }
+            & > span {
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19.36px;
+                text-align: left;
+                color: #00000099;
+            }
+        }
+        & > a:hover {
+            background-color: #ffd9db;
+        }
+        & > .active {
+            background-color: var(--Pink-nht, #ffc9cb);
+            color: var(--main-color);
+        }
+    }
+
+    & > .support-btn {
+        background-color: #ffbaba !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 0px;
+        margin-top: 40px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.3s ease;
+    }
+
+    & > .support-btn:hover {
+        box-shadow: 0px 4px 4px 0px #00000040;
+        transform: scale(1.03);
+        background-color: #dc4342b2 !important;
+    }
+
+    & > #support-active {
+        background-color: var(--main-color) !important;
+    }
+}
+
+.open {
+    width: 20%;
+}
+
+.closed {
+    width: 80px;
+    padding: 30px 10px !important;
+}
