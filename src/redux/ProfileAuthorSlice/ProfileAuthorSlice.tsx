@@ -1,32 +1,41 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FollowAuthorApi, UnFollowAuthorApi, ViewProfileAuthorApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
+import { FollowAuthorApi, UnFollowAuthorApi, ViewProfileAuthorApi, ViewProfileAuthorByEmailApi } from "../../services/ProfileAuthorApi/ProfileAuthorApi";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
-
-interface initialState {
-  isloading: boolean;
-  error: string | null;
-  success: boolean;
-  followUser:string[],
-  
-}
-const initialState: initialState = {
-  isloading: false,
-  error: null,
-  success: false,
-  followUser:[] as string[],
-};
 
 export interface IViewProfile{
   firstName: string;
   lastName: string;
   email: string;
-  profilePicture: string;
-  faculty: string;
-  role: string;
-  Followers:string;
-  Following:string;
+  profilePicture: string | null;
+  birthDate: string | null;
+  gender: string | null;
+  hometown: string | null;
+  phoneNumber: string | null;
+  facultyName: string | null;
+  major: string | null;
+  enrollmentYear: string | null;
+  classNumber: string | null;
+  role: string[];
+  follower:number;
+  following:number;
 }
+interface initialState {
+  isloading: boolean;
+  error: string | null;
+  success: boolean;
+  followUser:string[],
+  viewProfile: IViewProfile | null;
+}
+const initialState: initialState = {
+  isloading: false,
+  error: null,
+  success: false,
+  followUser: [] as string[],
+  viewProfile: null
+};
+
+
 
 
 
@@ -70,6 +79,19 @@ export const ViewProfileAuthorAction = createAsyncThunk(
   }
 );
 
+export const ViewProfileAuthorByEmailAction = createAsyncThunk<IViewProfile,string>(
+  "ProfileAuthorSlice/ViewProfileAuthorByEmailAction",
+  async (email:string) => {
+    try {
+      const res = await ViewProfileAuthorByEmailApi(email);
+      return res as unknown as IViewProfile
+    } catch (err:unknown) {
+      const error = err as AxiosError<{message?:string}>
+      throw new Error(error.response?.data.message || error.message)
+    }
+  }
+);
+
 export const ProfileAuthorSlice = createSlice({
   name: "ProfileAuthorSlice",
   initialState: initialState,
@@ -79,6 +101,9 @@ export const ProfileAuthorSlice = createSlice({
       state.isloading = true;
     })
     .addCase(UnFollowAuthorAction.pending, (state) => {
+      state.isloading = true;
+    })
+    .addCase(ViewProfileAuthorByEmailAction.pending, (state) => {
       state.isloading = true;
     })
     
@@ -96,6 +121,10 @@ export const ProfileAuthorSlice = createSlice({
         toast.success("UnFollow success");
       }
     })
+    .addCase(ViewProfileAuthorByEmailAction.fulfilled, (state, action: PayloadAction<IViewProfile>) => {
+      state.isloading = false;
+      state.viewProfile= action.payload;
+    })
     .addCase(FollowAuthorAction.rejected, (state, action) => {
       state.isloading = false;
       state.error = action.error.message || "Failed to follow user";
@@ -103,6 +132,10 @@ export const ProfileAuthorSlice = createSlice({
     .addCase(UnFollowAuthorAction.rejected, (state, action) => {
       state.isloading = false;
       state.error = action.error.message || "Failed to UnFollow user";
+    })
+    .addCase(ViewProfileAuthorByEmailAction.rejected, (state, action) => {
+      state.isloading = false;
+      state.error = action.error.message || "Failed to get user";
     })
   },
 });

@@ -9,13 +9,11 @@ import {
   PaginationRenderItemParams,
 } from "@mui/material";
 import { useCallback, useState } from "react";
-import {  RootState, useAppDispatch } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
   clearSearchUser,
   SearchUserAction,
-  SearchUserInformationAction,
 } from "../../../redux/SearchUserSlice/SearchUserSlice";
-import { useSelector } from "react-redux";
 import { SearchInterface } from "../../../services/SearchUserAPI/SearchUserApi";
 import { useNavigate } from "react-router-dom";
 
@@ -75,7 +73,7 @@ const SearchUserComponents = () => {
   const alphabet = Array.from("1234567");
   const dispatch = useAppDispatch();
   const navigate =useNavigate();
-  const {listSearch}:{listSearch:SearchInterface[]} =useSelector((state:RootState) => state.searchUser);
+  const {listSearch}:{listSearch:SearchInterface[]} =useAppSelector((state) => state.searchUser);
 
 
   console.log(listSearch);
@@ -111,13 +109,10 @@ const SearchUserComponents = () => {
       console.log(error);
     }
   };
-  const handleNavigateUser = (email: string) => {
+  const handleNavigateUser = (email: string, userName:string) => {
     try {
-      const res=dispatch(SearchUserInformationAction((email)))
-      if(res){
-        sessionStorage.setItem("userEmail",email)
-        navigate(`/document/profileauthor/${email}`,{state:res}) 
-      }
+      sessionStorage.setItem("userEmail",email)
+      navigate(`/document/profile-author/${userName}`) 
     } catch (error) {
       console.log(error);
     }
@@ -129,7 +124,7 @@ const SearchUserComponents = () => {
         <div className={cx("user-header-search")}>
           <input
             type="text"
-            placeholder="Tìm kiếm tài liệu..."
+            placeholder="Tìm kiếm người dùng..."
             onChange={(e) => handleChangeSearch(e.target.value)}
           />
           <SearchIcon className={cx("search-icon")} />
@@ -137,7 +132,7 @@ const SearchUserComponents = () => {
       </div>
       <div className={cx("search-user-body")}>
         {filteredDataList(listSearch).map((item,index) => (
-          <div className={cx("user-body-list")}  key={index} onClick={() => handleNavigateUser(item.email)} >
+          <div className={cx("user-body-list")}  key={index} onClick={() => handleNavigateUser(item.email,item.firstName.concat(item.lastName))} >
             <div className={cx("user-list-img")}>
               <img src={UserAvatar} alt="avartar" />
             </div>
@@ -145,18 +140,18 @@ const SearchUserComponents = () => {
               <div className={cx("user-list-name")}>
                 <div className={cx("list-name-text")}>{`${item.lastName} ${item.firstName}`}</div>
                 <div className={cx("list-name-position")}>
-                  Chức vụ: Giang viên
+                  Chức vụ: Giảng viên
                 </div>
               </div>
               <div className={cx("user-list-department")}>
                 <div className={cx("list-department-text")}>
-                  Khoa: Đào tạo quôc tế
+                  Khoa: Đào tạo quốc tế
                 </div>
                 <div className={cx("list-department-position")}>
                   Ngành:Công nghệ phần mềm CMU
                 </div>
               </div>
-              <div className={cx("user-list-email")}>Email: {item.email}</div>
+              {/* <div className={cx("user-list-email")}>Email: {item.email}</div> */}
             </div>
             <div className={cx("user-list-button")}>
               <button>Theo dõi</button>

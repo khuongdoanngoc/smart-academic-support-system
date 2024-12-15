@@ -1,5 +1,6 @@
 import { AxiosError } from "axios"
 import { axiosInstance } from "../../utils/AxiosInterceptor"
+import { IViewProfile } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice"
 
 
 
@@ -29,8 +30,19 @@ export const UnFollowAuthorApi=async(email:string)=>{
 
 export const ViewProfileAuthorApi=async()=>{
   try {
-    const response = await axiosInstance.post(`/user/profile`)
+    const response = await axiosInstance.get(`/user/profile`)
     return response
+  } catch (err:unknown) {
+    const error= err as AxiosError<{message?:string}>
+    throw new Error(error.response?.data.message || error.message)
+    
+  }
+}
+
+export const ViewProfileAuthorByEmailApi=async(email:string)=>{
+  try {
+    const response = await axiosInstance.get(`/user/profile/email?email=${email}`)
+    return response as unknown as IViewProfile
   } catch (err:unknown) {
     const error= err as AxiosError<{message?:string}>
     throw new Error(error.response?.data.message || error.message)

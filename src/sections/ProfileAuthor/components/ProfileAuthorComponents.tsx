@@ -14,26 +14,16 @@ import {
 } from "@mui/material";
 
 import { useEffect, useState } from "react";
-// import { useSelecto } from "react-redux";
-import {
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-} from "../../../redux/store";
-// import { FollowProFileAction } from "../../../redux/EditProFileSlice/EditProFileSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
   FollowAuthorAction,
   UnFollowAuthorAction,
+  ViewProfileAuthorByEmailAction,
 } from "../../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
 import { useGlobalContextLoin } from "../../../layouts/useContext";
-import { useLocation } from "react-router-dom";
-import { SearchViewUserInterface } from "../../../services/SearchUserAPI/SearchUserApi";
 import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
-import { SearchUserInformationAction } from "../../../redux/SearchUserSlice/SearchUserSlice";
-import { useSelector } from "react-redux";
-// import { RootState } from "@reduxjs/toolkit/query";
-// import { RootState } from "@reduxjs/toolkit/query";
-        
+import Loader from "../../../components/Loader/Loader";
+
 const cx = classnames.bind(styles);
 interface Subject {
   id: number;
@@ -129,40 +119,25 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
     useState<boolean>(false);
 
   const dispatch = useAppDispatch();
-  // const [listItemFile, setListItemFile] = useState(4);
-  const location = useLocation();
-
-  // const userDetails = location.state as SearchViewUserInterface
   const isloading = useAppSelector((state) => state.profileAuthor.isloading);
+  const { viewProfile } = useAppSelector((state) => state.profileAuthor);
   const isFollow = useAppSelector((state) =>
     state.profileAuthor.followUser.includes(email)
   );
-  const fullname = useSelector(
-    (state: RootState) => state.authentication.username
-  );
-  const [userDetails, setUserDetails] = useState<
-    SearchViewUserInterface[] | null
-  >(location.state || null);
-
+  const fullname = useAppSelector((state) => state.authentication.username);
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      const stogeEmail = sessionStorage.getItem("userEmail");
-      if (stogeEmail && !userDetails) {
-        try {
-          const res = await dispatch(
-            SearchUserInformationAction(stogeEmail)
-          ).unwrap();
-          setUserDetails(res);
-        } catch (error) {
-          console.log(error);
-        }
+    const stogeEmail = sessionStorage.getItem("userEmail");
+    if (stogeEmail) {
+      try {
+        dispatch(ViewProfileAuthorByEmailAction(stogeEmail));
+      } catch (error) {
+        console.log(error);
       }
-    };
-    fetchUserDetails();
-  }, [dispatch, userDetails]);
+    }
+  }, [dispatch]);
 
   const { setIsFormLogin } = useGlobalContextLoin();
-    
+
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
@@ -207,188 +182,186 @@ const ProfilePersonalComponents = ({ email }: FollowButtonProps) => {
 
   return (
     <div className={cx("author-component")}>
-      {userDetails?.map((data, index) => {
-        return (
-          <div key={index}>
-            <div className={cx("author-component-information")}>
-              <div className={cx("component-information-left")}>
-                <div className={cx("information-left-profile")}>
-                  <div className={cx("left-profile-author")}>
-                    <div className={cx("author-name")}>
-                      <img src={Avatar} />
-                      <div>
-                        <h3>
-                          {data?.firstName} {data?.lastName}
-                        </h3>
-                        <p>Software Technology CMU</p>
-                      </div>
-                    </div>
-                    <div className={cx("author-follow")}>
-                      <div>
-                        <p>0</p>
-                        <p>Followers</p>
-                      </div>
-                      <div>
-                        <p>0</p>
-                        <p>Following</p>
-                      </div>
+      {viewProfile == null ? (
+        <Loader height={20} />
+      ) : (
+        <>
+          <div className={cx("author-component-information")}>
+            <div className={cx("component-information-left")}>
+              <div className={cx("information-left-profile")}>
+                <div className={cx("left-profile-author")}>
+                  <div className={cx("author-name")}>
+                    <img src={Avatar} />
+                    <div>
+                      <h3>
+                        {viewProfile.firstName} {viewProfile.lastName}
+                      </h3>
+                      <p>{viewProfile.major?viewProfile.major:"Chưa cập nhật"}</p>
                     </div>
                   </div>
-                  <div
-                    className={cx("left-profile-button")}
-                    onClick={handleFollow}
-                  >
-                    <Button
-                      text={titleButtonFollow}
-                      paddingX={29}
-                      paddingY={6}
-                      fontSize={16}
-                    />
+                  <div className={cx("author-follow")}>
+                    <div>
+                      <p>{viewProfile.follower}</p>
+                      <p>Followers</p>
+                    </div>
+                    <div>
+                      <p>{viewProfile.following}</p>
+                      <p>Following</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className={cx("component-information-right")}>
-                <h4>Thông tin</h4>
-                <div className={cx("information-right-item")}>
-                  <div>
-                    <p>Chức vụ :Sinh viên</p>
-                    <p>Khoa: Đào tạo quốc tế</p>
-                  </div>
-                  <div>
-                    <p>Chuyên ngành: Công nghệ Phần mềm CMU</p>
-                    <p>Khóa: 27</p>
-                  </div>
+                <div
+                  className={cx("left-profile-button")}
+                  onClick={handleFollow}
+                >
+                  <Button
+                    text={titleButtonFollow}
+                    paddingX={29}
+                    paddingY={6}
+                    fontSize={16}
+                  />
                 </div>
               </div>
             </div>
-            <div className={cx("author-component-file")}>
-              <div className={cx("component-title-top")}>
-                <div className={cx("file-top-title")}>
-                  <h3>THỐNG KÊ</h3>
+            <div className={cx("component-information-right")}>
+              <h4>Thông tin</h4>
+              <div className={cx("information-right-item")}>
+                <div>
+                  <p>Chức vụ : {viewProfile.role[0]==="LECTURER"?"Giảng viên":"Sinh viên"}</p>
+                  <p>Khoa: {viewProfile.facultyName?viewProfile.facultyName:"Chưa cập nhật"}</p>
                 </div>
-                <div className={cx("file-top-table")}>
-                  <div className={cx("top-table-name")}>
-                    <h4>Tài liệu của Huy</h4>
-                  </div>
-                  <div className={cx("top-table-total")}>
-                    <div>
-                      <span>{totalFile}</span>
-                      <p>Đã tải lên</p>
-                    </div>
-                    <div>
-                      <span>0</span>
-                      <p>Đã lưu</p>
-                    </div>
-                    <div>
-                      <span>0</span>
-                      <p>Đã gắn thẻ</p>
-                    </div>
-                  </div>
+                <div>
+                  <p>Chuyên ngành: {viewProfile.major?viewProfile.major:"Chưa cập nhật"}</p>
+                  {viewProfile.enrollmentYear !== null ? <p>Khóa: 27</p> : ""}
                 </div>
-              </div>
-              <div className={cx("conponent-file-bottom")}>
-                <div className={cx("file-bottom-title")}>
-                  <h3>TÀI LIỆU ĐÃ TẢI LÊN</h3>
-                </div>
-                <div className={cx("file-bottom-list")}>
-                  <div className={cx("bottom-list-title")}>
-                    <p>Tiêu đề tài liệu</p>
-                    <p>Chức năng</p>
-                  </div>
-                  <div className={cx("bottom-list-table")}>
-                    {filteredDataList(fakeSubjects).map((data) => (
-                      <div className={cx("bottom-list-item")} key={data.id}>
-                        <div className={cx("list-item-left")}>
-                          <img src={File} alt="file" />
-                          <p>{data.title}</p>
-                        </div>
-                        <div className={cx("list-item-right")}>
-                          <img
-                            src={ImportLight}
-                            alt="down"
-                            onClick={() => handleDownLoad(data.id)}
-                          />
-                          <img
-                            src={Share}
-                            alt="share"
-                            onClick={() => handleOpenShare()}
-                          />
-                          <img src={EditIcon} alt="EditIcon" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {isOpenShare && (
-                  <div
-                    className={cx(
-                      "file-bottom-share",
-                      shareCloseAnimation && "home-close-animation",
-                      shareAnimation && "home-animation"
-                    )}
-                  >
-                    <div className={cx("bottom-share-title")}>
-                      <div className={cx("share-title-header")}>
-                        <h3>Chia sẻ tài liệu này</h3>
-                        {/* <div> */}
-                        <img
-                          src={Delect}
-                          alt="Delect"
-                          onClick={() => handleCloseShare()}
-                        />
-                        {/* </div> */}
-                      </div>
-                      <div className={cx("share-title-content")}>
-                        <div className={cx("title-content-email")}>
-                          <div>
-                            <p>Chia sẻ liên kết qua email</p>
-                          </div>
-                          <button className={cx("content-email-button")}>
-                            Gửi Email
-                          </button>
-                        </div>
-                        <div className={cx("title-content-url")}>
-                          <h4>URL tài liệu</h4>
-                          <p>
-                            http://duytanforyou.com/vn/12345678/do-an-cdio-2024/...
-                          </p>
-                        </div>
-                        <div className={cx("title-content-copy")}>
-                          <button className={cx("button-coppy")}>
-                            Sao chép đường liên kết
-                          </button>
-                          <button className={cx("button-finished")}>
-                            Xong
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className={cx("conponent-file-slide")}>
-                <Pagination
-                  count={alphabet.length}
-                  defaultPage={1}
-                  siblingCount={7}
-                  onChange={handlePageChange}
-                  variant="outlined"
-                  renderItem={(item: PaginationRenderItemParams) => (
-                    <PaginationItem
-                      sx={{
-                        margin: "0 6px",
-                        fontFamily: "Inter",
-                      }}
-                      {...item}
-                      page={item.page ? alphabet[item.page - 1] : null}
-                    />
-                  )}
-                />
               </div>
             </div>
           </div>
-        );
-      })}
+          <div className={cx("author-component-file")}>
+            <div className={cx("component-title-top")}>
+              <div className={cx("file-top-title")}>
+                <h3>THỐNG KÊ</h3>
+              </div>
+              <div className={cx("file-top-table")}>
+                <div className={cx("top-table-name")}>
+                  <h4>Tài liệu của {viewProfile.lastName}</h4>
+                </div>
+                <div className={cx("top-table-total")}>
+                  <div>
+                    <span>{totalFile}</span>
+                    <p>Đã tải lên</p>
+                  </div>
+                  <div>
+                    <span>0</span>
+                    <p>Đã lưu</p>
+                  </div>
+                  <div>
+                    <span>0</span>
+                    <p>Đã gắn thẻ</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={cx("conponent-file-bottom")}>
+              <div className={cx("file-bottom-title")}>
+                <h3>TÀI LIỆU ĐÃ TẢI LÊN</h3>
+              </div>
+              <div className={cx("file-bottom-list")}>
+                <div className={cx("bottom-list-title")}>
+                  <p>Tiêu đề tài liệu</p>
+                  <p>Chức năng</p>
+                </div>
+                <div className={cx("bottom-list-table")}>
+                  {filteredDataList(fakeSubjects).map((data) => (
+                    <div className={cx("bottom-list-item")} key={data.id}>
+                      <div className={cx("list-item-left")}>
+                        <img src={File} alt="file" />
+                        <p>{data.title}</p>
+                      </div>
+                      <div className={cx("list-item-right")}>
+                        <img
+                          src={ImportLight}
+                          alt="down"
+                          onClick={() => handleDownLoad(data.id)}
+                        />
+                        <img
+                          src={Share}
+                          alt="share"
+                          onClick={() => handleOpenShare()}
+                        />
+                        <img src={EditIcon} alt="EditIcon" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {isOpenShare && (
+                <div
+                  className={cx(
+                    "file-bottom-share",
+                    shareCloseAnimation && "home-close-animation",
+                    shareAnimation && "home-animation"
+                  )}
+                >
+                  <div className={cx("bottom-share-title")}>
+                    <div className={cx("share-title-header")}>
+                      <h3>Chia sẻ tài liệu này</h3>
+                      {/* <div> */}
+                      <img
+                        src={Delect}
+                        alt="Delect"
+                        onClick={() => handleCloseShare()}
+                      />
+                      {/* </div> */}
+                    </div>
+                    <div className={cx("share-title-content")}>
+                      <div className={cx("title-content-email")}>
+                        <div>
+                          <p>Chia sẻ liên kết qua email</p>
+                        </div>
+                        <button className={cx("content-email-button")}>
+                          Gửi Email
+                        </button>
+                      </div>
+                      <div className={cx("title-content-url")}>
+                        <h4>URL tài liệu</h4>
+                        <p>
+                          http://duytanforyou.com/vn/12345678/do-an-cdio-2024/...
+                        </p>
+                      </div>
+                      <div className={cx("title-content-copy")}>
+                        <button className={cx("button-coppy")}>
+                          Sao chép đường liên kết
+                        </button>
+                        <button className={cx("button-finished")}>Xong</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className={cx("conponent-file-slide")}>
+              <Pagination
+                count={alphabet.length}
+                defaultPage={1}
+                siblingCount={7}
+                onChange={handlePageChange}
+                variant="outlined"
+                renderItem={(item: PaginationRenderItemParams) => (
+                  <PaginationItem
+                    sx={{
+                      margin: "0 6px",
+                      fontFamily: "Inter",
+                    }}
+                    {...item}
+                    page={item.page ? alphabet[item.page - 1] : null}
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

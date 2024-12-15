@@ -45,14 +45,14 @@ const docItems = [
     {
         title: "Thông báo",
         icon: NotificationsOutlinedIcon,
-        pathAcitve: "/document/notication",
+        pathAcitve: "/document/notification",
     },
 ];
 const searchItems = [
     {
-        title: "Phân loại",
+        title: "Người dùng",
         icon: SearchOutlinedIcon,
-        pathAcitve: "#unknown",
+        pathAcitve: "/document/search-user",
     },
     {
         title: "Tài liệu đã lưu",

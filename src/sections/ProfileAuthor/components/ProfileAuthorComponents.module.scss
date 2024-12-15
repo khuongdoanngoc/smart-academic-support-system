@@ -98,7 +98,6 @@
     }
   }
   & > .author-component-file {
-   &>div{
     & > .component-title-top {
       display: flex;
       margin-top: 20px;
@@ -334,7 +333,6 @@
         }
       }
     }
-   }
   }
 }
 @keyframes slide-in-elliptic-top-fwd {

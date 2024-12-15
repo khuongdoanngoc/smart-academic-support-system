@@ -91,7 +91,7 @@ export default function Router() {
         // { path: "/directory", element: <DocumentPage /> },
         // { path: "support", element: <SupportPage /> },
         { path: "profile-author", element: <ProfileAuthor /> },
-        { path: "profile-author:email", element: <ProfileAuthor /> },
+        { path: "profile-author/:lastName", element: <ProfileAuthor /> },
         { path: "profile-personal", element: <ProfilePersonal /> },
         {
           path: "profile-personal-teacher",
