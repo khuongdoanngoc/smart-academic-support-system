@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import UploadFileReducer from "./UploadFileSlice/uploadFileSlice";
-// import DocumentReducer from "./DocumentSlice/documentSlice";
+import DocumentReducer from "./DocumentSlice/documentSlice";
 import TagReducers from "./TagSlice/TagSlice";
 import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
@@ -14,7 +14,7 @@ import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 const store = configureStore({
   reducer: {
     uploadFile: UploadFileReducer,
-    // document: DocumentReducer,
+    document: DocumentReducer,
     tag: TagReducers,
     notication: NoticatonReducer,
     chatbot: ChatBotReducer,

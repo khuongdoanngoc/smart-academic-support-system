@@ -41,7 +41,7 @@ import {
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "@mui/material";
+// import { debounce } from "@mui/material";
 
 const cx = classNames.bind(styles);
 
@@ -75,7 +75,14 @@ const UploadFileComponents = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
+  const isUpload = useAppSelector((state) => state.uploadFile.isupload);
+  const searchFaculty =
+    useAppSelector((state) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
+  const searchSubject =
+  useAppSelector((state) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+  const searchFolder =
+  useAppSelector((state) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+
   let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(1);
@@ -242,14 +249,6 @@ const UploadFileComponents = () => {
     setmenuCheckItemRow(!menuCheckItemRow);
   };
 
-  const searchFaculty =
-    useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
-  const searchSubject =
-    useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
-  const searchFolder =
-    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchFaculty = useCallback(
     debounce(
       (value: string) => dispatch(SearchFacultyAction(value)).unwrap(),
@@ -257,7 +256,6 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchFacultyAction]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchSubject = useCallback(
     debounce(
       (value: string) => dispatch(SearchSubjectAction(value)).unwrap(),
@@ -265,25 +263,23 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchSubjectAction]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearFaculty = useCallback(
     debounce(() => dispatch(clearSearchFaculty()), 1000),
     [dispatch, clearSearchFaculty]
   );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearSubject = useCallback(
     debounce(() => dispatch(clearSearchSubject()), 1000),
     [dispatch, clearSearchSubject]
   );
 
-  const debounceSearching = useCallback(
-    debounce(
-      async (nextValue) =>
-        await dispatch(SearchFacultyAction(nextValue)).unwrap(),
-      1000
-    ),
-    [dispatch]
-  );
+  // const debounceSearching = useCallback(
+  //   debounce(
+  //     async (nextValue) =>
+  //       await dispatch(SearchFacultyAction(nextValue)).unwrap(),
+  //     1000
+  //   ),
+  //   [dispatch]
+  // );
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
     if (!value.trim()) {
