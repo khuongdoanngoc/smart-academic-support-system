@@ -49,6 +49,7 @@
       width: 100%;
       padding: 5px 10px;
       margin: 25px 0;
+      cursor: pointer;
       & > .user-list-img {
         & > img {
           width: 65px;
@@ -58,6 +59,7 @@
       }
       & > .user-list-info {
         width: 77%;
+        margin-left: 1rem;
         // background: antiquewhite;
         & > .user-list-name {
           display: flex;

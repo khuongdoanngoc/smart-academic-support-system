@@ -13,12 +13,13 @@ import { useSharingModal } from "../../../../contexts/SharingModalContext";
 // import { SharingModal } from "../../../../components/SharingModal"
 
 interface IDoc {
-  avatar: string;
+  title: string;
   author: string;
   content: string;
   subject: string;
   downloads: number;
   image: string;
+  facultyName: string;
 }
 
 interface IDocs {
@@ -29,7 +30,7 @@ const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ"
 
 const ITEM_HEIGHT = 48;
 
-export default function Docs({ title, docs }: IDocs) {
+export default function Docs({ title, docs }: any) {
   // configs cho nút chia sẻ
   const { openSharingModal } = useSharingModal();
 
@@ -62,11 +63,11 @@ export default function Docs({ title, docs }: IDocs) {
         </span>
       </div>
       <div className={cx("cards")}>
-        {docs.slice(0, visibleCount).map((data, index) => (
+        {docs.slice(0, visibleCount).map((data:any, index:number) => (
           <div key={index} className={cx("card")}>
             <div className={cx("author")}>
               <div className={cx("name")}>
-                <img src={`${data.avatar}`} alt="avt" />
+                <img src={`src/assets/images/avatar.png`} alt="avt" />
                 <p>{data.author}</p>
               </div>
               <IconButton
@@ -107,11 +108,12 @@ export default function Docs({ title, docs }: IDocs) {
                 ))}
               </Menu>
             </div>
-            <img src={`${data.image}`} alt="doc" />
-            <h3>{data.content}</h3>
+            <img src={`src/assets/images/library.document.png`} alt="doc" />
+            <h3>{data.title}</h3>
             <span>{data.subject}</span>
+            <span>{data.facultyName}</span>
             <div className={cx("actions")}>
-              <span>{data.downloads}+ lượt tải</span>
+              <span>500+ lượt tải</span>
               <div>
                 <div
                   onClick={() => {

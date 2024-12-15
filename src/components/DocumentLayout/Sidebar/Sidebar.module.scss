@@ -156,6 +156,16 @@
         & > .active {
             background-color: var(--Pink-nht, #ffc9cb);
             color: var(--main-color);
+            &>span>svg{
+                color: var(--main-color);
+            }
+        }
+        &>.brings{
+            color: var(--main-color);
+            &>span>svg{
+                color: var(--main-color);
+                animation: ring 0.5s infinite;
+            }
         }
     }
 
@@ -193,3 +203,13 @@
     width: 80px;
     padding: 30px 10px !important;
 }
+
+
+
+@keyframes ring {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
+  }

@@ -30,31 +30,36 @@
     }
 
     & > .search {
-        position: relative;
-        max-width: 478px;
-        & > input {
-            width: 478px;
-            height: 46px;
-            border: 0.5px solid #00000080;
-            border-radius: 25px;
-            padding: 11.5px 19px;
-            font-family: var(--font-family-secondary);
-            font-size: 17px;
-            font-weight: 400;
-            line-height: 23px;
-            text-align: left;
-            transition: ease 0.2s;
-        }
-        & > input:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px #b3000080;
-        }
-        & > .search-icon {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            pointer-events: none;
+        & > form {
+            position: relative;
+            max-width: 478px;
+            & > input {
+                width: 478px;
+                height: 46px;
+                border: 0.5px solid #00000080;
+                border-radius: 25px;
+                padding: 11.5px 19px;
+                font-family: var(--font-family-secondary);
+                font-size: 17px;
+                font-weight: 400;
+                line-height: 23px;
+                text-align: left;
+                transition: ease 0.2s;
+            }
+            & > input:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #b3000080;
+            }
+            & > button {
+                all: initial;
+                & > .search-icon {
+                    position: absolute;
+                    top: 50%;
+                    right: 15px;
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                }
+            }
         }
     }
     & > .items {

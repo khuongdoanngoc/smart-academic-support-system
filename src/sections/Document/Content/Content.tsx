@@ -7,18 +7,17 @@ import { Docs } from "./Docs";
 
 import staticDocs from "./static-docs.json";
 import { Subjects } from "./Subjects";
-// import { useEffect } from "react";
-// import { AppDispatch } from "../../../redux/store";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getAllDocuments } from "../../../redux/DocumentSlice/documentSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { getAllDocuments } from "../../../redux/DocumentSlice/documentSlice";
+import { useEffect } from "react";
 
 export default function Content() {
-    // const dispatch = useDispatch<AppDispatch>();
-    // const documents = useSelector((state: any) => state.document.Documents);
+    const dispatch = useAppDispatch();
+    const documents = useAppSelector((state: any) => state.document.Documents);
 
-    // useEffect(() => {
-    //     dispatch(getAllDocuments());
-    // }, []);
+    useEffect(() => {
+        dispatch(getAllDocuments());
+    }, []);
 
     return (
         <div className={cx("content")}>
@@ -26,7 +25,7 @@ export default function Content() {
             <div className={cx("central")}>
                 <div className={cx("category")}>
                     {staticDocs.map((data, index) => (
-                        <Docs key={index} title={data.title} docs={data.docs} />
+                        <Docs key={index} title={data.title} docs={documents} />
                     ))}
                 </div>
                 <Statistics />

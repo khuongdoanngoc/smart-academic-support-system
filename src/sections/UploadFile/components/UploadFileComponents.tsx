@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
 import Vector1 from "../../../assets/images/Vector 9.png";
@@ -5,13 +7,13 @@ import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
-
+import { debounce } from "lodash";
 import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
 import { useRef, useState, useCallback } from "react";
+
 import {
   ArrowBack,
   ArrowForward,
@@ -37,8 +39,7 @@ import {
   SearchSubjectAction,
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "@mui/material";
 
@@ -71,7 +72,7 @@ const UploadFileComponents = () => {
   const [facultyFile, setFacultyFile] = useState("");
   const [folderFile, setFolderFile] = useState("");
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
@@ -81,7 +82,6 @@ const UploadFileComponents = () => {
     
     const newFile = e.target.files?.[0]; //lấy file từ input
     console.log("newFile",newFile);
-    
     if (newFile) {
       const originalName = newFile.name; //lấy tên file
       const sizeFile = newFile.size; //lấy kích thước file
@@ -97,7 +97,6 @@ const UploadFileComponents = () => {
         return;
       }
       if (fileSelected === null) {
-        //kiểm tra file đã được chọn chưa
         setFileSelected(newFile);
         setTitleFile(originalName);
         const shortenedName =
@@ -126,6 +125,14 @@ const UploadFileComponents = () => {
             `This file seems to have been already uploaded: ${originalName}`
           );
 
+          setAlertFile(true);
+          setTimeout(() => {
+            setAlertFile(false);
+          }, 3000);
+          return;
+        }
+        if (fileList.length >= 1) {
+          setInformationAlert("Only 1 file can be uploaded.");
           setAlertFile(true);
           setTimeout(() => {
             setAlertFile(false);
@@ -269,6 +276,14 @@ const UploadFileComponents = () => {
     [dispatch, clearSearchSubject]
   );
 
+  const debounceSearching = useCallback(
+    debounce(
+      async (nextValue) =>
+        await dispatch(SearchFacultyAction(nextValue)).unwrap(),
+      1000
+    ),
+    [dispatch]
+  );
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
     if (!value.trim()) {
@@ -372,7 +387,6 @@ const UploadFileComponents = () => {
             onDragOver={(e) => e.preventDefault()}
           >
             <input onChange={onFileDrop} type="file" />
-
             <div className={cx("main-body-hover")}>
               <div>
                 <TextSnippet />
@@ -442,7 +456,7 @@ const UploadFileComponents = () => {
                       {subjectFile.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
-                            {searchSubject.map((result, index) => (
+                            {searchSubject.map((result: any, index: number) => (
                               <li
                                 key={index}
                                 onClick={() => {

@@ -5,4 +5,4 @@ export { default as Register } from "./Register";
 export { default as NenPassword } from "./NewPassword";
 export { default as ProfileAuthor } from "./ProFileAuthor";
 export { default as ChangePassWord } from "./ChangePassWord";
-export { default as Notication } from "./Notication";
+export { default as Notication } from "./Notification";

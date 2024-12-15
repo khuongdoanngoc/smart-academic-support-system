@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
+import { axiosInstance } from "../../utils/AxiosInterceptor";
 
-const baseUrl= "http://127.0.0.1:5000/api"
+
 export const sendMessageService= async (message:string)=>{
     try{
         const data = {
@@ -11,8 +11,8 @@ export const sendMessageService= async (message:string)=>{
               }
             ]
           }
-        const res= await axios.post(`${baseUrl}/search`,data);
-        return res.data;
+        const res= await axiosInstance.post(`/chat-bot/send-message`,data);
+        return res;
     }catch(err: any){
         throw new Error(err.message);
     }
