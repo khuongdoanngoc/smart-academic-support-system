@@ -3,50 +3,41 @@ import styles from "./NewPasswordComponents.module.scss";
 import { useNavigate } from "react-router-dom";
 
 import logoLogin from "../../../assets/images/image_main_login.jfif";
-import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
-import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
+// import HeaderTop from "../../../layouts/header/HeaderTop/HeaderTop";
+// import { HeaderCenter } from "../../../layouts/header/HeaderCenter";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-// import { Button } from "../../../components/Button";
 import { Key } from "@mui/icons-material";
 import { ButtonSubmit } from "../../../components/Button/Button";
+import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../redux/store";
+import { UpdatePasswordAction } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
 
 const cx = classnames.bind(styles);
 
 // Tạo schema kiểm tra với Yup
 const validationSchema = Yup.object({
   password: Yup.string()
-    .required("Vui lòng nhập password")
-    .min(8, "Password phải có ít nhất 8 ký tự")
-    .matches(/[A-Z]/, "Password phải chứa ít nhất 1 chữ cái viết hoa")
-    .matches(/[0-9]/, "Password phải chứa ít nhất 1 số")
+    .required("New password is required.")
+    .min(8, "Password must have at least 8 characters.")
+    .matches(/[A-Z]/, "Password must contain at least 1 capital letter.")
+    .matches(/[0-9]/, "Password must contain at least 1 number.")
     .matches(
       /[!@#$%^&*(),.?":{}|<>]/,
-      "Password phải chứa ít nhất 1 ký tự đặc biệt"
+      "Password must contain at least 1 special character."
     ),
 
   confirmPass: Yup.string()
-    .required("Vui lòng nhập lại password")
-    .oneOf([Yup.ref("password")], "Password nhập lại không khớp"),
+    .required("Confirm Password required. ")
+    .oneOf([Yup.ref("password")], "Confirm password not match."),
 });
 
-interface informationLogin {
-  titleHeader: string;
-  titleNewPass: string;
-  titleConfirmNewPass: string;
-  titleButton: string;
-  titleForgot: string;
-}
-
-interface PopsInformation {
-  pops: informationLogin[];
-}
-
-const NewPasswordComponents: React.FC<PopsInformation> = ({
-  pops,
-}: PopsInformation) => {
+const NewPasswordComponents = () => {
+  const dispatch= useAppDispatch();
   //useState macaptcha
+  const [email,setEmail]= useState("");
+  const [otp, setOtp]= useState("");
 
   const navigate = useNavigate();
   const handleOnClickForgot = () => {
@@ -55,7 +46,6 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
   };
 
   const handleSubmit = (
-    //hàm onclick kiểm tra email,captcha
     values: { password: string; confirmPass: string },
     {
       setSubmitting,
@@ -63,48 +53,41 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
     }: // resetForm,
     { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    console.log("Form submitted", values);
 
-    if (values.password !== values.confirmPass) {
-      alert("Mã mật khẩu xác nhận không đúng");
-    } else {
-      // alert("Đăng nhập thành công");
-
-      // navigate("/login", {
-      //   state: { message: "Mật khẩu đã được thay đổi, vui lòng đăng nhập" },
-      // });
-      sessionStorage.setItem(
-        "passwordChangedMessage",
-        "Mật khẩu đã được thay đổi, vui lòng đăng nhập"
-      );
-      navigate("/login");
+    const data= {
+      password: values.password,
+      email: email,
+      otp: otp,
     }
+    dispatch(UpdatePasswordAction(data));
+    
     resetForm(); // Reset lại form sau khi submit thành công
 
     setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
   };
 
+  useEffect(()=>{
+    const email= sessionStorage.getItem("email");
+    const otp= sessionStorage.getItem("otp");
+    if(email) setEmail(email);
+    if(otp) setOtp(otp);
+  },[]);
+
   return (
     <>
-      <div className="header-login">
-        <HeaderTop />
-        <HeaderCenter />
-      </div>
       <div className={cx("main-login")}>
         <div>
           <img src={logoLogin} alt="logo" />
         </div>
         <div className={cx("form-login-pass")}>
-          {pops.map((pop, index) => (
             <Formik
-              key={index}
               initialValues={{ password: "", confirmPass: "" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
               {({ isSubmitting }) => (
                 <Form className={cx("form-login-main")}>
-                  <h3>{pop.titleHeader}</h3>
+                  <h3>Forgot Password</h3>
                   <div className={cx("main-border")}></div>
                   <div className={cx("main-body")}>
                     <div className={cx("body-list")}>
@@ -114,7 +97,7 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                           <Field
                             type="password"
                             name="password"
-                            placeholder={pop.titleNewPass}
+                            placeholder="Enter new password"
                           />
                         </div>
                         <ErrorMessage
@@ -131,7 +114,7 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                           <Field
                             type="password"
                             name="confirmPass"
-                            placeholder={pop.titleNewPass}
+                            placeholder="Enter confirmation password"
                           />
                         </div>
                         <ErrorMessage
@@ -143,12 +126,12 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                     </div>
                     <div className={cx("body-button")}>
                       <ButtonSubmit
-                        titleButton={pop.titleButton}
+                        titleButton="Reset password"
                         isSubmitting={isSubmitting}
                         padding={10}
                         fontsize={16}
                         borderRadius={10}
-                        background={"red"}
+                        background={"#EB2930"}
                       />
                     </div>
                   </div>
@@ -159,7 +142,7 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                         className={cx("password-title")}
                         onClick={handleOnClickForgot}
                       >
-                        {pop.titleForgot}
+                        Back to login
                       </div>
                       <div className={cx("password-line")}></div>
                     </div>
@@ -167,7 +150,6 @@ const NewPasswordComponents: React.FC<PopsInformation> = ({
                 </Form>
               )}
             </Formik>
-          ))}
         </div>
       </div>
     </>

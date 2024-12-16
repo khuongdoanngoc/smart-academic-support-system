@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 const cx = classNames.bind(styles);
@@ -18,10 +19,16 @@ import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import CloseIcon from "../../../assets/images/icons/CloseArrowIcon.png";
 import OpenIcon from "../../../assets/images/icons/OpenArrowIcon.png";
 
+import CreateNewFolderOutlinedIcon from "@mui/icons-material/CreateNewFolderOutlined";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ContactICON from "../../../assets/images/icons/ContactICON.png";
+import Badge from '@mui/material/Badge';
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAppSelector } from "../../../redux/store";
+import { motion, AnimatePresence } from "framer-motion";
+import { appear } from "../../../utils/animations";
 
 const menuItems = [
     { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
@@ -38,14 +45,14 @@ const docItems = [
     {
         title: "Thông báo",
         icon: NotificationsOutlinedIcon,
-        pathAcitve: "#unknown",
+        pathAcitve: "/document/notification",
     },
 ];
 const searchItems = [
     {
-        title: "Phân loại",
+        title: "Người dùng",
         icon: SearchOutlinedIcon,
-        pathAcitve: "#unknown",
+        pathAcitve: "/document/search-user",
     },
     {
         title: "Tài liệu đã lưu",
@@ -59,20 +66,68 @@ const searchItems = [
     },
 ];
 
-export default function Sidebar() {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
+interface ISidebar {
+    isModal: boolean;
+    isOpen: boolean;
+    setIsOpen: any;
+}
 
+const customAppear = {
+    ...appear,
+    hidden: {
+        ...appear.hidden,
+        transition: { ...appear.hidden.transition, duration: 0 },
+    },
+};
+
+export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const navigate = useNavigate();
     const pathName = useLocation().pathname;
-    console.log(pathName);
+    const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
+    const { username } = useAppSelector((state) => state.authentication);
+    const {numberOfNotificationsUnRead} = useAppSelector(state=>state.notication);
+    const isOpenAndModal = isModal && isOpen;
+    
+    const handleClickUpFIle = ()=>{
+        navigate("/document/upload-file");
+    }
+
+    const uploadFileDropdown = (
+        <AnimatePresence>
+            {dropdownToggle && (
+                <motion.div
+                    variants={customAppear}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    className={cx("uploadfile-dropdown")}>
+                    <div className={cx("item")} onClick={handleClickUpFIle}>
+                        <UploadFileIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tải tài liệu</span>}
+                    </div>
+                    <hr />
+                    <div className={cx("item")}>
+                        <CreateNewFolderOutlinedIcon
+                            sx={{ width: "22px", height: "22px" }}
+                        />
+                        {isOpen && <span>Tạo thư mục</span>}
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 
     return (
-        <div className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
+        <div
+            style={isOpenAndModal ? { position: "fixed" } : {}}
+            className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
             <div className={cx("account")}>
                 <img src={Avatar} alt="avatar" />
                 {isOpen && (
                     <div>
-                        <h3>Name user</h3>
+                        <h3>{username ? username : "Name User"}</h3>
                         <a href="#">+ Add information</a>
                     </div>
                 )}
@@ -107,7 +162,9 @@ export default function Sidebar() {
                 className={cx("addDoc-btn")}
                 onClick={(e) => {
                     e.preventDefault();
-                    navigate("/document/uploadfile");
+                    setDropdownToggle(
+                        (prevDropdownToggle) => !prevDropdownToggle
+                    );
                 }}>
                 <Button
                     text={`+ ${isOpen ? "Thêm mới" : ""}`}
@@ -116,17 +173,18 @@ export default function Sidebar() {
                     fontSize={16}
                 />
             </div>
+            {uploadFileDropdown}
             <div
                 style={{ ...(!isOpen && { alignItems: "center" }) }}
                 className={cx("items")}>
                 {menuItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <div
@@ -136,13 +194,18 @@ export default function Sidebar() {
                     Tài liệu của tôi
                 </span>
                 {docItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
-                        <item.icon sx={{ width: "22px", height: "22px" }} />
+                        className={cx(pathName === item.pathAcitve && "active",`${(item.pathAcitve==="/document/notication" && numberOfNotificationsUnRead>0)? "brings": ""}`)}
+                        to={item.pathAcitve}>
+                        {item.pathAcitve==="/document/notication"?(
+                            <Badge badgeContent={numberOfNotificationsUnRead>0?numberOfNotificationsUnRead:0} color="error">
+                                <item.icon  sx={{ width: "22px", height: "22px"}} />
+                            </Badge>
+                        ):<item.icon  sx={{ width: "22px", height: "22px"}} />}
+                        
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <div
@@ -152,13 +215,13 @@ export default function Sidebar() {
                     Tìm kiếm nâng cao
                 </span>
                 {searchItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <button

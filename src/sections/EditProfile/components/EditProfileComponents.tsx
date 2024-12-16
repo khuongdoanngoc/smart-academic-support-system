@@ -1,21 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
-import { RootState, AppDispatch } from "../../../redux/store";
-import {
-  EditProfileAction,
-  // resetState,
-} from "../../../redux/EditProfileSlice/EditProfileSlice";
+import { RootState, useAppDispatch, useAppSelector } from "../../../redux/store";
+// import {
+//   EditProfileAction,
+//   // resetState,
+// } from "../../../redux/EditProfileSlice/EditProfileSlice";
 import avatar from "../../../assets/images/Frame 8720.png";
 import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
 const EditProfileComponents = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isloading, success } = useSelector(
+  const dispatch = useAppDispatch()
+  const { isloading, success } = useAppSelector(
     (state: RootState) => state.editProfile
   );
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -47,7 +47,7 @@ const EditProfileComponents = () => {
 
   const handleSubmit = () => {
     console.log("formData", formData.avatar);
-    dispatch(EditProfileAction(formData));
+    // dispatch(EditProfileAction(formData));
     if (success) {
       toast.success("Cập nhật thông tin thành công!");
     }

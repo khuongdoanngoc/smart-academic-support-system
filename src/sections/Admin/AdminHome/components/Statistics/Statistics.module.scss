@@ -1,0 +1,30 @@
+.statistics {
+    max-width: 1024px;
+    border: 1px solid #00000080;
+    box-shadow: 0px 0px 12.2px 0px #00000040;
+    border-radius: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    row-gap: 50px;
+    padding: 20px;
+    & > .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        & > h3 {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 19.36px;
+        }
+        & > span {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 19.36px;
+            color: #00000080;
+        }
+    }
+}
