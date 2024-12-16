@@ -159,7 +159,7 @@ const LoginComponents: React.FC<PopsInformation> = ({
           {pops.map((pop, index) => (
             <Formik
               key={index}
-              initialValues={{ email: "", password: "" }}
+              initialValues={{ email: "", password: "", captcha: "" }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
