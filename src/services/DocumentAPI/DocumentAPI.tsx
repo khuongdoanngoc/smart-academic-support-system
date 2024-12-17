@@ -11,9 +11,11 @@ export const GetDocumentByID = async (id: number) => {
     }
 };
 
-export const GetAllDocuments = async () => {
+export const GetAllDocuments = async (size: number) => {
     try {
-        const res = await axiosInstance.get(baseUrl + "/document/all");
+        const res = await axiosInstance.get(
+            baseUrl + "/document/all?size=" + size
+        );
         return res;
     } catch (error: any) {
         throw new Error(error.message);

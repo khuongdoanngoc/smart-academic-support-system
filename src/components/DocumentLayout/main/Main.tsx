@@ -16,11 +16,10 @@ export default function Main(props: PropsType) {
         (state) => state.authentication
     );
     const [loadingElement, setLoadingElement] = useState(false);
-    const regex = /^\/document\/view\/\d+$/;
+    const regex = /^\/view-doc\/\d+$/;
     const [isOpen, setIsOpen] = useState<boolean>(
         !regex.test(location.pathname)
     );
-
 
     const hasOverlay = regex.test(location.pathname) && isOpen;
 

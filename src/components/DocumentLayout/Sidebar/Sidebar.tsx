@@ -4,14 +4,12 @@ const cx = classNames.bind(styles);
 import Avatar from "../../../assets/images/avatar.png";
 import { Button } from "../../../components/Button";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
-import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
@@ -30,26 +28,31 @@ import { appear } from "../../../utils/animations";
 
 const menuItems = [
     { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
-    { title: "Thư viện", icon: BookOutlinedIcon, pathAcitve: "#unknown" },
-    { title: "Sách", icon: AutoStoriesOutlinedIcon, pathAcitve: "#unknown" },
 ];
 const docItems = [
     {
         title: "Tài liệu",
         icon: InsertDriveFileOutlinedIcon,
-        pathAcitve: "#unknown",
+        regex: /^\/document\/(directory|folder)/,
+        linkTo: "/document/directory",
     },
-    { title: "Môn học", icon: StickyNote2OutlinedIcon, pathAcitve: "#unknown" },
+    {
+        title: "Môn học",
+        icon: StickyNote2OutlinedIcon,
+        regex: /^\/document\/(subject)/,
+        linkTo: "/document#",
+    },
     {
         title: "Thông báo",
         icon: NotificationsOutlinedIcon,
-        pathAcitve: "/document/notication",
+        regex: /^\/document\/(notication)/,
+        linkTo: "/document/notication",
     },
 ];
 const searchItems = [
     {
-        title: "Phân loại",
-        icon: SearchOutlinedIcon,
+        title: "Người dùng",
+        icon: PersonSearchOutlinedIcon,
         pathAcitve: "#unknown",
     },
     {
@@ -84,10 +87,10 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
     const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
     const { username } = useAppSelector((state) => state.authentication);
     const isOpenAndModal = isModal && isOpen;
-    
-    const handleClickUpFIle = ()=>{
+
+    const handleClickUpFIle = () => {
         navigate("/document/upload-file");
-    }
+    };
 
     const uploadFileDropdown = (
         <AnimatePresence>
@@ -105,7 +108,9 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                         {isOpen && <span>Tải tài liệu</span>}
                     </div>
                     <hr />
-                    <div className={cx("item")}>
+                    <div
+                        className={cx("item")}
+                        onClick={() => navigate("/document/create-folder")}>
                         <CreateNewFolderOutlinedIcon
                             sx={{ width: "22px", height: "22px" }}
                         />
@@ -193,8 +198,8 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 {docItems.map((item, index) => (
                     <Link
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active")}
-                        to={item.pathAcitve}>
+                        className={cx(item.regex.test(pathName) && "active")}
+                        to={item.linkTo}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
                     </Link>

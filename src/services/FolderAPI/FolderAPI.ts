@@ -21,6 +21,15 @@ export const CreateFolder = async (folderName: string, description: string) => {
     }
 };
 
+export const GetFolderById = async (id: number) => {
+    try {
+        const res = await axiosInstance.get(`${baseUrl}/folder/${id}`);
+        return res;
+    } catch (error: any) {
+        throw Error(error.message);
+    }
+};
+
 export const UpdateFolder = async (
     folderId: number,
     folderName: string,

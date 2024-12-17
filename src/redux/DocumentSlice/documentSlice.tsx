@@ -17,23 +17,23 @@ interface InitialStateStyles {
     DocumentDetail: DocumentResponse | undefined;
 }
 
-export const getDocumentByID = createAsyncThunk<DocumentResponse, number>(
+export const getDocumentByID = createAsyncThunk<any, number>(
     "documents/getDocumentByID",
     async (id: number) => {
         try {
             const response: any = await GetDocumentByID(id);
-            return response.data as DocumentResponse;
+            return response;
         } catch (err: any) {
             throw Error(err.message);
         }
     }
 );
 
-export const getAllDocuments = createAsyncThunk<any>(
+export const getAllDocuments = createAsyncThunk<any, number>(
     "documents/getAllDocuments",
-    async () => {
+    async (size: number) => {
         try {
-            const response = await GetAllDocuments();
+            const response = await GetAllDocuments(size);
             return response;
         } catch (error: any) {
             throw Error(error.message);

@@ -122,7 +122,7 @@ export default function Router() {
             ],
         },
         {
-            path: "/test",
+            path: "/view-doc/:id",
             element: (
                 <DocumentLayout>
                     <Outlet />

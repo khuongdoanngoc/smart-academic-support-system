@@ -5,6 +5,7 @@ import TagReducers from "./TagSlice/TagSlice";
 import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import SearchReducer from "./SearchSlice/searchSlice";
+import FolderReducer from "./FolderSlice/folderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 
@@ -17,6 +18,7 @@ const store = configureStore({
         chatbot: ChatBotReducer,
         authentication: authenticationReducer,
         search: SearchReducer,
+        folder: FolderReducer,
     },
 });
 

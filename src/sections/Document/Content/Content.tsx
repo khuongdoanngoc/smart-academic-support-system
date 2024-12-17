@@ -13,11 +13,23 @@ import { useEffect } from "react";
 
 export default function Content() {
     const dispatch = useAppDispatch();
-    const documents = useAppSelector((state: any) => state.document.Documents);
+    const documents: any = useAppSelector(
+        (state: any) => state.document.Documents.content
+    );
 
     useEffect(() => {
-        dispatch(getAllDocuments());
+        dispatch(getAllDocuments(3));
     }, []);
+
+    console.log(documents);
+
+    const handleLoadMore = (state: string) => {
+        if (state === "expand") {
+            dispatch(getAllDocuments(9));
+        } else {
+            dispatch(getAllDocuments(3));
+        }
+    };
 
     return (
         <div className={cx("content")}>
@@ -25,7 +37,12 @@ export default function Content() {
             <div className={cx("central")}>
                 <div className={cx("category")}>
                     {staticDocs.map((data, index) => (
-                        <Docs key={index} title={data.title} docs={documents} />
+                        <Docs
+                            key={index}
+                            title={data.title}
+                            onLoadMore={handleLoadMore}
+                            docs={documents}
+                        />
                     ))}
                 </div>
                 <Statistics />
