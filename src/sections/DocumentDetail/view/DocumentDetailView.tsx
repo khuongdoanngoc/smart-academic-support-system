@@ -5,14 +5,14 @@ import { Content } from "../components/Content";
 import { useEffect } from "react";
 import { useAppDispatch } from "../../../redux/store";
 import { useParams } from "react-router-dom";
-import { getDocumentByID } from "../../../redux/DocumentSlice/documentSlice";
+import { getDocumentByIDAction } from "../../../redux/DocumentSlice/documentSlice";
 const cx = classNames.bind(styles);
 
 export default function DocumentDetailView() {
     const dispatch = useAppDispatch();
     const { id }: any = useParams();
     useEffect(() => {
-        dispatch(getDocumentByID(parseInt(id)));
+        dispatch(getDocumentByIDAction(parseInt(id)));
     }, []);
 
     return (

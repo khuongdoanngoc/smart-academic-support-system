@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./DocumentsView.module.scss";
 const cx = classNames.bind(styles);
@@ -6,7 +7,7 @@ import CensorDropdown from "../components/CensorDropdown";
 import SearchIcon from "@mui/icons-material/Search";
 import DataTable from "../components/DataTable";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
-import { getAllDocuments } from "../../../../redux/DocumentSlice/documentSlice";
+import { getAllDocumentsAction } from "../../../../redux/DocumentSlice/documentSlice";
 
 const columns: any[] = [
     {
@@ -52,8 +53,8 @@ export default function DocumentsView() {
 
     const dispatch = useAppDispatch();
     useEffect(() => {
-        dispatch(getAllDocuments());
-    }, []);
+        dispatch(getAllDocumentsAction());
+    }, [dispatch]);
 
     const filterByClassify: any = (
         rows: any[],

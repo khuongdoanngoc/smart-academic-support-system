@@ -8,28 +8,16 @@ import { Docs } from "./Docs";
 import staticDocs from "./static-docs.json";
 import { Subjects } from "./Subjects";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { getAllDocuments } from "../../../redux/DocumentSlice/documentSlice";
 import { useEffect } from "react";
+import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlice";
 
 export default function Content() {
     const dispatch = useAppDispatch();
-    const documents: any = useAppSelector(
-        (state: any) => state.document.Documents.content
-    );
+    const documents = useAppSelector((state) => state.document.Documents);
 
     useEffect(() => {
-        dispatch(getAllDocuments(3));
-    }, []);
-
-    console.log(documents);
-
-    const handleLoadMore = (state: string) => {
-        if (state === "expand") {
-            dispatch(getAllDocuments(9));
-        } else {
-            dispatch(getAllDocuments(3));
-        }
-    };
+        dispatch(getAllDocumentsAction());
+    }, [dispatch]);
 
     return (
         <div className={cx("content")}>
@@ -40,7 +28,6 @@ export default function Content() {
                         <Docs
                             key={index}
                             title={data.title}
-                            onLoadMore={handleLoadMore}
                             docs={documents}
                         />
                     ))}

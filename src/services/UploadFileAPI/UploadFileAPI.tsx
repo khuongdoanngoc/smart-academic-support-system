@@ -6,10 +6,9 @@ interface ApiPostFile {
   file: File;
   title: string;
   description: string;
-  content: string;
   type: string;
-  subject: string;
-  facultyId: number;
+  subjectName: string;
+  facultyName: string;
 }
 export interface SearchFaculty {
   id: number;
@@ -17,21 +16,20 @@ export interface SearchFaculty {
 }
 export interface SearchFolder {
   id: number;
-  title: string;
+  folderName: string;
 }
 export interface SearchSubject {
   id: number;
-  subject: string;
+  subjectName: string;
 }
 export const postFile = async (data: ApiPostFile) => {
   const formData = new FormData();
   formData.append("file", data.file);
   formData.append("title", data.title);
   formData.append("description", data.description);
-  formData.append("content", data.content);
   formData.append("type", data.type);
-  formData.append("subject", data.subject);
-  formData.append("facultyId", data.facultyId.toString());
+  formData.append("subjectName", data.subjectName);
+  formData.append("facultyName", data.facultyName);
   console.log("formData", formData);
 
   try {
@@ -48,10 +46,10 @@ export const postFile = async (data: ApiPostFile) => {
     throw new Error(errorMessage);
   }
 };
-export const searchFaculty = async (data: string) => {
+export const searchFacultyAPI = async (data: string) => {
   try {
     const res = await axiosInstance.get<SearchFaculty[]>(
-      `/search/faculty?facultyName=${encodeURIComponent(data)}`
+      `/search/faculty?facultyName=${data}`
     );
     return res;
   } catch (err: unknown) {
@@ -64,10 +62,10 @@ export const searchFaculty = async (data: string) => {
   }
 };
 
-export const searchFolder = async (data: string) => {
+export const searchFolderAPI = async () => {
   try {
-    const res = await axiosInstance.get<SearchFolder[]>(
-      `/search/folder?folderName=${encodeURIComponent(data)}`
+    const res = await axiosInstance.get(
+      `/folder/all`
     );
     return res;
   } catch (err: unknown) {

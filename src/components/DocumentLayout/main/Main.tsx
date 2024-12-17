@@ -4,7 +4,7 @@ import { Sidebar } from "../Sidebar";
 import { useAppSelector } from "../../../redux/store";
 import Loader from "../../Loader/Loader";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 interface PropsType {
     children: React.ReactNode;
@@ -37,18 +37,14 @@ export default function Main(props: PropsType) {
         setIsOpen(false);
     };
 
-    useEffect(() => {
-        if (!isLogined && location.pathname !== "/document") {
-            //   toast.error("You must login");
-            setLoadingElement(true);
-            setTimeout(() => {
-                // if (isLogined) {
-                //   window.location.href = "/login";
-                // }
-                setLoadingElement(false);
-            }, 5000);
-        }
-    }, [isLogined, location.pathname]);
+  useEffect(() => {
+    if (!isLogined && location.pathname !== "/document") {
+      setLoadingElement(true);
+      setTimeout(() => {
+        setLoadingElement(false);
+      }, 3000);
+    }
+  }, [isLogined,location.pathname]);
 
     return (
         <>

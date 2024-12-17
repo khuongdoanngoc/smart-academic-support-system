@@ -6,6 +6,7 @@ interface LoginData {
   password: string;
 }
 interface ILoginS {
+  accountId:number;
   listRoles: string[];
   accessToken: string;
   refreshToken: string;
@@ -17,6 +18,10 @@ interface IRegister {
   roleName: string;
 }
 
+export interface IChangePassWord{
+  password:string
+  newpassword:string
+}
 export type SendOtpRequest= {
   email: string;
   otp: string;
@@ -35,7 +40,9 @@ export type ClearTokenRequest= {
 export const LoginApi = async (data: LoginData): Promise<ILoginS> => {
   try {
     const res = await axiosInstance.post("/auth/login", data);
+
     return res as unknown as ILoginS;
+    // return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
 
@@ -68,11 +75,22 @@ export const LogoutApi = async () => {
   }
 };
 
-export const AutoLoginApi= async ()=>{
-  try{
-    const res= await axiosInstance.get("/auth/autoLogin");
+export const ChangePasswordAPI= async(data:IChangePassWord)=>{
+  try {
+    const res = await axiosInstance.post(`/auth/update/new-password`,data);
     return res;
-  }catch(err:unknown){
+  } catch (err:unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+  
+    throw new Error(error.response?.data.message || error.message);
+     }
+}
+
+export const AutoLoginApi = async () => {
+  try {
+    const res = await axiosInstance.get("/auth/autoLogin");
+    return res;
+  } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     throw new Error(error.message);
   }

@@ -3,6 +3,8 @@ import { ButtonSubmit } from "../../../components/Button/Button";
 import styles from "./ChangePassWordComponents.module.scss";
 import classNames from "classnames/bind";
 import * as Yup from "yup";
+import { useAppDispatch } from "../../../redux/store";
+import { ChangePasswordAction } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
 
 const cx = classNames.bind(styles);
 
@@ -20,9 +22,11 @@ const validationSchema = Yup.object({
   confirmPass: Yup.string()
     .required("Vui lòng nhập lại password")
     .oneOf([Yup.ref("newpassword")], "Password nhập lại không khớp"),
+  checkPass: Yup.boolean().oneOf([true], "Vui lòng xác nhận đổi mật khẩu"),
 });
 
 const ChangePassWordViewComponents = () => {
+  const dispath=useAppDispatch();
   const handleSubmit = (
     //hàm onclick kiểm tra email,captcha
     _values: { password: string; newpassword: string; confirmPass: string },
@@ -32,8 +36,13 @@ const ChangePassWordViewComponents = () => {
     }: // resetForm,
     { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    alert("Đã thay đổi mật khẩu");
-
+    const data ={
+      password:_values.password,
+      newpassword:_values.newpassword}
+      console.log("data",data);
+      
+  
+dispath(ChangePasswordAction(data))
     resetForm();
     setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
   };
@@ -41,7 +50,7 @@ const ChangePassWordViewComponents = () => {
   return (
     <div className={cx("change-password")}>
       <Formik
-        initialValues={{ password: "", newpassword: "", confirmPass: "" }}
+        initialValues={{ password: "", newpassword: "", confirmPass: "", checkPass: false }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
@@ -91,9 +100,14 @@ const ChangePassWordViewComponents = () => {
                   </div>
                   <div className={cx("list-input-check")}>
                     <div className={cx("input-check-item")}>
-                      <input type="checkbox" />
+                      <Field type="checkbox" name="checkPass" />
                       <label>Xác nhận đổi mật khẩu</label>
                     </div>
+                    <ErrorMessage
+                      name="checkPass"
+                      component="div"
+                      className={cx("error-message")}
+                    />
                   </div>
                 </div>
                 <div className={cx("body-individual-submit")}>
@@ -103,7 +117,7 @@ const ChangePassWordViewComponents = () => {
                     padding={10}
                     fontsize={16}
                     borderRadius={20}
-                    // background={"#0A75E6"}
+                    background={"#0A75E6"}
                   />
                 </div>
               </div>
