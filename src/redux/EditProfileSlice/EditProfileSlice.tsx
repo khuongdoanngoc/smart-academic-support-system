@@ -1,58 +1,69 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import EditProfileAPI, { UpdateProfileRequest } from "../../services/EditProfileAPI/EditProfileAPI";
-// import { AxiosError } from "axios";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import {
+  EditProfileAPI,
+  UpdateProfileRequest,
+} from "../../services/EditProFileApi/EditProfileAPI";
 
 interface EditProfileState {
   isloading: boolean;
   error: string | null;
   success: boolean;
+  profileData: UpdateProfileRequest | null;
 }
 const initialState: EditProfileState = {
   isloading: false,
   error: null,
   success: false,
+  profileData: null,
 };
 
-// export const EditProfileAction = createAsyncThunk(
-//   "EditProfileAction",
-//   async(data: UpdateProfileRequest)=>{
-//     try {
-//       const response = EditProfileAPI(data);
-//       return response;
-//     } catch (err: unknown) {
-//       const error = err as AxiosError<{ message?: string }>;
-//       throw new Error(error.response?.data.message || error.message);
-//     }
-//   }
-// )
+export const EditProfileAction = createAsyncThunk(
+  "EditProfileAction",
+  async (data: UpdateProfileRequest) => {
+    try {
+      const response = await EditProfileAPI(data);
+      console.log("EditProfileAction", response);
+
+      return response as unknown as UpdateProfileRequest;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.response?.data.message || error.message);
+    }
+  }
+);
+
 const editProfileSlice = createSlice({
   name: "editProfile",
   initialState,
-  reducers: {
-    resetState: (state) => {
-      state.isloading = false;
-      state.error = null;
-      state.success = false;
-    }
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(EditProfileAction.pending, (state) => {
+        state.isloading = true;
+        state.error = null;
+        state.success = false;
+      })
+
+      .addCase(
+        EditProfileAction.fulfilled,
+        (state, action: PayloadAction<UpdateProfileRequest>) => {
+          state.isloading = false;
+          state.success = true;
+          state.profileData = action.payload;
+        }
+      )
+
+      .addCase(EditProfileAction.rejected, (state, action) => {
+        state.isloading = false;
+        state.error = action.error.message || "Cập nhật thất bại";
+        toast.error(state.error);
+        state.success = false;
+      });
   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(EditProfileAction.pending, (state) => {
-//         state.isloading = true;
-//         state.error = null;
-//       })
-//       .addCase(EditProfileAction.fulfilled, (state) => {
-//         state.isloading = false;
-//         state.success = true;
-//         state.error = null;
-//       })
-//       .addCase(EditProfileAction.rejected, (state, action) => {
-//         state.isloading = false;
-//         state.error = action.error.message||"Cập nhật thất bại";
-//       });
-//   },
 });
 
-export const { resetState } = editProfileSlice.actions;
+// export const { resetState } = editProfileSlice.actions;
 export default editProfileSlice.reducer;

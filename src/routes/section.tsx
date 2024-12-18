@@ -25,6 +25,7 @@ import Directory from "../pages/Directory";
 import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
+import UserInformation from "../pages/Admin/UserInformation";
 export default function Router() {
   const routes = useRoutes([
     {
@@ -72,11 +73,16 @@ export default function Router() {
           element: <EditProfile />,
         },
         {
+          path: "edit-profile/:id",
+          element: <EditProfile />,
+        },
+
+        {
           path: "notification",
           element: <Notification />,
         },
         {
-          path: ":majorSlug/:folderSlug/:id",
+          path: ":majorSlug/:folderSlug/id",
           element: <DocumentDetailPage />,
         },
         {
@@ -96,6 +102,10 @@ export default function Router() {
           path: "profile-personal-teacher",
           element: <PersonalTeacher />,
         },
+        // {
+        //   path: "profile-personal-teacher:id",
+        //   element: <PersonalTeacher />,
+        // },
         {
           path: "search-user",
           element: <SearchUser />,
@@ -126,6 +136,10 @@ export default function Router() {
         {
           path: "users",
           element: <AdminUsers />,
+        },
+        {
+          path: "user-information",
+          element: <UserInformation />,
         },
       ],
     },

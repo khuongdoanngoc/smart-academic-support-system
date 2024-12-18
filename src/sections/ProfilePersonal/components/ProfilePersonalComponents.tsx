@@ -1,6 +1,6 @@
 import classnames from "classnames/bind";
 import styles from "./ProfilePersonalComponents.module.scss";
-import Avatar from "../../../assets/images/avatar.png";
+
 import File from "../../../assets/images/File_dock.svg";
 import EditIcon from "../../../assets/images/edit-05.png";
 import ImportLight from "../../../assets/images/Import_light.png";
@@ -14,12 +14,17 @@ import {
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
-import { useAppDispatch } from "../../../redux/store";
+import { RootState, useAppDispatch } from "../../../redux/store";
 // // import { SearchFolderAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
 // import { SearchDocProfilePersonalAPI } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
-import { SearchDocPersonalAction } from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
+import {
+  GetProFileAction,
+  SearchDocPersonalAction,
+} from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const cx = classnames.bind(styles);
 interface Subject {
   id: number;
@@ -103,14 +108,18 @@ const fakeSubjects: Subject[] = [
 
 const ProfileAuthorComponent = () => {
   const alphabet = Array.from("1234567");
+  const navigate = useNavigate();
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const dispatch=useAppDispatch()
+  const dispatch = useAppDispatch();
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debounceSearch=useCallback(debounce((name:string)=>dispatch(SearchDocPersonalAction(name)),1000),[dispatch])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearch = useCallback(
+    debounce((name: string) => dispatch(SearchDocPersonalAction(name)), 1000),
+    [dispatch]
+  );
   const filteredDataList = (data: Subject[]) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -118,15 +127,28 @@ const ProfileAuthorComponent = () => {
   };
   const totalFile = fakeSubjects.length;
 
+  const handleSearchDoc = async (name: string) => {
+    try {
+      debounceSearch(name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleEditClick = () => {
+    console.log(1);
 
-const handleSearchDoc = async(name:string)=>{
-  try {
-    debounceSearch(name)
-  } catch (error) {
-    console.log(error);
-    
-  }
-}
+    navigate("/document/edit-profile", { state: { useData: getUserProfile } });
+  };
+
+  useEffect(() => {
+    dispatch(GetProFileAction());
+  }, [dispatch]);
+  const { getUserProfile } = useSelector(
+    (state: RootState) => state.profilePersonal
+  );
+
+  console.log("getUserProfile", getUserProfile);
+
   return (
     <div className={cx("author-component")}>
       <div className={cx("author-component-information")}>
@@ -134,19 +156,21 @@ const handleSearchDoc = async(name:string)=>{
           <div className={cx("information-left-profile")}>
             <div className={cx("left-profile-author")}>
               <div className={cx("author-name")}>
-                <img src={Avatar} />
+                <img src={getUserProfile?.profilePicture} />
                 <div>
-                  <h3>Nguyen Quoc Huy</h3>
-                  <p>Software Technology CMU</p>
+                  <h3>
+                    {getUserProfile?.firstName} {getUserProfile?.lastName}
+                  </h3>
+                  <p>{getUserProfile?.major}</p>
                 </div>
               </div>
               <div className={cx("author-follow")}>
                 <div>
-                  <p>0</p>
+                  <p>{getUserProfile?.follower}</p>
                   <p>Followers</p>
                 </div>
                 <div>
-                  <p>0</p>
+                  <p>{getUserProfile?.following}</p>
                   <p>Following</p>
                 </div>
               </div>
@@ -157,21 +181,30 @@ const handleSearchDoc = async(name:string)=>{
           <div className={cx("information-right-title")}>
             <div className={cx("right-title-text")}>
               <h4>Thông tin</h4>
-              <img src={Edit} alt="edit" />
+              <img src={Edit} alt="edit" onClick={handleEditClick} />
             </div>
             <div className={cx("information-right-item")}>
               <div>
-                <p>Chức vụ :Sinh viên</p>
-                <p>Khoa: Đào tạo quốc tế</p>
+                <p>
+                  Chức vụ :
+                  {getUserProfile?.role === "LECTURER"
+                    ? "Sinh viên"
+                    : "Giảng viên"}
+                </p>
+                <p>Khoa:{getUserProfile?.facultyName}</p>
               </div>
               <div>
-                <p>Chuyên ngành: Công nghệ Phần mềm CMU</p>
-                <p>Khóa: 27</p>
+                <p>Chuyên ngành: {getUserProfile?.major}</p>
+                <p>Khóa:K{getUserProfile?.classNumber}</p>
               </div>
             </div>
           </div>
           <div className={cx("information-right-search")}>
-            <input type="text" placeholder="Tìm kiếm tài liệu của Huy" onChange={(e)=>handleSearchDoc(e.target.value)}/>
+            <input
+              type="text"
+              placeholder="Tìm kiếm tài liệu của Huy"
+              onChange={(e) => handleSearchDoc(e.target.value)}
+            />
             <SearchIcon className={cx("search-icon")} />
           </div>
         </div>
