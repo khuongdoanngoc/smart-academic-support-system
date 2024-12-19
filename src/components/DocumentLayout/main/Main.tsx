@@ -16,7 +16,7 @@ export default function Main(props: PropsType) {
         (state) => state.authentication
     );
     const [loadingElement, setLoadingElement] = useState(false);
-    const regex = /^\/view-doc\/\d+$/;
+    const regex = /^\/document\/\d+$/;
     const [isOpen, setIsOpen] = useState<boolean>(
         !regex.test(location.pathname)
     );

@@ -204,7 +204,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                     <Link
                         key={index}
                         className={cx(
-                            item.regex.test(pathName),
+                            item.regex.test(pathName) && "active",
                             `${
                                 item.regex.test(pathName) &&
                                 numberOfNotificationsUnRead > 0

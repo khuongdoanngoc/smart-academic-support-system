@@ -52,8 +52,8 @@ export default function HeaderBottom() {
         <div className={cx("header-bottom")}>
             <a href="#">TRANG CHỦ</a>
             <a href="#">GIỚI THIỆU</a>
-            <a href="#">TÀI LIỆU</a>
-            <a href="#">CÔNG CỤ AI</a>
+            <a href="/document">TÀI LIỆU</a>
+            <a href="/document/ai-support">CÔNG CỤ AI</a>
             <a href="#">TIN TỨC</a>
             <a href="#">LIÊN HỆ</a>
             <div className={cx("search-container")}>

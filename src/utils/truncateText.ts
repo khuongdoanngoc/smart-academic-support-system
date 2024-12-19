@@ -4,3 +4,10 @@ export const truncateText = (txt: string) => {
     }
     return txt;
 };
+
+export const truncateTextWithLength = (txt: string, length: number) => {
+    if (txt.length > length) {
+        return `${txt.substring(0, length)}...`;
+    }
+    return txt;
+};

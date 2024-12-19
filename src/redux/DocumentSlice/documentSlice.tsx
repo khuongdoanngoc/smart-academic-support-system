@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 
 interface InitialStateStyles {
     Documents: DocumentResponse[] | undefined;
-    DocumentDetail: DocumentResponse | undefined;
+    DocumentDetail: any | undefined;
     loading: boolean;
     error: string;
     document: DocumentResponse[];
@@ -33,6 +33,7 @@ export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
     async (id: number) => {
         try {
             const response = await GetDocumentByID(id);
+            console.log(response);
             return response as unknown as DocumentResponse;
         } catch (err: unknown) {
             const error = err as AxiosError<{ message?: string }>;

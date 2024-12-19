@@ -11,37 +11,31 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useSharingModal } from "../../../../contexts/SharingModalContext";
 import { useNavigate } from "react-router-dom";
+import { truncateTextWithLength } from "../../../../utils/truncateText";
+import { downloadFile } from "../../../../utils/downloadFile";
 // import { SharingModal } from "../../../../components/SharingModal"
 
-interface IDoc {
-    title: string;
-    author: string;
-    content: string;
-    subject: string;
-    downloads: number;
-    image: string;
-    facultyName: string;
-}
-
-interface IDocs {
-    title: string;
-    docs: IDoc[];
-}
 const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ", "Báo cáo"];
 
 const ITEM_HEIGHT = 48;
 
 export default function Docs({ title, docs, onLoadMore }: any) {
     // configs cho nút chia sẻ
-    const { openSharingModal } = useSharingModal();
+    const { openSharingModal, setUrl } = useSharingModal();
+    const handleOpenModal = (id: number) => {
+        setUrl(`${import.meta.env.VITE_CLIENT_URL}/document/${id}`);
+        openSharingModal();
+    };
 
     // configs cho nút ... trên tài liệu
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
+        console.log(event.currentTarget)
     };
     const handleClose = () => {
+
         setAnchorEl(null);
     };
 
@@ -58,7 +52,7 @@ export default function Docs({ title, docs, onLoadMore }: any) {
                         if (isLoadingMore) {
                             onLoadMore("shorten");
                         } else {
-                            onLoadMore("expand");
+                            onLoadMore("loadmore");
                         }
                     }}>
                     {!isLoadingMore ? "Xem thêm" : "Thu gọn"}
@@ -111,27 +105,28 @@ export default function Docs({ title, docs, onLoadMore }: any) {
                             </Menu>
                         </div>
                         <img
-                            onClick={() => navigate(`/view-doc/${data.docId}`)}
+                            onClick={() => navigate(`/document/${data.docId}`)}
                             src={`src/assets/images/library.document.png`}
                             alt="doc"
                         />
-                        <h3 onClick={() => navigate(`/view-doc/${data.docId}`)}>
-                            {data.title}
+                        <h3 onClick={() => navigate(`/document/${data.docId}`)}>
+                            {truncateTextWithLength(data.title, 45)}
                         </h3>
                         <span>{data.subject}</span>
                         <span>{data.facultyName}</span>
                         <div className={cx("actions")}>
-                            <span>500+ lượt tải</span>
+                            <span>{data.downloadCount}+ lượt tải</span>
                             <div>
                                 <div
                                     onClick={() => {
-                                        console.log("do download");
+                                        downloadFile(data.filePath, data.title);
                                     }}>
                                     <FileDownloadOutlinedIcon
                                         sx={{ color: "#EB2930" }}
                                     />
                                 </div>
-                                <div onClick={openSharingModal}>
+                                <div
+                                    onClick={() => handleOpenModal(data.docId)}>
                                     <ShareOutlinedIcon
                                         sx={{ color: "#EB2930" }}
                                     />

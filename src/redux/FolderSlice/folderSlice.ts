@@ -7,10 +7,6 @@ import {
     UpdateFolder,
 } from "../../services/FolderAPI/FolderAPI";
 
-interface IFolder {
-    folderName: string;
-    folderDescription: string;
-}
 
 export const getAllFolders = createAsyncThunk<any>(
     "folder/getAllFolders",
