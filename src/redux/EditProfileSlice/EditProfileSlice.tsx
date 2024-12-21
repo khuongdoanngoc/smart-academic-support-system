@@ -8,13 +8,13 @@ import {
 } from "../../services/EditProFileApi/EditProfileAPI";
 
 interface EditProfileState {
-  isloading: boolean;
+  loading: boolean;
   error: string | null;
   success: boolean;
-  profileData: UpdateProfileRequest | null;
+  profileData: Omit<UpdateProfileRequest, "profilePicture"> | null;
 }
 const initialState: EditProfileState = {
-  isloading: false,
+  loading: false,
   error: null,
   success: false,
   profileData: null,
@@ -24,10 +24,9 @@ export const EditProfileAction = createAsyncThunk(
   "EditProfileAction",
   async (data: UpdateProfileRequest) => {
     try {
-      const response = await EditProfileAPI(data);
-      console.log("EditProfileAction", response);
-
-      return response as unknown as UpdateProfileRequest;
+      EditProfileAPI(data);
+      const { ...serializableData } = data;
+      return serializableData;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw new Error(error.response?.data.message || error.message);
@@ -42,22 +41,29 @@ const editProfileSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(EditProfileAction.pending, (state) => {
-        state.isloading = true;
+        state.loading = true;
         state.error = null;
         state.success = false;
       })
 
       .addCase(
         EditProfileAction.fulfilled,
-        (state, action: PayloadAction<UpdateProfileRequest>) => {
-          state.isloading = false;
+        (
+          state,
+          action: PayloadAction<Omit<
+            UpdateProfileRequest,
+            "profilePicture"
+          > | null>
+        ) => {
+          state.loading = false;
           state.success = true;
           state.profileData = action.payload;
+          toast.success("Cập nhật thành công");
         }
       )
 
       .addCase(EditProfileAction.rejected, (state, action) => {
-        state.isloading = false;
+        state.loading = false;
         state.error = action.error.message || "Cập nhật thất bại";
         toast.error(state.error);
         state.success = false;

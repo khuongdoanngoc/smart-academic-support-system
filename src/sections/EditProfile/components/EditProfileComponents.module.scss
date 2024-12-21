@@ -306,9 +306,8 @@
               //   line-height: 19px;
               //   outline: none;
               // }
-             
+
               & > .list-item-search {
-                width: 76%;
                 & > input {
                   width: 100%;
                   padding: 15px 32px;
@@ -322,7 +321,7 @@
                 }
                 & > div {
                   width: 100%;
-                  &>div{
+                  & > div {
                     border-radius: 20px;
                     border: 1.5px solid #00000099;
                     font-size: 16px;
@@ -330,19 +329,18 @@
                     color: #00000099;
                     font-weight: 500;
                     position: relative;
-                  
-                      &>fieldset{
-                        border-color: #fff;
-                        border-width: 0px;
-                      }
+
+                    & > fieldset {
+                      border-color: #fff;
+                      border-width: 0px;
                     }
-                  
+                  }
                 }
                 & > .search-results {
                   background: #fff;
                   position: absolute;
                   z-index: 100;
-                  width: 76%;
+                  width: 28%;
                   height: 121px;
                   overflow: auto;
                   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;

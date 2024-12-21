@@ -1,80 +1,30 @@
-import { useState, useRef } from "react";
+import { useEffect } from "react";
 
 import styles from "./UserInformationComponent.module.scss";
 import classNames from "classnames/bind";
 
-// import {
-//   EditProfileAction,
-//   // resetState,
-// } from "../../../redux/EditProfileSlice/EditProfileSlice";
-import avatarImg from "../../../../assets/images/User.png";
+import { RootState, useAppDispatch } from "../../../../redux/store";
+import {
+  DelectProfilePictureAction,
+  GetProFileDashAction,
+} from "../../../../redux/DashBoardSlice/DashBoardSlice";
+import { useSelector } from "react-redux";
+import avartar from "../../../../assets/images/Frame 8720.png";
 
 const cx = classNames.bind(styles);
 
 const UserInformationComponents = () => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const [department, setDepartment] = useState("Đào tạo quốc tế 1");
-
-  // useEffect(() => {
-  //   if (success) {
-  //     toast.success("Cập nhật thông tin thành công!");
-  //     setFormData({
-  //       firstName: "",
-  //       lastName: "",
-  //       gender: "",
-  //       birthDate: "",
-  //       hometown: "",
-  //       email: "",
-  //       phoneNumber: "",
-  //       facultyId: "",
-  //       major: "Software Technology CMU",
-  //       enrollmentYear: new Date().getFullYear(),
-  //       classNumber: "27",
-  //       avatar: null,
-  //     });
-  //     dispatch(resetState());
-  //   }
-  //   if (error) {
-  //     toast.error(error);
-  //   }
-  // }, [success, error, dispatch]);
-
-  // const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-
-  // Khi avatar thay đổi, tạo URL mới và giải phóng URL cũ
-  // useEffect(() => {
-  //   if (formData.avatar) {
-  //     const newPreview = URL.createObjectURL(formData.avatar);
-  //     setAvatarPreview((prev) => {
-  //       if (prev) {
-  //         URL.revokeObjectURL(prev); // Giải phóng URL cũ
-  //       }
-  //       return newPreview;
-  //     });
-  //   }
-  // }, [formData.avatar]);
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const fileUrl = URL.createObjectURL(file); // Tạo URL cho ảnh
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       avatar: file, // Lưu file vào formData
-  //     }));
-  //     // setAvatarPreview(fileUrl); // Hiển thị ảnh xem trước
-  //   }
-  // };
-
-  const handleDepartment = (e: string) => {
-    setDepartment(e);
-  };
   const handleOpenFileDialog = () => {
-    fileInputRef.current?.click();
+    dispatch(DelectProfilePictureAction());
   };
+  useEffect(() => {
+    dispatch(GetProFileDashAction());
+  }, [dispatch]);
+  const { getProfileDash } = useSelector(
+    (state: RootState) => state.profileDashBoard
+  );
 
   return (
     <div className={cx("edit-profile")}>
@@ -82,22 +32,17 @@ const UserInformationComponents = () => {
         <div className={cx("profile-main-title")}>
           <span>DTUDASHBOARD / Người dùng / Thông tin chi tiết</span>
         </div>
-        {/* <div className={cx("profile-main-header")}>
-          <h3>CHỈNH SỬA THÔNG TIN</h3>
-        </div> */}
+
         <div className={cx("profile-main-body")}>
           <div className={cx("main-body-top")}>
             <div className={cx("main-body-avatar")}>
               <h3>Ảnh đại diện</h3>
-              <img src={avatarImg} alt="avatar" />
+              <img
+                src={getProfileDash?.profilePicture || avartar}
+                alt="avatar"
+              />
               <div className={cx("file-input")}>
-                <input
-                  type="file"
-                  name="avatar"
-                  ref={fileInputRef}
-                  // onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
+                {/* <input type="file" name="avatar" style={{ display: "none" }} /> */}
                 <button onClick={handleOpenFileDialog}>Xoá ảnh</button>
               </div>
             </div>
@@ -109,28 +54,42 @@ const UserInformationComponents = () => {
                 <div className={cx("individual-input-name")}>
                   <div className={cx("input-name-lastname")}>
                     <label>Họ</label>
-                    <input type="text" name="lastName" placeholder="Nguyễn" />
+                    <input
+                      type="text"
+                      name="lastName"
+                      readOnly
+                      value={getProfileDash?.lastName || ""}
+                    />
                   </div>
                   <div className={cx("input-name-firstname")}>
                     <label>Tên</label>
                     <input
                       type="text"
                       name="firstName"
-                      placeholder="Quốc Huy"
+                      readOnly
+                      value={getProfileDash?.firstName || ""}
                     />
                   </div>
                   <div className={cx("input-infor-sex")}>
                     <label>Giới tính</label>
-                    <select className={cx("infor-sex-select")} name="gender">
-                      <option>Nam</option>
-                      <option>Nữ</option>
-                    </select>
+                    <input
+                      type="text"
+                      name="firstName"
+                      readOnly
+                      className={cx("infor-sex-select")}
+                      value={getProfileDash?.gender || ""}
+                    />
                   </div>
                 </div>
                 <div className={cx("individual-input-infor")}>
                   <div className={cx("input-infor-date")}>
                     <label>Ngày sinh</label>
-                    <input type="date" name="birthDate" />
+                    <input
+                      type="date"
+                      name="birthDate"
+                      readOnly
+                      value={getProfileDash?.birthDate || ""}
+                    />
                   </div>
 
                   <div className={cx("input-infor-country")}>
@@ -138,7 +97,9 @@ const UserInformationComponents = () => {
                     <input
                       type="text"
                       name="hometown"
-                      placeholder="Phong Bình - Gio Linh - Quảng Trị"
+                      readOnly
+                      value={getProfileDash?.hometown || ""}
+                      placeholder={getProfileDash?.hometown}
                     />
                   </div>
                 </div>
@@ -148,7 +109,8 @@ const UserInformationComponents = () => {
                     <input
                       type="email"
                       name="email"
-                      placeholder="nguyenquochuy@gmail.com"
+                      readOnly
+                      value={getProfileDash?.email || ""}
                     />
                   </div>
                   <div className={cx("input-contact-phone")}>
@@ -156,7 +118,8 @@ const UserInformationComponents = () => {
                     <input
                       type="text"
                       name="phoneNumber"
-                      placeholder="+84 353940610"
+                      readOnly
+                      value={getProfileDash?.phoneNumber || ""}
                     />
                   </div>
                 </div>
@@ -171,62 +134,52 @@ const UserInformationComponents = () => {
               <div className={cx("student-input-school")}>
                 <div className={cx("input-school-department")}>
                   <label>Khoa - Trường</label>
-                  <select
-                    name="department"
-                    value={department}
-                    onChange={() => handleDepartment}
-                  >
-                    <option value={"Đào tạo Quốc Tế 1"}>
-                      Đào tạo Quốc Tế 1
-                    </option>
-                    <option value={"Đào tạo Quốc Tế 2"}>
-                      Đào tạo Quốc Tế 2
-                    </option>
-                  </select>
+                  <input
+                    type="text"
+                    readOnly
+                    placeholder="Nhập mã hoặc tên chuyên ngành"
+                    value={getProfileDash?.major || ""}
+                  />
                 </div>
                 <div className={cx("input-school-specialized")}>
                   <label>Chuyên ngành</label>
-                  <select name="major">
-                    <option value={"Software Technology CMU"}>
-                      Software Technology CMU
-                    </option>
-                    <option value={"Software Technology CMU 2"}>
-                      Software Technology CMU 2
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <div className={cx("student-input-information")}>
-                <div className={cx("input-information-position")}>
-                  <label>Chức vụ(Không thể chỉnh sửa)</label>
                   <input
                     type="text"
-                    name="position"
                     readOnly
-                    placeholder="Sinh viên"
+                    placeholder="Nhập mã hoặc tên chuyên ngành"
+                    value={getProfileDash?.facultyName || ""}
                   />
                 </div>
-                <div className={cx("input-information-year")}>
-                  <label>Năm nhập học</label>
-                  <input
-                    type="number"
-                    name="enrollmentYear"
-                    min={2000}
-                    max={2030}
-                    placeholder="YYYY"
-                  />
-                </div>
-                <div className={cx("input-infor-lock")}>
-                  <label>Khóa</label>
-                  <select
-                    className={cx("infor-lock-select")}
-                    name="classNumber"
-                  >
-                    <option value={27}>27</option>
-                    <option value={26}>26</option>
-                    <option value={25}>25</option>
-                  </select>
-                </div>
+              </div>
+            </div>
+            <div className={cx("student-input-information")}>
+              <div className={cx("input-information-position")}>
+                <label>Chức vụ</label>
+                <input
+                  type="text"
+                  name="position"
+                  readOnly
+                  value={getProfileDash?.roles || ""}
+                  placeholder="role"
+                />
+              </div>
+              <div className={cx("input-information-year")}>
+                <label>Năm nhập học</label>
+                <input
+                  type="number"
+                  readOnly
+                  name="enrollmentYear"
+                  value={getProfileDash?.enrollmentYear || ""}
+                />
+              </div>
+              <div className={cx("input-infor-lock")}>
+                <label>Khóa</label>
+                <input
+                  type="number"
+                  readOnly
+                  name="enrollmentYear"
+                  value={getProfileDash?.classNumber || ""}
+                />
               </div>
             </div>
           </div>

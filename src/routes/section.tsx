@@ -26,6 +26,7 @@ import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
 import UserInformation from "../pages/Admin/UserInformation";
+import { EditDocumentComponents } from "../sections/EditDocument/components";
 export default function Router() {
   const routes = useRoutes([
     {
@@ -76,7 +77,6 @@ export default function Router() {
           path: "edit-profile/:id",
           element: <EditProfile />,
         },
-
         {
           path: "notification",
           element: <Notification />,
@@ -113,6 +113,11 @@ export default function Router() {
         {
           path: "document-storage",
           element: <DocumentStorage />,
+          index: true,
+        },
+        {
+          path: "edit-profile",
+          element: <EditDocumentComponents />,
           index: true,
         },
       ],

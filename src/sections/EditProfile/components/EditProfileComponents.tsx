@@ -2,11 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
-import {
-  RootState,
-  useAppDispatch,
-  useAppSelector,
-} from "../../../redux/store";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
   EditProfileAction,
   // GetProFileAction,
@@ -18,7 +14,6 @@ import {
   clearSearchFaculty,
   SearchFacultyAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 
@@ -26,13 +21,13 @@ const EditProfileComponents = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isloading, success } = useAppSelector(
-    (state: RootState) => state.editProfile
-  );
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [facultyId, setFacultyId] = useState<number>(0);
 
   const { useData } = location.state || { useData: null };
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    useData.profilePicture
+  );
 
   const formatDateToYYYYMMDD = (date: string | Date): string => {
     const d = new Date(date);
@@ -49,7 +44,7 @@ const EditProfileComponents = () => {
     birthDate: useData.birthDate ? formatDateToYYYYMMDD(useData.birthDate) : "",
     hometown: useData.hometown,
     phoneNumber: useData.phoneNumber,
-    facultyId: facultyId,
+    facultyId: 0,
     major: useData.major,
     enrollmentYear: new Date().getFullYear(),
     classNumber: useData.classNumber,
@@ -66,60 +61,6 @@ const EditProfileComponents = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    const dataToSubmit = {
-      ...formData,
-      profilePicture: formData.profilePicture || useData.profilePicture,
-    };
-    console.log("dataToSubmit", dataToSubmit);
-
-    dispatch(EditProfileAction(dataToSubmit));
-    if (success) {
-      toast.success("Cập nhật thành công");
-      setTimeout(() => {
-        navigate("/document/profile-personal");
-      }, 1000);
-    }
-  };
-
-  // useEffect(() => {
-  //   if (success) {
-  //     setTimeout(() => {
-  //       console.log(1);
-  //       navigate("/document/profile-personal");
-  //     }, 1000);
-  //   }
-  // }, [navigate, success]);
-
-  // useEffect(() => {
-  //   if (success) {
-  //     toast.success("Cập nhật thông tin thành công!");
-  //     setFormData({
-  //       firstName: "",
-  //       lastName: "",
-  //       gender: "",
-  //       birthDate: "",
-  //       hometown: "",
-  //       email: "",
-  //       phoneNumber: "",
-  //       facultyId: "",
-  //       major: "Software Technology CMU",
-  //       enrollmentYear: new Date().getFullYear(),
-  //       classNumber: "27",
-  //       avatar: null,
-  //     });
-  //     dispatch(resetState());
-  //   }
-  //   if (error) {
-  //     toast.error(error);
-  //   }
-  // }, [success, error, dispatch]);
-
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    useData.profilePicture
-  );
-
-  // Khi avatar thay đổi, tạo URL mới và giải phóng URL cũ
   useEffect(() => {
     if (
       formData.profilePicture &&
@@ -140,7 +81,7 @@ const EditProfileComponents = () => {
     if (file) {
       setFormData((prev) => ({
         ...prev,
-        profilePicture: file, // Lưu file mới vào state
+        profilePicture: file,
       }));
       setAvatarPreview(URL.createObjectURL(file)); // Tạo ảnh xem trước
     }
@@ -170,22 +111,43 @@ const EditProfileComponents = () => {
   const handleSearchFaculty = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
 
     if (!value.trim()) {
+      // Nếu giá trị rỗng, xóa danh sách tìm kiếm và cập nhật major về rỗng
       debounceClearFaculty();
+      setFormData((prev) => ({
+        ...prev,
+        major: "", // Đảm bảo major được cập nhật thành rỗng
+        facultyId: 0, // Reset facultyId nếu cần
+      }));
       return;
     }
     try {
+      // Thực hiện tìm kiếm với giá trị nhập vào
       debounceSearchFaculty(value);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "facultyId" && searchFaculty,
       major: value,
     }));
+  };
+
+  const handleSubmit = () => {
+    const dataToSubmit = {
+      ...formData,
+      profilePicture: formData.profilePicture || useData.profilePicture,
+      facultyId: formData.facultyId,
+    };
+
+    console.log("dataToSubmit", dataToSubmit);
+
+    dispatch(EditProfileAction(dataToSubmit));
+    setTimeout(() => {
+      navigate("/document/profile-personal");
+    }, 3000);
   };
 
   return (
@@ -246,7 +208,7 @@ const EditProfileComponents = () => {
                     <select
                       className={cx("infor-sex-select")}
                       name="gender"
-                      value={useData.lastName}
+                      value={useData.gender}
                       onChange={handleInputChange}
                     >
                       <option>Nam</option>
@@ -325,7 +287,11 @@ const EditProfileComponents = () => {
                             <li
                               key={index}
                               onClick={() => {
-                                setFacultyId(index);
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  major: result.facultyName,
+                                  facultyId: index,
+                                }));
                                 dispatch(clearSearchFaculty());
                               }}
                             >
@@ -411,12 +377,11 @@ const EditProfileComponents = () => {
           </div>
           <button
             onClick={handleSubmit}
-            disabled={isloading}
             className={cx("body-individual-submit")}
           >
-            {isloading ? "Đang lưu..." : "Lưu thay đổi"}
+            "Lưu thay đổi"
           </button>
-          <button disabled={isloading} className={cx("body-individual-delete")}>
+          <button className={cx("body-individual-delete")}>
             Xoá tài khoản
           </button>
         </div>

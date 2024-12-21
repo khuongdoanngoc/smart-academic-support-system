@@ -11,6 +11,7 @@ import EditProfileReducer from "./EditProfileSlice/EditProfileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 import profilePersonalReducer from "./ProfilePersonalSlice/ProfilePersonalSlice";
+import dashBoardReducer from "./DashBoardSlice/DashBoardSlice";
 
 const store = configureStore({
   reducer: {
@@ -25,6 +26,7 @@ const store = configureStore({
     // downloadDocument: profileAuthorReducer,
     profileAuthor: profileAuthorReducer,
     profilePersonal: profilePersonalReducer,
+    profileDashBoard: dashBoardReducer,
     search: SearchReducer,
   },
 });

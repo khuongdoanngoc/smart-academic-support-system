@@ -21,6 +21,7 @@ export interface GetProfileRequest {
   follower: string;
   following: string;
   role: string | null;
+  documentDtos: [];
 }
 export const SearchDocProfilePersonalAPI = async (name: string) => {
   try {
