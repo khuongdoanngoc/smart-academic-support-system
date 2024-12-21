@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState } from "react";
 
 interface SharingModalContextType {
     open: boolean;
+    url: string;
+    setUrl: (url: string) => void;
     openSharingModal: () => void;
     closeSharingModal: () => void;
 }
@@ -14,6 +16,7 @@ export const SharingModalProvider: React.FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
     const [open, setOpen] = useState(false);
+    const [url, setUrl] = useState("");
 
     const openSharingModal = () => {
         console.log("open modal");
@@ -23,7 +26,7 @@ export const SharingModalProvider: React.FC<{ children: React.ReactNode }> = ({
 
     return (
         <SharingModalContext.Provider
-            value={{ open, openSharingModal, closeSharingModal }}>
+            value={{ open, url, setUrl, openSharingModal, closeSharingModal }}>
             {children}
         </SharingModalContext.Provider>
     );

@@ -7,27 +7,40 @@ import docsDirectory from "../docs_directory.json";
 import { DocsDirectory } from "./DocsDirectory";
 import FolderDirectory from "./FolderDirectory/FolderDirectory";
 import { RouterTitle } from "../../../components/RouterTitle";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import { useEffect } from "react";
+import { getAllFolders } from "../../../redux/FolderSlice/folderSlice";
 
 const DirectoryComponents = () => {
-  return (
-    <div className={cx("directory-component")}>
-      <img src={Background} alt="bg" />
-      <RouterTitle title="TÀI LIỆU" />
-      <div className={cx("component-folder")}>
-        <div className={cx("component-folder-main")}>
-          {folderDirectory.map((data, index) => (
-            <FolderDirectory key={index} title={data.title} docs={data.docs} />
-          ))}
+    const dispatch = useAppDispatch();
+
+    const folders: any = useAppSelector((state) => state.folder.data);
+
+    useEffect(() => {
+        dispatch(getAllFolders());
+    }, []);
+
+    return (
+        <div className={cx("directory-component")}>
+            <img src={Background} alt="bg" />
+            <RouterTitle title="TÀI LIỆU" />
+            <div className={cx("component-folder")}>
+                <div className={cx("component-folder-main")}>
+                    <FolderDirectory data={folders} />
+                </div>
+            </div>
+            {/* <div className={cx("component-docs")}>
+                <div className={cx("component-docs-main")}>
+                    {docsDirectory.map((data, index) => (
+                        <DocsDirectory
+                            key={index}
+                            title={data.title}
+                            docs={data.docs}
+                        />
+                    ))}
+                </div>
+            </div> */}
         </div>
-      </div>
-      <div className={cx("component-docs")}>
-        <div className={cx("component-docs-main")}>
-          {docsDirectory.map((data, index) => (
-            <DocsDirectory key={index} title={data.title} docs={data.docs} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 export default DirectoryComponents;

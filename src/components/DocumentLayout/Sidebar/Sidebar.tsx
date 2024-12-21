@@ -5,14 +5,15 @@ const cx = classNames.bind(styles);
 import Avatar from "../../../assets/images/avatar.png";
 import { Button } from "../../../components/Button";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
-import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
+import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
+
+import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import BookmarkAddedOutlinedIcon from "@mui/icons-material/BookmarkAddedOutlined";
 import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 
@@ -39,19 +40,26 @@ const docItems = [
   {
     title: "Tài liệu",
     icon: InsertDriveFileOutlinedIcon,
-    pathAcitve: "#unknown",
+    regex: /^\/document\/(directory|folder)/,
+    linkTo: "/document/directory",
   },
-  { title: "Môn học", icon: StickyNote2OutlinedIcon, pathAcitve: "#unknown" },
+  {
+    title: "Môn học",
+    icon: StickyNote2OutlinedIcon,
+    regex: /^\/document\/(subject)/,
+    linkTo: "/document#",
+  },
   {
     title: "Thông báo",
     icon: NotificationsOutlinedIcon,
+    regex: /^\/document\/(notication)/,
     pathAcitve: "/document/notification",
   },
 ];
 const searchItems = [
   {
     title: "Người dùng",
-    icon: SearchOutlinedIcon,
+    icon: PersonSearchOutlinedIcon,
     pathAcitve: "/document/search-user",
   },
   {
@@ -112,7 +120,10 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
             {isOpen && <span>Tải tài liệu</span>}
           </div>
           <hr />
-          <div className={cx("item")}>
+          <div
+            className={cx("item")}
+            onClick={() => navigate("/document/create-folder")}
+          >
             <CreateNewFolderOutlinedIcon
               sx={{ width: "22px", height: "22px" }}
             />

@@ -8,6 +8,7 @@ import Popover from "@mui/material/Popover";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AvatarIMG from "../../../assets/images/avatar.png";
 import { truncateText } from "../../../utils/truncateText";
+import { Link } from 'react-scroll';
 const notificationsData = [
     {
         title: "Tiêu đề thông báo...Tiêu đề thông báo...Tiêu đề thông báo...",
@@ -50,12 +51,12 @@ export default function HeaderBottom() {
 
     return (
         <div className={cx("header-bottom")}>
-            <a href="#">TRANG CHỦ</a>
-            <a href="#">GIỚI THIỆU</a>
-            <a href="#">TÀI LIỆU</a>
-            <a href="#">CÔNG CỤ AI</a>
-            <a href="#">TIN TỨC</a>
-            <a href="#">LIÊN HỆ</a>
+            <a href="/">TRANG CHỦ</a>
+            <Link to="introduction" smooth={true} duration={1000}>GIỚI THIỆU</Link>
+            <a href="/document">TÀI LIỆU</a> 
+            <Link to="chatbot" smooth={true} duration={1000}>CÔNG CỤ AI</Link>
+            <Link to="news" smooth={true} duration={1000}>TIN TỨC</Link>
+            <Link to="contact" smooth={true} duration={1000}>LIÊN HỆ</Link>
             <div className={cx("search-container")}>
                 <input
                     value={searchValue}

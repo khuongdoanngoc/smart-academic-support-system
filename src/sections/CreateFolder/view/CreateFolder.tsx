@@ -57,7 +57,7 @@ export default function CreateFolder() {
             </p>
             <button
                 onClick={() => {
-                    navigate("/document/uploadfile");
+                    navigate("/document/upload-file");
                 }}>
                 <DriveFolderUploadIcon /> Tải tài liệu lên thư mục
             </button>

@@ -17,6 +17,7 @@ import {
   GetDocument,
   GetDocumentSizeAPI,
   SaveDownLoadHistoryApi,
+  SaveDocummentStogeAPI,
 } from "../../services/DocumentAPI/DocumentAPI";
 import { DocumentResponse } from "./InterfaceResponse";
 import { AxiosError } from "axios";
@@ -39,24 +40,11 @@ export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
   async (id: number) => {
     try {
       const response = await GetDocumentByID(id);
+      console.log(response);
       return response as unknown as DocumentResponse;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw new AxiosError(error.message);
-    }
-  }
-);
-
-export const GetDocumentStogeAction = createAsyncThunk<any, { page: number }>(
-  "GetDocumentStogeAction",
-  async ({ page }) => {
-    try {
-      const response = await GetDocumentStogeAPI(page);
-
-      return response as unknown as GetDocument;
-    } catch (err: unknown) {
-      const error = err as AxiosError<{ message?: string }>;
-      throw new Error(error.response?.data.message || error.message);
     }
   }
 );
@@ -100,7 +88,6 @@ export const DownloadDocumentAction = createAsyncThunk<
       if (!fileResponse.ok) {
         throw new Error("Failed to fetch the file from the URL");
       }
-
       const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
       const link = document.createElement("a");
       const fileName = fileUrl.split("/").pop() || "download_file";
@@ -108,7 +95,6 @@ export const DownloadDocumentAction = createAsyncThunk<
       const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
       link.href = url;
       link.setAttribute("download", fileName); // Đặt thuộc tính download
-
       document.body.appendChild(link);
       link.click(); // Kích hoạt tải xuống
       document.body.removeChild(link);
@@ -142,6 +128,33 @@ export const DownloadDocumentAction = createAsyncThunk<
 //   }
 // );
 
+export const SaveDocumentStogeAction = createAsyncThunk<string, number>(
+  "SaveDocumentStogeAction",
+  async (docId: number) => {
+    try {
+      const res = await SaveDocummentStogeAPI(docId);
+      return res as unknown as string;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.response?.data.message || error.message);
+    }
+  }
+);
+
+export const GetDocumentStogeAction = createAsyncThunk<any, { page: number }>(
+  "GetDocumentStogeAction",
+  async ({ page }) => {
+    try {
+      const response = await GetDocumentStogeAPI(page);
+
+      return response as unknown as GetDocument;
+    } catch (err: unknown) {
+      const error = err as AxiosError<{ message?: string }>;
+      throw new Error(error.response?.data.message || error.message);
+    }
+  }
+);
+
 export const DelectDocumentStogeAction = createAsyncThunk<string, number>(
   "DocumentSlice/DelectDocumentStogeAction",
   async (id: number) => {
@@ -167,11 +180,11 @@ export const DelectDocumentStogeAction = createAsyncThunk<string, number>(
 //   }
 // );
 
-export const getAllDocumentsAction = createAsyncThunk<any>(
+export const getAllDocumentsAction = createAsyncThunk<any, number>(
   "documents/getAllDocuments",
-  async () => {
+  async (size: number) => {
     try {
-      const response = await GetAllDocuments();
+      const response = await GetAllDocuments(size);
       return response;
     } catch (error: any) {
       throw Error(error.message);
@@ -331,6 +344,9 @@ export const DocumentSlice = createSlice({
       .addCase(DelectDocumentStogeAction.pending, (state) => {
         state.loading = true;
       })
+      .addCase(SaveDocumentStogeAction.pending, (state) => {
+        state.loading = true;
+      })
       // .addCase(GetDocumentStogeAction.fulfilled, (state, action) => {
       //   state.loading = false;
       //   state.informationDocument = action.payload;
@@ -351,10 +367,19 @@ export const DocumentSlice = createSlice({
         state.error = action.payload;
         toast.success("Xóa tài liệu thanh công");
       })
+      .addCase(SaveDocumentStogeAction.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.success("Đã lưu tài liệu thanh công");
+      })
       // .addCase(GetDocumentStogeAction.rejected, (state, action) => {
       //   state.loading = false;
       //   state.error = action.error.message || "Get Document Stoge Failed";
       // })
+      .addCase(SaveDocumentStogeAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Lưu tài liệu thất bại";
+      })
       .addCase(GetDocumentSizeAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Get Document Failed";

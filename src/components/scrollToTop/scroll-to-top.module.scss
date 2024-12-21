@@ -1,0 +1,36 @@
+.button-scroll-top{
+    position: fixed;
+    bottom: 7%;
+    right: 5%;
+    background-color: #dc4342;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    transition: all 0.25s ease-in-out;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    &>svg{
+        width: 40px;
+        height: 40px;
+        margin: 0 auto;
+        color: var(--text-main-color);
+    }
+    &:hover{
+        background-color: #dc4242cf;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .button-scroll-top{
+        width: 40px;
+        height: 40px;
+        &>svg{
+            width: 20px;
+            height: 20px;
+        }
+    }
+}

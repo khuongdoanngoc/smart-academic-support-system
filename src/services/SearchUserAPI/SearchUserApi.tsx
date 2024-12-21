@@ -25,13 +25,7 @@ export interface SearchViewUserInterface {
 export const SearchUserAPI = async (name: string,pageSize:number =5,pageNum:number=0) => {
   try {
     const response = await axiosInstance.get<SearchInterface>(
-      `user-search/search-by-name?name=${name}`,
-      {
-        params: {
-          pageSize,
-          pageNum
-        }
-      }
+      `user-search/search-by-name?name=${name}&pageSize=${pageSize}&pageNum=${pageNum}`
     );
     return response;
   } catch (err: unknown) {

@@ -1,0 +1,59 @@
+.support-banner {
+    border: 0.5px solid #00000080;
+    box-shadow: 0px 0px 3px 3px #00000040;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: fit-content;
+    border-radius: 20px;
+    box-sizing: border-box;
+    & > div {
+        padding: 0 58px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        & > .title {
+            display: flex;
+            align-items: center;
+            & > img {
+                width: 86px;
+                height: 86px;
+            }
+
+            & > h2 {
+                width: 468px;
+                font-size: 28px;
+                font-weight: 600;
+                line-height: 34.13px;
+                color: var(--button-background-color);
+                text-align: center;
+            }
+        }
+        & > .banner-form {
+            display: flex;
+            align-items: center;
+            gap: 23px;
+            & > input {
+                width: 400px;
+                border: 0.5px solid #00000080;
+                box-shadow: 0px 0px 5px 2px #00000040;
+                font-family: var(--font-family-main);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 17.07px;
+                text-align: left;
+                padding: 11px;
+                border-radius: 10px;
+                transition: 0.3s ease;
+            }
+            & > input:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #b3000080;
+            }
+        }
+    }
+    & > img {
+        width: 196px;
+        height: 196px;
+    }
+}

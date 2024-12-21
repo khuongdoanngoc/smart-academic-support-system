@@ -6,9 +6,7 @@ import { IViewProfile } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice"
 
 export const FollowAuthorApi=async(email:string)=>{
   try {
-    const response = await axiosInstance.post(`/follow/follow-by-email${email}`,null,{
-      params:{email}
-    })
+    const response = await axiosInstance.post(`/follow/follow-by-email?email=${email}`,null)
     return response
   } catch (err:unknown) {
     const error= err as AxiosError<{message?:string}>
@@ -19,7 +17,7 @@ export const FollowAuthorApi=async(email:string)=>{
 
 export const UnFollowAuthorApi=async(email:string)=>{
   try {
-    const response = await axiosInstance.delete(`/follow/unfollow-by-email${email}`)
+    const response = await axiosInstance.delete(`/follow/unfollow-by-email?email=${email}`)
     return response
   } catch (err:unknown) {
     const error= err as AxiosError<{message?:string}>

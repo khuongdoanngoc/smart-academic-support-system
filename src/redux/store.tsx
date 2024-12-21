@@ -6,6 +6,8 @@ import NoticatonReducer from "./Notication/NoticationSlice";
 import ChatBotReducer from "./ChatBotSlice/ChatBotSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import SearchReducer from "./SearchSlice/searchSlice";
+import FolderReducer from "./FolderSlice/folderSlice";
+
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 import EditProfileReducer from "./EditProfileSlice/EditProfileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
@@ -28,6 +30,7 @@ const store = configureStore({
     profilePersonal: profilePersonalReducer,
     profileDashBoard: dashBoardReducer,
     search: SearchReducer,
+    folder: FolderReducer,
   },
 });
 

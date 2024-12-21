@@ -105,6 +105,7 @@
         }
         & > .docs-list {
             width: 100%;
+            min-width: 850px;
             border-radius: 20px;
             border: 1px solid #00000080;
             position: relative;
@@ -138,6 +139,8 @@
                         font-size: 16px;
                         font-weight: 600;
                         line-height: 19.5px;
+                        width: 600px;
+                        word-break: break-word;
                     }
                     & > .actions {
                         display: flex;
@@ -149,6 +152,17 @@
                             cursor: pointer !important;
                         }
                     }
+                }
+                & > .not-found {
+                    padding: 18px 50px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #dc4342;
+                    font-size: 16px;
+                    font-weight: 600;
+                    line-height: 19.5px;
+                    width: 100%;
                 }
             }
         }

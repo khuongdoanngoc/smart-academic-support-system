@@ -1,9 +1,10 @@
-import { Outlet, useRoutes } from "react-router-dom";
+import { Navigate, Outlet, useRoutes } from "react-router-dom";
 import Layout from "../layouts";
 import HomePage from "../pages/Home";
 import DocumentPage from "../pages/Document";
 import { DocumentLayout } from "../components/DocumentLayout";
-import SupportPage from "../pages/Support";
+// import SupportPage from "../pages/Support";
+// import FAQDetailPage from "../pages/FAQDetail";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
 import { ChangePassWord, ProfileAuthor, Register, UploadFile } from "../pages";
@@ -27,6 +28,7 @@ import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
 import UserInformation from "../pages/Admin/UserInformation";
 import { EditDocumentComponents } from "../sections/EditDocument/components";
+import CommingSoonPage from "../pages/CommingSoon";
 export default function Router() {
   const routes = useRoutes([
     {
@@ -47,6 +49,27 @@ export default function Router() {
         { path: "new-password", element: <NewPassword />, index: true },
       ],
     },
+    // {
+    //   path: "/document",
+    //   element: (
+    //     <DocumentLayout>
+    //       <Outlet />
+    //     </DocumentLayout>
+    //   ),
+    //   children: [
+    //     { path: "support", element: <SupportPage /> },
+    //     { path: "support/:id", element: <FAQDetailPage /> },
+    //     {
+    //       path: "*",
+    //       element: <Navigate to="/document/coming-soon" replace />,
+    //     },
+    //     {
+    //       path: "coming-soon",
+    //       element: <CommingSoonPage />,
+    //       index: true,
+    //     },
+    //   ],
+    // },
     {
       path: "/document",
       element: (
@@ -59,7 +82,7 @@ export default function Router() {
       children: [
         { index: true, element: <DocumentPage /> },
         { path: "directory", element: <Directory /> },
-        { path: "support", element: <SupportPage /> },
+        // { path: "support", element: <SupportPage /> },
         { path: "ai-support", element: <AISupportPage /> },
         {
           path: "upload-file",
@@ -83,6 +106,7 @@ export default function Router() {
         },
         {
           path: ":majorSlug/:folderSlug/id",
+          // path: ":id",
           element: <DocumentDetailPage />,
         },
         {
@@ -162,6 +186,16 @@ export default function Router() {
         },
       ],
     },
+    {
+      path: "*",
+      element: <Navigate to="/404" replace />,
+    },
+    {
+      path: "/404",
+      element: <CommingSoonPage />,
+      index: true,
+    },
   ]);
+
   return routes;
 }

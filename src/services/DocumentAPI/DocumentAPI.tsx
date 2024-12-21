@@ -13,6 +13,8 @@ export interface GetDocument {
   title: string;
   filePath: string;
 }
+import { DocumentByAccountRequest } from "../../redux/DocumentSlice/InterfaceResponse";
+import { DocumentDtos } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
 
 export const GetDocumentByID = async (id: number) => {
   try {
@@ -23,12 +25,27 @@ export const GetDocumentByID = async (id: number) => {
       throw new Error(error.message);
     }
   }
+  // try {
+  //   const res = await axiosInstance.get(`/document/${id}`);
+  //   return res;
+  // } catch (error: any) {
+  //   if (error) {
+  //     throw new Error(error.message);
+  //   }
+  // }
 };
 
-export const GetAllDocuments = async () => {
+// export const GetAllDocuments = async () => {
+//   try {
+//     const res = await axiosInstance.get("/document/all");
+//     return res;
+//   } catch (error: any) {
+//     throw new Error(error.message);
+//   }
+export const GetAllDocuments = async (size: number) => {
   try {
-    const res = await axiosInstance.get("/document/all");
-    return res;
+    const res: any = await axiosInstance.get("/document/all" + "?size=" + size);
+    return res.content;
   } catch (error: any) {
     throw new Error(error.message);
   }
@@ -61,6 +78,19 @@ export const GetDocumentByFolder = async (folder: string) => {
   }
 };
 
+export const FindAllDocumentByEmailAPI = async (
+  data: DocumentByAccountRequest
+) => {
+  try {
+    const res = await axiosInstance.get(
+      `/document/account?email=${data.email}&pageNum=${data.pageNum}&pageSize=${data.pageSize}`
+    );
+    return res as unknown as DocumentDtos[];
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 // export const GetDocumentByFalcuty = async (falcuty: string) => {
 //     try {
 //         const res = await axiosInstance.get(baseUrl + `/search/${falcuty}`);
@@ -79,20 +109,20 @@ export const GetDocumentByFalcuty = async (falcuty: string) => {
   }
 };
 
-export const GetDocumentStogeAPI = async (
-  size: number = 3,
-  page: number = 3
-) => {
-  try {
-    const response = await axiosInstance.get<any>(`document/all`, {
-      params: { page, size },
-    });
-    return response;
-  } catch (err: unknown) {
-    const error = err as AxiosError<{ message?: string }>;
-    throw new Error(error.response?.data.message || error.message);
-  }
-};
+// export const GetDocumentStogeAPI = async (
+//   size: number = 3,
+//   page: number = 3
+// ) => {
+//   try {
+//     const response = await axiosInstance.get<any>(`document/all`, {
+//       params: { page, size },
+//     });
+//     return response;
+//   } catch (err: unknown) {
+//     const error = err as AxiosError<{ message?: string }>;
+//     throw new Error(error.response?.data.message || error.message);
+//   }
+// };
 
 export const GetDocumentSizeAPI = async (
   pageNum: number,
@@ -122,6 +152,17 @@ export const DownloadDocumentAuthorApi = async (docId: number) => {
     throw new Error(error.response?.data?.message || error.message);
   }
 };
+// export const DownloadDocumentAuthorApi = async (docId: number) => {
+//   try {
+//     const response = await axiosInstance.get<{ filePath: string }>(
+//       `/download/${docId}`
+//     );
+//     return response;
+//   } catch (err: unknown) {
+//     const error = err as AxiosError<{ message?: string }>;
+//     throw new Error(error.response?.data.message || error.message);
+//   }
+// };
 
 export const SaveDownLoadHistoryApi = async (
   username: string,
@@ -144,7 +185,48 @@ export const SaveDownLoadHistoryApi = async (
     throw new Error(error.response?.data.message || error.message);
   }
 };
+// export const SaveDownLoadHistoryApi = async (
+//     fullname: string,
+//     docId: number
+// ) => {
+//     try {
+//         const res = await axiosInstance.post(`/history/track`, {
+//             fullname,
+//             docId,
+//         });
+//         return res;
+//     } catch (err: unknown) {
+//         const error = err as AxiosError<{ message?: string }>;
+//         throw new Error(error.response?.data.message || error.message);
+//     }
+// };
 
+export const SaveDocummentStogeAPI = async (docId: number) => {
+  try {
+    const res = await axiosInstance.post(`/saved-documents/save`, null, {
+      params: { docId },
+    });
+    return res;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.response?.data.message || error.message);
+  }
+};
+
+export const GetDocumentStogeAPI = async (
+  page: number = 0,
+  size: number = 10
+) => {
+  try {
+    const response = await axiosInstance.get(`document/all`, {
+      params: { page, size },
+    });
+    return response;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.response?.data.message || error.message);
+  }
+};
 export const DelectDocumentStoge = async (docId: number) => {
   try {
     const res = await axiosInstance.delete(`/saved-documents/delete/${docId}`);
@@ -154,3 +236,12 @@ export const DelectDocumentStoge = async (docId: number) => {
     throw new Error(error.response?.data.message || error.message);
   }
 };
+// export const DelectDocumentStoge = async (id: number) => {
+//     try {
+//         const res = await axiosInstance.delete(`/document/${id}`);
+//         return res;
+//     } catch (err: unknown) {
+//         const error = err as AxiosError<{ message?: string }>;
+//         throw new Error(error.response?.data.message || error.message);
+//     }
+// };

@@ -8,6 +8,7 @@ import { Outstanding } from "../Outstanding";
 import styles from "./HomeView.module.scss";
 import classnames from "classnames/bind";
 import { useGlobalContextLoin } from "../../../layouts/useContext";
+import { ScrollToTop } from "../../../components/scrollToTop";
 
 const cx = classnames.bind(styles);
 export default function HomeView() {
@@ -41,6 +42,7 @@ export default function HomeView() {
       <Outstanding />
       <News />
       <Contact />
+      <ScrollToTop />
     </main>
   );
 }

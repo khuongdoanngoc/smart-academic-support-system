@@ -6,12 +6,11 @@ import ImportLight from "../../../assets/images/Import_light.png";
 import Delect from "../../../assets/images/Frame 8819.png";
 import Share from "../../../assets/images/fi_share-2.png";
 import {
-  debounce,
   Pagination,
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../../redux/store";
 import {
@@ -107,16 +106,16 @@ const DocumentStorageComponents = () => {
 
   const itemsPerPage = 9;
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const debounceSearch = useCallback(
-    debounce(
-      (page: number) => dispatch(GetDocumentStogeAction({ page })),
-      1000
-    ),
-    [dispatch]
-  );
+  // const debounceSearch = useCallback(
+  //   debounce(
+  //     (page: number) => dispatch(GetDocumentStogeAction({ page })),
+  //     1000
+  //   ),
+  //   [dispatch]
+  // );
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
-    debounceSearch(itemsPerPage);
+    dispatch(GetDocumentStogeAction({ page: value }));
   };
 
   const { documentStoge } = useSelector((state: RootState) => state.document);

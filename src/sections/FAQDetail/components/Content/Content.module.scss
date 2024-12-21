@@ -1,0 +1,36 @@
+.container{
+    margin: 2rem 0;
+    &>.back-button{
+        margin-bottom: 2rem;
+    }
+    &>.content{
+        width: auto;
+        border: 1px solid rgba(0,0,0,0.5);
+        padding: 15px 20px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        &>.title{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            &>hr{
+                width: 50px;
+            }
+        }
+        &>.wrapper{
+            display: grid;
+            grid-template-columns: 3fr 7fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            &>.image{
+                width: 300px;
+                &>img{
+                    width: 100%;
+                }
+            }
+            &>.paragraph{
+                font-size: 20px;
+            }
+        }
+    }
+}

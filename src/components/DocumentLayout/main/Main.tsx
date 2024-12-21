@@ -10,14 +10,22 @@ interface PropsType {
     children: React.ReactNode;
 }
 
+const public_endpoint: string[] =[
+    "/document",
+    "/document/support",
+    "/document/support/:id"
+]
+
 export default function Main(props: PropsType) {
-  const location = useLocation();
-  const { loading, isLogined } = useAppSelector(
-    (state) => state.authentication
-  );
-  const [loadingElement, setLoadingElement] = useState(false);
-  const regex = /^\/document\/[^\\/]+\/[^\\/]+\/\d+$/;
-  const [isOpen, setIsOpen] = useState<boolean>(!regex.test(location.pathname));
+    const location = useLocation();
+    const { loading, isLogined } = useAppSelector(
+        (state) => state.authentication
+    );
+    const [loadingElement, setLoadingElement] = useState(false);
+    const regex = /^\/document\/\d+$/;
+    const [isOpen, setIsOpen] = useState<boolean>(
+        !regex.test(location.pathname)
+    );
 
     const hasOverlay = regex.test(location.pathname) && isOpen;
 
@@ -44,6 +52,11 @@ export default function Main(props: PropsType) {
     }
   }, [isLogined,location.pathname]);
 
+  console.log(loading);
+  console.log(loadingElement);
+  console.log(location.pathname);
+  
+
     return (
         <>
             <div style={{ marginTop: "100px", width: "100%", display: "flex" }}>
@@ -59,7 +72,7 @@ export default function Main(props: PropsType) {
                 )}
 
                 {/* {location.pathname !== "/document/uploadfile" && <Sidebar />} */}
-                {loading || loadingElement ? (
+                {(loading || loadingElement || !public_endpoint.includes(location.pathname) ) ? (
                     <Loader height={100} />
                 ) : (
                     <div
@@ -71,6 +84,14 @@ export default function Main(props: PropsType) {
                         {props.children}
                     </div>
                 )}
+                {/* <div
+                        style={{
+                            width: "100%",
+                            ...(hasOverlay ? { marginLeft: "80px" } : {}),
+                        }}
+                        className="main">
+                        {props.children}
+                    </div> */}
             </div>
         </>
     );

@@ -18,7 +18,21 @@ const fakeSubjects = [
     { title: "Bóng đá sơ cấp", files: 30 },
 ];
 
-export default function Subjects() {
+interface IFolder {
+    folderId: number;
+    folderName: string;
+    description: string;
+    accountEmail: null;
+    documentCount: number;
+    subjectCode: string;
+    ownerName: string;
+}
+
+interface IFolders {
+    folders: IFolder[];
+}
+
+export default function Subjects({ folders }: IFolders) {
     const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     const [currentPage, setCurrentPage] = useState<string>(alphabet[0]);
 
@@ -27,14 +41,22 @@ export default function Subjects() {
     };
 
     const filteredDataList = (data: any[]) => {
-        return data.filter((item) =>
-            item.title.toLowerCase().startsWith(currentPage.toLowerCase())
-        );
+        const newFolders = [...data];
+        if (newFolders) {
+            return newFolders.filter((item) =>
+                item.folderName
+                    .toLowerCase()
+                    .startsWith(currentPage.toLowerCase())
+            );
+        }
+        return [];
     };
+
+    console.log(folders);
 
     return (
         <div className={cx("subjects")}>
-            <h2>Môn học</h2>
+            <h2>Thư mục</h2>
             <Pagination
                 count={alphabet.length}
                 defaultPage={1}
@@ -54,14 +76,14 @@ export default function Subjects() {
             />
             {/* subjects */}
             <div>
-                {filteredDataList(fakeSubjects).map((data, index) => (
+                {filteredDataList(folders).map((data, index) => (
                     <div className={cx("subject")} key={index}>
                         <DescriptionIcon
                             sx={{ width: "35px", height: "35px" }}
                         />
                         <div>
-                            <h3>{data.title}</h3>
-                            <span>{data.files} tệp</span>
+                            <h3>{data.folderName}</h3>
+                            <span>{data.documentCount} tệp</span>
                         </div>
                     </div>
                 ))}

@@ -36,7 +36,7 @@ export default function AISection() {
     }, []);
 
     return (
-        <div className={cx("ai-section")}>
+        <div id="chatbot" className={cx("ai-section")}>
             <Head />
             <div ref={sectionRef} className={cx("content")}>
                 <motion.img
