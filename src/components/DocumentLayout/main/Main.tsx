@@ -10,11 +10,6 @@ interface PropsType {
     children: React.ReactNode;
 }
 
-const public_endpoint: string[] =[
-    "/document",
-    "/document/support",
-    "/document/support/:id"
-]
 
 export default function Main(props: PropsType) {
     const location = useLocation();
@@ -54,7 +49,6 @@ export default function Main(props: PropsType) {
 
   console.log(loading);
   console.log(loadingElement);
-  console.log(location.pathname);
   
 
     return (
@@ -72,7 +66,7 @@ export default function Main(props: PropsType) {
                 )}
 
                 {/* {location.pathname !== "/document/uploadfile" && <Sidebar />} */}
-                {(loading || loadingElement || !public_endpoint.includes(location.pathname) ) ? (
+                {(loading || loadingElement ) ? (
                     <Loader height={100} />
                 ) : (
                     <div
