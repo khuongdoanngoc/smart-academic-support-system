@@ -1,5 +1,7 @@
 import styles from "./Footer.module.scss";
 import classnames from "classnames/bind";
+import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
+import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 
 const cx = classnames.bind(styles);
 export default function Footer() {
@@ -7,56 +9,78 @@ export default function Footer() {
         <footer>
             <div className={cx("footer-content")}>
                 <div className={cx("footer-top")}>
-                    <div className={cx("document")}>
-                        <h1>DUY TAN</h1>
-                        <h2>DOCUMENT</h2>
-                        <p>
-                            Chúng tôi là một kho tàng tài liệu trực tuyến cung
-                            cấp một loạt các tài liệu, bải giảng đa dạng và chất
-                            lượng, từ marketing, kinh doanh, CNTT, thiết kế đến
-                            kỹ năng sống và nhiều ngành, lĩnh vực khác. Với
-                            lượng tài liệu phong phú từ các nguồn uy tín, chúng
-                            tôi cam kết mang đến cho bạn những tài liệu chất
-                            lượng cao và mang tính thực tiễn, giúp bạn đạt hiệu
-                            quả cao trong học tập hơn.
-                        </p>
+                    <div className={cx("list-items")}>
+                        <h2>Product</h2>
+                        <a href="#">Landing page</a>
+                        <a href="#">Popup Builder</a>
+                        <a href="#">Web-design</a>
+                        <a href="#">Content</a>
+                        <a href="#">Integrations</a>
                     </div>
                     <div className={cx("list-items")}>
-                        <h2>DANH MỤC</h2>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
-                        <a href="#">Sub content 1</a>
+                        <h2>Use Cases</h2>
+                        <a href="#">Web-designers</a>
+                        <a href="#">Marketers</a>
+                        <a href="#">Small Business</a>
+                        <a href="#">Website Builder</a>
                     </div>
                     <div className={cx("list-items")}>
-                        <h2>LIÊN KẾT</h2>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
-                        <a href="#">Liên kết web 1</a>
+                        <h2>Resources</h2>
+                        <a href="#">Academy</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Themes</a>
+                        <a href="#">Hosting</a>
+                        <a href="#">Developers</a>
+                        <a href="#">Support</a>
+                    </div>
+                    <div className={cx("list-items")}>
+                        <h2>Company</h2>
+                        <a href="#">About Us</a>
+                        <a href="#">Careers</a>
+                        <a href="#">FAQs</a>
+                        <a href="#">Teams</a>
+                        <a href="#">Contact Us</a>
+                    </div>
+                    <div className={cx("list-items","contact")}>
+                        <h2>Contact Us</h2>
+                        <div className={cx("box")}>
+                            <FmdGoodOutlinedIcon />
+                            <p>
+                                <span>254 Nguyen Van Linh</span>
+                                <span>Thanh Khe district, Da Nang</span>
+                            </p>
+                        </div>
+                        <div className={cx("box")}>
+                            <MailOutlineOutlinedIcon />
+                            <p>
+                                <span>c1se.07@gmail.com</span>
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <hr />
+                <div className={cx("social-icons")}>
+                    <h3>Follow us</h3>
+                    <div className={cx("list-icon")}>
+                        <a href="#"><img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="facebook" /></a>
+                        <a href="#"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="twitter" /></a>
+                        <a href="#"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="instagram" /></a>
+                        <a href="#"><img src="https://img.icons8.com/?size=100&id=kBCrQMzpQDLQ&format=png&color=000000" alt="linkedin" /></a>
+                        <a href="#"><img src="https://img.icons8.com/fluent/48/000000/youtube-play.png" alt="youtube" /></a>
+                        <a href="#"><img src="https://img.icons8.com/fluent/48/000000/github.png" alt="github" /></a>
+                    </div>
+                </div>
                 <div className={cx("footer-bottom")}>
                     <p>
                         Copyright © 2024 - Bản quyền thuộc về nhóm đồ án
                         Capstone1 C1SE.07
                     </p>
-                    <p>
-                        Địa chỉ: 254 Nguyễn Văn Linh, Quận Thanh Khê - Tp. Đà
-                        Nẵng
-                    </p>
-                    <p>Điện thoại: (+84) xxx.xxxxxx - (+84) xxx.xxxxxx</p>
+                    <div className={cx("policy")}>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Use</a>
+                        <a href="#">Sales and Refunds</a>
+                        <a href="#">Legal</a>
+                        <a href="#">Site Map</a>
+                    </div>
                 </div>
             </div>
         </footer>

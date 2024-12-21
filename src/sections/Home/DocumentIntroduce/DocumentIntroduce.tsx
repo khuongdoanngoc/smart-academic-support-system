@@ -11,9 +11,11 @@ import { Button } from "../../../components/Button";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { slideInLeft, slideInRight } from "../../../utils/animations";
+import { useNavigate } from "react-router-dom";
 export default function DocumentIntroduce() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const sectionRef = useRef(null);
+  const navigate= useNavigate();
 
   useEffect(() => {
     const options = {
@@ -40,7 +42,7 @@ export default function DocumentIntroduce() {
   }, []);
 
   return (
-    <div ref={sectionRef} className={cx("document-introduce-wrapper")}>
+    <div id="introduction" ref={sectionRef} className={cx("document-introduce-wrapper")}>
       <div>
         <motion.div
           variants={slideInLeft}
@@ -116,6 +118,9 @@ export default function DocumentIntroduce() {
             fontSize={16}
             paddingY={23}
             paddingX={76}
+            onClick={()=>{
+              navigate("/document");
+            }}
           />
         </motion.div>
       </div>

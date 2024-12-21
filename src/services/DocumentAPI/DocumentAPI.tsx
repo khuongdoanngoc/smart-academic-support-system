@@ -2,6 +2,8 @@
 
 import { AxiosError } from "axios";
 import { axiosInstance } from "../../utils/AxiosInterceptor";
+import { DocumentByAccountRequest } from "../../redux/DocumentSlice/InterfaceResponse";
+import { DocumentDtos } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
 
 export const GetDocumentByID = async (id: number) => {
     try {
@@ -50,6 +52,15 @@ export const GetDocumentByFolder = async (folder: string) => {
         throw new Error(error.message);
     }
 };
+
+export const FindAllDocumentByEmailAPI= async (data:DocumentByAccountRequest)=>{
+    try{
+        const res= await axiosInstance.get(`/document/account?email=${data.email}&pageNum=${data.pageNum}&pageSize=${data.pageSize}`);
+        return res as unknown as DocumentDtos[];
+    }catch(error: any) {
+        throw new Error(error.message);
+    }
+}
 
 
 // export const GetDocumentByFalcuty = async (falcuty: string) => {

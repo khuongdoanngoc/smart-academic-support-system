@@ -196,9 +196,9 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
                 {docItems.map((item, index) => (
                     <Link
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active",`${(item.pathAcitve==="/document/notication" && numberOfNotificationsUnRead>0)? "brings": ""}`)}
+                        className={cx(pathName === item.pathAcitve && "active",`${(item.pathAcitve==="/document/notification" && numberOfNotificationsUnRead>0)? "brings": ""}`)}
                         to={item.pathAcitve}>
-                        {item.pathAcitve==="/document/notication"?(
+                        {item.pathAcitve==="/document/notification"?(
                             <Badge badgeContent={numberOfNotificationsUnRead>0?numberOfNotificationsUnRead:0} color="error">
                                 <item.icon  sx={{ width: "22px", height: "22px"}} />
                             </Badge>

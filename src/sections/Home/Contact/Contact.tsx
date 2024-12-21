@@ -42,7 +42,7 @@ export default function Contact() {
     }, []);
 
     return (
-        <div ref={sectionRef} className={cx("contact")}>
+        <div id="contact" ref={sectionRef} className={cx("contact")}>
             <div>
                 <h1>THÔNG TIN LIÊN HỆ</h1>
                 <div className={cx("contact-content")}>

@@ -138,6 +138,7 @@ export const DelectDocumentStogeAction = createAsyncThunk<string, number>(
 //   }
 // );
 
+
 export const getAllDocumentsAction = createAsyncThunk<any>(
   "documents/getAllDocuments",
   async () => {
@@ -149,6 +150,7 @@ export const getAllDocumentsAction = createAsyncThunk<any>(
     }
   }
 );
+
 
 // Document Searches
 export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(

@@ -59,7 +59,7 @@ export default function News() {
     }, []);
 
     return (
-        <div ref={sectionRef} className={cx("news")}>
+        <div id="news" ref={sectionRef} className={cx("news")}>
             <div>
                 <div className={cx("head")}>
                     <motion.div

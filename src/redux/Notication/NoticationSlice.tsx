@@ -138,7 +138,12 @@ const NoticationSlice = createSlice({
   initialState,
   reducers: {
     updateNotification: (state, action) => {
-      state.notificationList = [...state.notificationList, action.payload];
+      if(state.notificationList.length > 0) {
+        state.notificationList[0]=action.payload;
+      }else{
+        state.notificationList = [...state.notificationList, action.payload];
+      }
+      
     },
     updateNumberOfNotificationsAll: (state, action) => {
       state.numberOfNotifications = action.payload;

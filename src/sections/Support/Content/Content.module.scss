@@ -33,6 +33,9 @@
             gap: 14px;
             padding: 13px;
             cursor: pointer;
+            &>img{
+                width: 40px;
+            }
             & > h3 {
                 font-size: 20px;
                 font-weight: 600;

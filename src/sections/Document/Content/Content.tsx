@@ -13,7 +13,7 @@ import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlic
 
 export default function Content() {
     const dispatch = useAppDispatch();
-    const documents = useAppSelector((state) => state.document.Documents);
+    // const documents = useAppSelector((state) => state.document.Documents);
 
     useEffect(() => {
         dispatch(getAllDocumentsAction());
@@ -25,7 +25,7 @@ export default function Content() {
             <div className={cx("central")}>
                 <div className={cx("category")}>
                     {staticDocs.map((data, index) => (
-                        <Docs key={index} title={data.title} docs={documents} />
+                        <Docs key={index} title={data.title} docs={[]} />
                     ))}
                 </div>
                 <Statistics />

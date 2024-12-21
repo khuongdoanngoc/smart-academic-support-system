@@ -5,14 +5,24 @@ import JsCookie from "js-cookie"
 import { useAppDispatch, useAppSelector } from "../redux/store";
 // import { updateNotification } from "../redux/Notication/NoticationSlice";
 import { useEffect } from "react";
+import { updateNotification, updateNumberOfNotificationsAll, updateNumberOfNotificationsUnRead } from "../redux/Notication/NoticationSlice";
+
+type NotificationResponse={
+  notificationId: number;
+  message: string;
+  type: string;
+  isRead: boolean;
+  createdAt: string;
+}
 
 let stompClient: Client; 
 export const WebsocketConnection: React.FC = () => {
     const dispatch= useAppDispatch();
     const {accountId}= useAppSelector(state=>state.authentication);
+    const {numberOfNotificationsUnRead,numberOfNotifications} = useAppSelector(state=>state.notication);
     const token= JsCookie.get("accessToken");
     useEffect(() => {
-      if (!token) {
+      if (!token || accountId===null) {
         console.error("No access token found");
         return;
       }
@@ -32,15 +42,23 @@ export const WebsocketConnection: React.FC = () => {
         console.log("Connected to WebSocket!");
   
         stompClient?.subscribe(
-          `/user/${accountId}/queue/notifications`,
+          `/user/${accountId}/queue/notifications-with-follow`,
           (message) => {
-            console.log("Received:", message.body);
-            // dispatch(
-            //   updateNotification({
-            //     message: message.body,
-            //     type: "NOTIFICATION",
-            //   })
-            // );
+            console.log("Received file upload notification:", message.body);
+            const data:NotificationResponse= JSON.parse(message.body);
+            dispatch(updateNotification(data));
+            dispatch(updateNumberOfNotificationsUnRead(numberOfNotificationsUnRead+1));
+            dispatch(updateNumberOfNotificationsAll(numberOfNotifications+1));
+          }
+        );
+        stompClient?.subscribe(
+          `/user/${accountId}/queue/notifications-with-upload`,
+          (message) => {
+            console.log("Received file upload notification:", message.body);
+            const data:NotificationResponse= JSON.parse(message.body);
+            dispatch(updateNotification(data));
+            dispatch(updateNumberOfNotificationsUnRead(numberOfNotificationsUnRead+1));
+            dispatch(updateNumberOfNotificationsAll(numberOfNotifications+1));
           }
         );
       };
@@ -56,14 +74,6 @@ export const WebsocketConnection: React.FC = () => {
         stompClient?.deactivate();
         console.log("WebSocket connection closed");
       };
-    }, [dispatch, accountId, token]);
+    }, [dispatch, accountId, token, numberOfNotificationsUnRead, numberOfNotifications]);
     return null;
 }
-
-// export const Disconnect = () => {
-//     if(stompClient){
-//         stompClient.deactivate();
-//         console.log('Disconnected from WebSocket');
-//     }
-    
-// }

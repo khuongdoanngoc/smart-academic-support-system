@@ -11,3 +11,9 @@ export interface DocumentResponse {
     updated_at: string;
     folder_id: number;
 }
+
+export interface DocumentByAccountRequest{
+    email: string;
+    pageSize: number;
+    pageNum: number;
+}
