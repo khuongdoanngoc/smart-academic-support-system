@@ -66,6 +66,7 @@
             & > img {
                 width: 100%;
                 border-radius: 5px;
+                cursor: pointer;
             }
 
             & > h3 {
@@ -74,6 +75,7 @@
                 line-height: 19.5px;
                 text-align: left;
                 color: #b40e0e;
+                cursor: pointer;
             }
 
             & > span {
@@ -87,7 +89,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-
+                margin-top: auto;
                 & > span {
                     font-size: 12px;
                     font-weight: 400;

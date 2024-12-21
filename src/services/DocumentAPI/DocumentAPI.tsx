@@ -10,17 +10,18 @@ export const GetDocumentByID = async (id: number) => {
         const res = await axiosInstance.get(`/document/${id}`);
         return res;
     } catch (error: any) {
-        if(error){
+        if (error) {
             throw new Error(error.message);
         }
-        
     }
 };
 
-export const GetAllDocuments = async () => {
+export const GetAllDocuments = async (size: number) => {
     try {
-        const res = await axiosInstance.get("/document/all");
-        return res;
+        const res: any = await axiosInstance.get(
+            "/document/all" + "?size=" + size
+        );
+        return res.content;
     } catch (error: any) {
         throw new Error(error.message);
     }
@@ -81,49 +82,55 @@ export const GetDocumentByFalcuty = async (falcuty: string) => {
     }
 };
 
-export const GetDocumentStogeAPI = async(pageSize:number=5,pageNum:number=0)=>{
+export const GetDocumentStogeAPI = async (
+    pageSize: number = 5,
+    pageNum: number = 0
+) => {
     try {
-        const response = await axiosInstance.get<any>(`document/all`,{
-            params:{pageSize,pageNum}
-        })
-        return response
-    } catch (err:unknown) {
-        const error = err as AxiosError<{message?:string}>
-        throw new Error(error.response?.data.message || error.message)
-        
+        const response = await axiosInstance.get<any>(`document/all`, {
+            params: { pageSize, pageNum },
+        });
+        return response;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
     }
-}
+};
 
-export const DownloadDocumentAuthorApi=async(docId:number)=>{
+export const DownloadDocumentAuthorApi = async (docId: number) => {
     try {
-      const response = await axiosInstance.get<{filePath:string}>(`/download/${docId}`)
-      return response
-    } catch (err:unknown) {
-      const error= err as AxiosError<{message?:string}>
-      throw new Error(error.response?.data.message || error.message)
+        const response = await axiosInstance.get<{ filePath: string }>(
+            `/download/${docId}`
+        );
+        return response;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
     }
-  }
+};
 
-export const SaveDownLoadHistoryApi= async (fullname:string,docId:number)=>{
+export const SaveDownLoadHistoryApi = async (
+    fullname: string,
+    docId: number
+) => {
     try {
-        const res = await axiosInstance.post(`/history/track`,{
+        const res = await axiosInstance.post(`/history/track`, {
             fullname,
-            docId
-        })
-        return res
-    } catch (err:unknown) {
-        const error = err as AxiosError<{message?:string}>
-        throw new Error(error.response?.data.message || error.message)
+            docId,
+        });
+        return res;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
     }
-}
+};
 
-
-export const DelectDocumentStoge = async(id:number)=>{
+export const DelectDocumentStoge = async (id: number) => {
     try {
         const res = await axiosInstance.delete(`/document/${id}`);
-        return res
-    } catch (err:unknown) {
-        const error = err as AxiosError<{message?:string}>
-        throw new Error(error.response?.data.message || error.message)
+        return res;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
     }
-}
+};

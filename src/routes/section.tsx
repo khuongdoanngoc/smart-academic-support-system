@@ -80,7 +80,7 @@ export default function Router() {
       children: [
         { index: true, element: <DocumentPage /> },
         { path: "directory", element: <Directory /> },
-        { path: "support", element: <SupportPage /> },
+        // { path: "support", element: <SupportPage /> },
         { path: "ai-support", element: <AISupportPage /> },
         {
           path: "upload-file",
@@ -99,7 +99,7 @@ export default function Router() {
           element: <Notification />,
         },
         {
-          path: ":majorSlug/:folderSlug/:id",
+          path: ":id",
           element: <DocumentDetailPage />,
         },
         {
@@ -176,5 +176,6 @@ export default function Router() {
       index: true,
     }
   ]);
+
   return routes;
 }

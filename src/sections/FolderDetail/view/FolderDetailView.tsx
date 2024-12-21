@@ -8,17 +8,60 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import EditICON from "../../../assets/images/icons/Editicon2.png";
 import DownICON from "../../../assets/images/icons/DownloadICON.png";
 import ShareICON from "../../../assets/images/icons/ShareICON.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../../components/Button";
+import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import {
+    getFolderById,
+    updateFolder,
+} from "../../../redux/FolderSlice/folderSlice";
+import { toast } from "react-toastify";
+
+const filterDocuments = (docs: any[] | undefined, searchValue: string) => {
+    if (!docs) return [];
+    return docs.filter((doc) => {
+        if (searchValue !== "") {
+            return doc.title
+                .toLowerCase()
+                .startsWith(searchValue.toLowerCase());
+        } else {
+            return doc;
+        }
+    });
+};
+
 export default function FolderDetailView() {
+    const { id }: any = useParams();
     const [folderName, setFolderName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
+    const data: any = useAppSelector((state) => state.folder.data);
+    const error: any = useAppSelector((state) => state.folder.error);
+
+    const dispatch = useAppDispatch();
+
     const handleEditFolder = () => {
         setIsUpdating(true);
     };
+
+    useEffect(() => {
+        dispatch(getFolderById(parseInt(id)));
+    }, []);
+
+    useEffect(() => {
+        setFolderName(data.folderName);
+    }, [data]);
+
+    useEffect(() => {
+        if (error) {
+            toast.error("Xảy ra lỗi trong quá trình cập nhật");
+        }
+    }, [error]);
+
+    const [filterDoc, setFilterDoc] = useState<string>("");
 
     const phase1Form = (
         <div className={cx("form")}>
@@ -36,18 +79,24 @@ export default function FolderDetailView() {
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Nhập loại thư mục"
+                    placeholder="Nhập mô tả thư mục"
                 />
             </div>
         </div>
     );
+
+    const handleUpdateFolder = (e: any) => {
+        e.preventDefault();
+        dispatch(updateFolder({ folderId: id, folderName, description }));
+        toast.success("Cập nhật thông tin thành công!");
+    };
 
     return (
         <div className={cx("folder-detail-view")}>
             <div className={cx("header")}>
                 <div className={cx("information")}>
                     <div className={cx("title")}>
-                        DTUDOCUMENT / <span>TÀI LIỆU/ “TÊN THƯ MỤC”</span>
+                        DTUDOCUMENT / <span>TÀI LIỆU/ “{data.folderName}”</span>
                     </div>
                     <div className={cx("content-container")}>
                         <FolderIcon
@@ -58,15 +107,15 @@ export default function FolderDetailView() {
                             }}
                         />
                         <div className={cx("content")}>
-                            <h3>“Tên thư mục tài liệu..........”</h3>
+                            <h3>“{data.folderName}”</h3>
                             <div className={cx("outstanding")}>
                                 <div>
                                     <DescriptionOutlinedIcon />
-                                    <span>123 tài liệu</span>
+                                    <span>{data.numberDoc} tài liệu</span>
                                 </div>
                                 <div>
                                     <PersonOutlineOutlinedIcon />
-                                    <span>Tên tác giả</span>
+                                    <span>{data.authorName}</span>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +140,9 @@ export default function FolderDetailView() {
                     <div className={cx("search-container")}>
                         <input
                             type="text"
-                            placeholder="Tìm tài liệu trong “Tên thư mục...”"
+                            value={filterDoc}
+                            onChange={(e) => setFilterDoc(e.target.value)}
+                            placeholder={`Tìm tài liệu trong “${data.folderName}”`}
                         />
                         <SearchOutlinedIcon className={cx("search-icon")} />
                     </div>
@@ -99,33 +150,50 @@ export default function FolderDetailView() {
             </div>
             {!isUpdating ? (
                 <div className={cx("body")}>
-                    <h3>TÀI LIỆU TRONG THƯ MỤC : “TÊN THƯ MỤC”</h3>
+                    <h3>TÀI LIỆU TRONG THƯ MỤC : “{data.folderName}”</h3>
                     <div className={cx("docs-list")}>
                         <div className={cx("list-head")}>
                             <h3>Tiêu đề tài liệu</h3>
                             <h3>Chức năng</h3>
                         </div>
                         <div className={cx("list-body")}>
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((value) => (
-                                <div key={value} className={cx("doc")}>
-                                    <div className={cx("doc-title")}>
-                                        <DescriptionOutlinedIcon />
-                                        Tiêu đề của tài liệu...Câu hỏi ôn tập -
-                                        CDIO CMU-2024...
-                                    </div>
-                                    <div className={cx("actions")}>
-                                        <button>
-                                            <img src={DownICON} alt="down" />
-                                        </button>
-                                        <button>
-                                            <img src={ShareICON} alt="share" />
-                                        </button>
-                                        <button>
-                                            <img src={EditICON} alt="edit" />
-                                        </button>
-                                    </div>
+                            {filterDocuments(data.documents, filterDoc).length >
+                            0 ? (
+                                filterDocuments(data.documents, filterDoc).map(
+                                    (value: any, index: number) => (
+                                        <div key={index} className={cx("doc")}>
+                                            <div className={cx("doc-title")}>
+                                                <DescriptionOutlinedIcon />
+                                                {value.title}
+                                            </div>
+                                            <div className={cx("actions")}>
+                                                <button>
+                                                    <img
+                                                        src={DownICON}
+                                                        alt="down"
+                                                    />
+                                                </button>
+                                                <button>
+                                                    <img
+                                                        src={ShareICON}
+                                                        alt="share"
+                                                    />
+                                                </button>
+                                                <button>
+                                                    <img
+                                                        src={EditICON}
+                                                        alt="edit"
+                                                    />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                )
+                            ) : (
+                                <div className={cx("not-found")}>
+                                    Not Found!
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                 </div>
@@ -136,7 +204,9 @@ export default function FolderDetailView() {
                         <button style={{ backgroundColor: "#827878" }}>
                             Quay lại
                         </button>
-                        <button style={{ backgroundColor: "#62d07a" }}>
+                        <button
+                            onClick={handleUpdateFolder}
+                            style={{ backgroundColor: "#62d07a" }}>
                             Xác nhận chỉnh sửa
                         </button>
                     </div>

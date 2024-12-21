@@ -3,15 +3,12 @@ import {
     CreateFolder,
     DeleteFolder,
     GetAllFolders,
+    GetFolderById,
     UpdateFolder,
 } from "../../services/FolderAPI/FolderAPI";
 
-interface IFolder {
-    folderName: string;
-    folderDescription: string;
-}
 
-const getAllFolders = createAsyncThunk<any>(
+export const getAllFolders = createAsyncThunk<any>(
     "folder/getAllFolders",
     async () => {
         const res = await GetAllFolders();
@@ -38,7 +35,15 @@ export const createFolder = createAsyncThunk<any, FolderCreateDTO>(
     }
 );
 
-const updateFolder = createAsyncThunk<any, FolderUpdateDTO>(
+export const getFolderById = createAsyncThunk<any, number>(
+    "folder/getFolderById",
+    async (id: number) => {
+        const res = await GetFolderById(id);
+        return res;
+    }
+);
+
+export const updateFolder = createAsyncThunk<any, FolderUpdateDTO>(
     "folder/updateFolder",
     async (params: {
         folderId: number;
@@ -97,6 +102,30 @@ const folderSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(updateFolder.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "An error occurred";
+            })
+            .addCase(getFolderById.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getFolderById.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getFolderById.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "An error occurred";
+            })
+            .addCase(getAllFolders.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllFolders.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getAllFolders.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "An error occurred";
             });

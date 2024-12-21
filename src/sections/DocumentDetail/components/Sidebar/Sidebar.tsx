@@ -6,30 +6,47 @@ import SchoolIcon from "@mui/icons-material/School";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Avatar from "../../../../assets/images/avatar.png";
 import FlagIcon from "@mui/icons-material/Flag";
-export default function Sidebar() {
+import { formatDate } from "../../../../utils/formatDate";
+import { toast } from "react-toastify";
+
+interface IDoc {
+    doc: {
+        authorName: string;
+        createdAt: string;
+        docId: number;
+        facultyName: string;
+        filePath: string;
+        folderName: string | null;
+        subjectName: string;
+        title: string;
+    };
+}
+
+export default function Sidebar({ doc }: IDoc) {
     return (
         <div className={cx("sidebar")}>
             <h2>Thông tin tài liệu</h2>
-            <h3>Câu hỏi ôn tập CDIO - CMU 2024</h3>
-            <p>Môn học: CDIO 2</p>
+            <h3>{doc?.title}</h3>
+            <p>Môn học: {doc?.subjectName}</p>
             <div className={cx("category")}>
                 <h3>
                     <FolderIcon /> Thư mục
                 </h3>
-                <a href="#">Tổng hợp tài liệu môn CDIO 2</a>
+                <a href="#">{doc?.folderName}</a>
             </div>
             <div className={cx("category")}>
                 <h3>
                     <SchoolIcon /> Chuyên ngành
                 </h3>
-                <a href="#">Công nghệ phần mềm CMU</a>
+                <a href="#">{doc?.facultyName}</a>
             </div>
             <hr />
             <div className={cx("category")}>
                 <h3>
                     <CalendarMonthIcon /> Thời gian đăng tài liệu
                 </h3>
-                <span>24 / 10 / 2024</span>
+
+                <span>{formatDate(doc?.createdAt)}</span>
             </div>
             <hr />
             <div className={cx("author")}>
@@ -37,20 +54,27 @@ export default function Sidebar() {
                 <div className={cx("author-detail")}>
                     <img src={Avatar} alt="avatar" />
                     <div className={cx("name")}>
-                        <h3>Nguyễn Đăng Quang Huy</h3>
-                        <span>Khoa Đào tạo Quốc tế CMU</span>
+                        <h3>{doc?.authorName}</h3>
+                        <span>Khoa {doc?.facultyName}</span>
                     </div>
                 </div>
             </div>
             <hr />
-            <div className={cx("comments")}>
-                <h3>Bình luận</h3>
-                <textarea name="comment"></textarea>
-                <button>Gửi</button>
-            </div>
-            <hr />
+
             <div className={cx("category")}>
-                <h3>
+                <h3
+                    onClick={() =>
+                        toast("🦄 Coming soon!", {
+                            position: "top-right",
+                            autoClose: 2500,
+                            hideProgressBar: false,
+                            closeOnClick: false,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "light",
+                        })
+                    }>
                     <FlagIcon /> Báo cáo tài liệu
                 </h3>
             </div>

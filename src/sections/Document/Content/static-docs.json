@@ -1,108 +1,79 @@
 [
-  {
-    "title": "Tài liệu phổ biến",
-    "docs": [
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      }
-    ]
-  },
-  {
-    "title": "Tải lên gần đây",
-    "docs": [
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      },
-      {
-        "avatar": "src/assets/images/avatar.png",
-        "author": "Nguyễn Quốc Huy",
-        "content": "Câu hỏi ôn tập - CDIO CMU-2024",
-        "subject": "Đồ án CDIO",
-        "downloads": 500,
-        "image": "src/assets/images/library.document.png"
-      }
-    ]
-  }
+    {
+        "title": "Tài liệu phổ biến",
+        "docs": [
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            },
+            {
+                "avatar": "src/assets/images/avatar.png",
+                "author": "Nguyễn Quốc Huy",
+                "content": "Câu hỏi ôn tập - CDIO CMU-2024",
+                "subject": "Đồ án CDIO",
+                "downloads": 500,
+                "image": "src/assets/images/library.document.png"
+            }
+        ]
+    }
 ]

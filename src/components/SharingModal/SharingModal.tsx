@@ -7,6 +7,8 @@ import styles from "./SharingModal.module.scss";
 import classNames from "classnames/bind";
 import { useState } from "react";
 const cx = classNames.bind(styles);
+import emailjs from "@emailjs/browser";
+import { useAppSelector } from "../../redux/store";
 
 const style = {
     position: "absolute",
@@ -25,13 +27,11 @@ const style = {
 };
 
 export default function SharingModal() {
-    // config đóng mở modal
-    const { open, closeSharingModal } = useSharingModal();
+    const [email, setEmail] = useState<string>("");
+    const fromName = useAppSelector((state) => state.authentication.username);
 
-    // url
-    const [url, setUrl] = useState<string>(
-        "http://duytanforyou.com/vn/12345678/do-an-cdio-2024/..."
-    );
+    // config đóng mở modal
+    const { open, closeSharingModal, url } = useSharingModal();
 
     // config copy url
     const [isCopied, setIsCopied] = useState<boolean>(false);
@@ -44,6 +44,33 @@ export default function SharingModal() {
         } catch (error) {
             console.error("Failed to copy url: ", error);
         }
+    };
+
+    // config cho send email
+    const sendEmail = () => {
+        var templateParams = {
+            from_name: fromName,
+            message: url,
+            to_email: email,
+        };
+        emailjs
+            .send(
+                import.meta.env.VITE_EMAILJS_KEY,
+                import.meta.env.VITE_EMAILJS_TEMPLATE,
+                templateParams,
+                {
+                    publicKey: "UasBeH0VctySK7UHo",
+                }
+            )
+            .then(
+                () => {
+                    console.log("SUCCESS!");
+                },
+                (error) => {
+                    console.log(error);
+                    console.log("FAILED...", error.text);
+                }
+            );
     };
 
     return (
@@ -70,12 +97,15 @@ export default function SharingModal() {
                         placeholder="Chia sẻ liên kết qua email"
                         className={cx("email-input")}
                         type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <Button
                         text="Gửi Email"
                         paddingX={20}
                         paddingY={11}
                         fontSize={15}
+                        onClick={sendEmail}
                     />
                 </div>
                 <input

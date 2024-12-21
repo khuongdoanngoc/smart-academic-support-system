@@ -8,75 +8,87 @@ import logoName from "../../../../assets/images/User_box.png";
 import logoNumberDocs from "../../../../assets/images/File_dock.png";
 import logoNumberStudent from "../../../../assets/images/User_alt.png";
 import { Button } from "../../../../components/Button";
+import { useNavigate } from "react-router-dom";
 
-interface IDoc {
-  title: string;
-  class: string;
-  name: string;
-  numberDocs: string;
-  numberStudent: string;
-}
+export default function FolderDirectory({ data }: any) {
+    const navigate = useNavigate();
+    // configs cho nút xem thêm
+    const [visibleCount, setVisibleCount] = useState<number>(4);
+    const handleToggle = () => {
+        if (visibleCount === 4) {
+            setVisibleCount(visibleCount + 4);
+        } else {
+            setVisibleCount(4);
+        }
+    };
 
-interface IDocs {
-  title: string;
-  docs: IDoc[];
-}
+    const handleSeeDetailFolder = (id: number) => {
+        navigate(`/document/folder/${id}`);
+    };
 
-export default function FolderDirectory({ title, docs }: IDocs) {
-  // configs cho nút xem thêm
-  const [visibleCount, setVisibleCount] = useState<number>(4);
-  const handleToggle = () => {
-    if (visibleCount === 4) {
-      setVisibleCount(visibleCount + 6);
-    } else {
-      setVisibleCount(4);
-    }
-  };
-
-  return (
-    <div className={cx("folder-directory")}>
-      <div className={cx("directory-title")}>
-        <h2>{title}</h2>
-        <span onClick={handleToggle}>
-          {visibleCount === 4 ? "Xem thêm" : "Thu gọn"}
-        </span>
-      </div>
-      <div className={cx("directory-cards")}>
-        {docs.slice(0, visibleCount).map((data, index) => (
-          <div key={index} className={cx("cards-list")}>
-            <div className={cx("list-title")}>
-              <img src={logoTitle} alt={data.title} />
-              <p>{data.title}</p>
+    return (
+        <div className={cx("folder-directory")}>
+            <div className={cx("directory-title")}>
+                <h2>THƯ MỤC CỦA TÔI</h2>
+                <span onClick={handleToggle}>
+                    {visibleCount === 4 ? "Xem thêm" : "Thu gọn"}
+                </span>
             </div>
-            <div className={cx("list-class")}>
-              <img src={logoClass} alt={data.class} />
-              <p>{data.class}</p>
+            <div className={cx("directory-cards")}>
+                {data
+                    ?.slice(0, visibleCount)
+                    .map((folderData: any, index: number) => (
+                        <div key={index} className={cx("cards-list")}>
+                            <div className={cx("list-title")}>
+                                <img src={logoTitle} alt={folderData.title} />
+                                <p>{folderData.folderName}</p>
+                            </div>
+                            <div className={cx("list-class")}>
+                                <img
+                                    src={logoClass}
+                                    alt={folderData.subjectCode}
+                                />
+                                <p>{folderData.subjectCode}</p>
+                            </div>
+                            <div className={cx("list-name")}>
+                                <img
+                                    src={logoName}
+                                    alt={folderData.ownerName}
+                                />
+                                <p>{folderData.ownerName}</p>
+                            </div>
+                            <div className={cx("list-number")}>
+                                <div className={cx("list-number-docs")}>
+                                    <img
+                                        src={logoNumberDocs}
+                                        alt={folderData.documentCount}
+                                    />
+                                    <p>{folderData.documentCount}</p>
+                                </div>
+                                <div className={cx("list-number-student")}>
+                                    <img
+                                        src={logoNumberStudent}
+                                        alt={folderData.accountEmail}
+                                    />
+                                    <p>{folderData.accountEmail}</p>
+                                </div>
+                            </div>
+                            <div className={cx("list-button")}>
+                                <Button
+                                    text="Xem chi tiết"
+                                    paddingX={18}
+                                    paddingY={3}
+                                    fontSize={14}
+                                    onClick={() =>
+                                        handleSeeDetailFolder(
+                                            folderData.folderId
+                                        )
+                                    }
+                                />
+                            </div>
+                        </div>
+                    ))}
             </div>
-            <div className={cx("list-name")}>
-              <img src={logoName} alt={data.name} />
-              <p>{data.name}</p>
-            </div>
-            <div className={cx("list-number")}>
-              <div className={cx("list-number-docs")}>
-                <img src={logoNumberDocs} alt={data.numberDocs} />
-                <p>{data.numberDocs}</p>
-              </div>
-              <div className={cx("list-number-student")}>
-                <img src={logoNumberStudent} alt={data.numberStudent} />
-                <p>{data.numberStudent}</p>
-              </div>
-            </div>
-            <div className={cx("list-button")}>
-              <Button
-                text="Theo dõi"
-                paddingX={18}
-                paddingY={3}
-                fontSize={14}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
