@@ -14,6 +14,7 @@ import {
     GetDocumentByID,
     GetDocumentBySubject,
     GetDocumentByTitle,
+    GetPopularDocuments,
 } from "../../services/DocumentAPI/DocumentAPI";
 import { DocumentResponse } from "./InterfaceResponse";
 import { AxiosError } from "axios";
@@ -195,6 +196,19 @@ export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
     }
 );
 
+export const getPopularDocuments = createAsyncThunk<any>(
+    "documents/getPopularDocuments",
+    async () => {
+        try {
+            const response = await GetPopularDocuments();
+            return response;
+        } catch (err: any) {
+            throw Error(err.message);
+        }
+    }
+);
+
+
 const initialState: InitialStateStyles = {
     loading: false,
     error: "",
@@ -330,6 +344,19 @@ export const DocumentSlice = createSlice({
                 state.loading = false;
                 state.error =
                     action.error.message || "Failed to delete document";
+            })
+            .addCase(getPopularDocuments.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getPopularDocuments.fulfilled, (state, action) => {
+                state.loading = false;
+                state.Documents = action.payload;
+            })
+            .addCase(getPopularDocuments.rejected, (state, action) => {
+                state.loading = false;
+                state.error =
+                    action.error.message ||
+                    "error when calling api get all documents";
             });
     },
 });

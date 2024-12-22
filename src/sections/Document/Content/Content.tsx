@@ -5,21 +5,39 @@ import Background from "../../../assets/images/library.background.jpeg";
 import { Statistics } from "./Statistics";
 import { Docs } from "./Docs";
 
-import staticDocs from "./static-docs.json";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { Subjects } from "./Subjects";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useEffect, useState } from "react";
 import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlice";
+import { DocumentResponse } from "../../../redux/DocumentSlice/InterfaceResponse";
+import { PopularFolders } from "./PopularFolders";
+import { getPopularFolders } from "../../../redux/FolderSlice/folderSlice";
+import { getStatsForUser } from "../../../redux/StatsSlice/statsSlice";
 
 export default function Content() {
     const dispatch = useAppDispatch();
     const documents = useAppSelector((state) => state.document.Documents);
+    const popularFolders = useAppSelector((state) => state.folder.data.content);
+    const stats = useAppSelector((state) => state.stats.stats);
+    const [dataPopularFolders, setDataPopularFolders] = useState<any[]>([]);
+    const [statsData, setStatsData] = useState<any>({});
+
 
     useEffect(() => {
         dispatch(getAllDocumentsAction(3));
+        dispatch(getPopularFolders(8));
+        dispatch(getStatsForUser());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (popularFolders) {
+            setDataPopularFolders(popularFolders);
+        }
+        if (stats) {
+            setStatsData(stats);
+        }
+    }, [popularFolders, stats]);
 
     const handleLoadMore = (status: string) => {
         if (status === "loadmore") {
@@ -37,35 +55,39 @@ export default function Content() {
         setCurrentPage(alphabet[value - 1]);
     };
 
-    const filteredDataList = (data: any[]) => {
-        const newListDocuments = [...data];
-        if (newListDocuments) {
-            return newListDocuments.filter((item) =>
-                item.title.toLowerCase().startsWith(currentPage.toLowerCase())
-            );
+    const filteredDataList = (data: DocumentResponse[] | undefined) => {
+        const newListDocuments = [...(data ?? [])];
+        if (currentPage !== undefined) {
+            if (newListDocuments) {
+                console.log(newListDocuments);
+                return newListDocuments.filter((item) =>
+                    item?.title
+                        .toLowerCase()
+                        .startsWith(currentPage.toLowerCase())
+                );
+            }
         }
-        return [];
+        return newListDocuments;
     };
 
     return (
         <div className={cx("content")}>
             <img src={Background} alt="bg" />
+
             <div className={cx("central")}>
                 <div className={cx("category")}>
-                    {staticDocs.map((data, index) => (
-                        <Docs
-                            key={index}
-                            title={data.title}
-                            onLoadMore={handleLoadMore}
-                            docs={documents}
-                        />
-                    ))}
+                    <Docs
+                        title={"Tài liệu phổ biến"}
+                        onLoadMore={handleLoadMore}
+                        docs={filteredDataList(documents)}
+                    />
                 </div>
-                <Statistics />
+                <Statistics data={statsData} />
             </div>
+
             <Pagination
                 count={alphabet.length}
-                defaultPage={1}
+                defaultPage={-1}
                 siblingCount={7}
                 onChange={handlePageChange}
                 variant="outlined"
@@ -80,7 +102,7 @@ export default function Content() {
                     />
                 )}
             />
-            {/* <Subjects /> */}
+            <PopularFolders data={dataPopularFolders} />
         </div>
     );
 }

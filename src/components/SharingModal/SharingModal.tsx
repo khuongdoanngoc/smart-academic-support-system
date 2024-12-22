@@ -9,6 +9,7 @@ import { useState } from "react";
 const cx = classNames.bind(styles);
 import emailjs from "@emailjs/browser";
 import { useAppSelector } from "../../redux/store";
+import { toast } from "react-toastify";
 
 const style = {
     position: "absolute",
@@ -65,10 +66,13 @@ export default function SharingModal() {
             .then(
                 () => {
                     console.log("SUCCESS!");
+                    toast.success("Chia sẻ thành công!");
+                    closeSharingModal();
                 },
                 (error) => {
                     console.log(error);
                     console.log("FAILED...", error.text);
+                    toast.error("Xảy ra lỗi khi chia sẻ tài liệu!");
                 }
             );
     };

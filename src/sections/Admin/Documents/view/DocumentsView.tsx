@@ -7,7 +7,15 @@ import CensorDropdown from "../components/CensorDropdown";
 import SearchIcon from "@mui/icons-material/Search";
 import DataTable from "../components/DataTable";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
-import { getAllDocumentsAction } from "../../../../redux/DocumentSlice/documentSlice";
+import {
+    approveDocuments,
+    deleteDocuments,
+    getDocumentsForAdmin,
+} from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
+import AlertDialog from "../../Users/components/AlertDialog";
+import ApproveDialog from "../../Users/components/ApproveDialog";
+import Loader from "../../../../components/Loader/Loader";
+import { toast } from "react-toastify";
 
 const columns: any[] = [
     {
@@ -17,44 +25,72 @@ const columns: any[] = [
         align: "center",
     },
     { id: "title", label: "Tên tài liệu", minWidth: 170 },
-    { id: "subject", label: "Môn học", minWidth: 100 },
+    { id: "subjectName", label: "Môn học", minWidth: 100 },
     {
-        id: "facultyName",
-        label: "Khoa",
+        id: "folderName",
+        label: "Thư mục",
         minWidth: 100,
         align: "center",
     },
     {
-        id: "accountId",
+        id: "createdAt",
+        label: "Ngày tạo",
+        minWidth: 120,
+        align: "center",
+    },
+    {
+        id: "authorName",
         label: "Tác giả",
         minWidth: 100,
         align: "center",
     },
     {
-        id: "type",
-        label: "Loại",
-        minWidth: 100,
-        align: "center",
-    },
-    {
         id: "isActive",
-        label: "Hiển thị",
+        label: "Phê duyệt",
         minWidth: 100,
         align: "center",
     },
 ];
 
+const censorValues: any = [
+    { code: "docId", title: "ID" },
+    { code: "title", title: "Tên tài liệu" },
+    { code: "subjectName", title: "Môn học" },
+    { code: "folderName", title: "Thư mục" },
+    { code: "createdAt", title: "Ngày tạo" },
+    { code: "authorName", title: "Tác giả" },
+    { code: "isActive", title: "Phê duyệt" },
+];
+
 export default function DocumentsView() {
     const [censor, setCensor] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>("");
-    const documents = useAppSelector((state: any) => state.document.Documents);
-
-    console.log(documents);
-
+    const [page, setPage] = useState(0);
+    const [data, setData] = useState<any>([]);
+    const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const dispatch = useAppDispatch();
+
+    const documents: any[] = useAppSelector(
+        (state: any) => state.adminDashboard.documents?.content
+    );
+
+    const { loading, successMessage } = useAppSelector(
+        (state) => state.adminDashboard
+    );
+
     useEffect(() => {
-        dispatch(getAllDocumentsAction());
+        if (documents && documents.length !== 0) {
+            setData(documents);
+        }
+    }, [documents]);
+
+    useEffect(() => {
+        dispatch(getDocumentsForAdmin(100));
     }, [dispatch]);
+
+    const handleClassifyChange = (value: string) => {
+        setCensor(value);
+    };
 
     const filterByClassify: any = (
         rows: any[],
@@ -62,14 +98,81 @@ export default function DocumentsView() {
         searchValue: string
     ) => {
         if (censor !== "") {
-            return rows.filter((item) => item[censor].startsWith(searchValue));
+            return rows.filter((item) => {
+                if (typeof item[censor] === "string")
+                    return item[censor]?.startsWith(searchValue);
+                else if (typeof item[censor] === "boolean") {
+                    console.log(item);
+                    if (searchValue === "checked") {
+                        return item[censor] === true;
+                    } else {
+                        return item[censor] === false;
+                    }
+                } else if (typeof item[censor] === "number") {
+                    return item[censor] === parseInt(searchValue);
+                }
+            });
         }
         return rows;
     };
 
-    const handleClassifyChange = (value: string) => {
-        setCensor(value);
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const [openApproveDialog, setOpenApproveDialog] = useState(false);
+
+    const handleOpenAlertDialog = () => {
+        if (selectedIds.length !== 0) {
+            setOpenAlertDialog(true);
+        } else {
+            toast.error("Phải chọn ít nhất 1 tài liệu");
+        }
     };
+    const handleOpenApproveDialog = () => {
+        if (selectedIds.length !== 0) {
+            setOpenApproveDialog(true);
+        } else {
+            toast.error("Phải chọn ít nhất 1 tài liệu");
+        }
+    };
+    const handleCloseAlertDialog = () => setOpenAlertDialog(false);
+    const handleCloseApproveDialog = () => setOpenApproveDialog(false);
+
+    const handleDeleteUsers = () => {
+        try {
+            dispatch(deleteDocuments(selectedIds));
+        } catch (error) {
+            toast.error("Xảy ra lỗi, vui lòng thử lại sau");
+        }
+    };
+
+    const handleApproveUsers = () => {
+        try {
+            dispatch(approveDocuments(selectedIds));
+        } catch (error) {
+            toast.error("Xảy ra lỗi, vui lòng thử lại sau");
+        }
+    };
+
+    const handleReloadTable = () => {
+        try {
+            dispatch(getDocumentsForAdmin(100));
+        } catch (error) {
+            console.log(error);
+            toast.error("Xảy ra lỗi, vui lòng thử lại sau");
+        }
+    };
+
+    useEffect(() => {
+        if (successMessage !== "") {
+            if (openAlertDialog) {
+                setOpenAlertDialog(false);
+            } else {
+                setOpenApproveDialog(false);
+            }
+            toast.success(successMessage);
+            setSelectedIds([]);
+            handleReloadTable();
+        }
+    }, [successMessage]);
 
     return (
         <div className={cx("admin-documents-view")}>
@@ -78,6 +181,7 @@ export default function DocumentsView() {
                 <CensorDropdown
                     censor={censor}
                     onDropdownChange={handleClassifyChange}
+                    values={censorValues}
                 />
                 {censor !== "" && (
                     <div className={cx("search-container")}>
@@ -86,7 +190,8 @@ export default function DocumentsView() {
                                 setSearchValue(e.target.value);
                             }}
                             value={searchValue}
-                            placeholder={`Nhập tên ${censor}...`}
+                            placeholder={`Lọc dữ liệu...`}
+                            disabled={censor === ""}
                             type="text"
                         />
                         <SearchIcon
@@ -102,15 +207,50 @@ export default function DocumentsView() {
                     </div>
                 )}
                 <div className={cx("rightActions")}>
-                    <button className={cx("delete-btn")}>Xoá</button>
-                    <button className={cx("censor-btn")}>
-                        Duyệt người dùng mới
+                    <button
+                        onClick={handleReloadTable}
+                        className={cx("reload-btn")}>
+                        Tải lại
+                    </button>
+                    <button
+                        onClick={handleOpenAlertDialog}
+                        className={cx("delete-btn")}>
+                        Xoá
+                    </button>
+                    <button
+                        onClick={handleOpenApproveDialog}
+                        className={cx("censor-btn")}>
+                        Duyệt tài liệu mới
                     </button>
                 </div>
             </div>
-            <DataTable
-                columns={columns}
-                rows={filterByClassify(documents, censor, searchValue)}
+
+            {loading ? (
+                <Loader height={100} />
+            ) : (
+                <DataTable
+                    page={page}
+                    setPage={setPage}
+                    columns={columns}
+                    rows={filterByClassify(data, censor, searchValue)}
+                    topic="document"
+                    selectedDocuments={selectedIds}
+                    setSelectedDocuments={setSelectedIds}
+                />
+            )}
+            <AlertDialog
+                open={openAlertDialog}
+                onClose={handleCloseAlertDialog}
+                onDelete={handleDeleteUsers}
+                ids={selectedIds}
+                title="tài liệu"
+            />
+            <ApproveDialog
+                open={openApproveDialog}
+                onClose={handleCloseApproveDialog}
+                onApprove={handleApproveUsers}
+                ids={selectedIds}
+                title="tài liệu"
             />
         </div>
     );
