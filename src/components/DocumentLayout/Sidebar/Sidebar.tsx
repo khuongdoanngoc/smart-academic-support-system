@@ -53,7 +53,7 @@ const docItems = [
     title: "Thông báo",
     icon: NotificationsOutlinedIcon,
     regex: /^\/document\/(notication)/,
-    pathAcitve: "/document/notification",
+    linkTo: "/document/notification",
   },
 ];
 const searchItems = [
@@ -217,17 +217,17 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
           <Link
             key={index}
             className={cx(
-              pathName === item.pathAcitve && "active",
+              pathName === item.linkTo && "active",
               `${
-                item.pathAcitve === "/document/notication" &&
+                item.linkTo === "/document/notification" &&
                 numberOfNotificationsUnRead > 0
                   ? "brings"
                   : ""
               }`
             )}
-            to={item.pathAcitve}
+            to={item.linkTo}
           >
-            {item.pathAcitve === "/document/notication" ? (
+            {item.linkTo === "/document/notification" ? (
               <Badge
                 badgeContent={
                   numberOfNotificationsUnRead > 0
