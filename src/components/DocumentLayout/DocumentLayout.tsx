@@ -4,6 +4,7 @@ import classnames from "classnames/bind";
 import { Main } from "./main";
 import { useLocation } from "react-router-dom";
 import { Footer } from "../../layouts/footer";
+import { WebsocketConnection } from "../../utils/Websocket";
 
 const cx = classnames.bind(styles);
 
@@ -18,7 +19,8 @@ export default function DocumentLayout(props: PropsType) {
         <div className={cx("layout-wrapper")}>
             <DocumentHeader />
             <Main>{props.children}</Main>
-            {location.pathname !== "/document/upload-file" && <Footer />}
+            {(location.pathname === "/document/upload-file" || location.pathname === "/document/coming-soon") ? null : <Footer />}
+            <WebsocketConnection />
         </div>
     );
 }

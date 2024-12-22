@@ -1,21 +1,42 @@
 import classNames from "classnames/bind";
 import styles from "./QuestionForm.module.scss";
 const cx = classNames.bind(styles);
-
+import emailjs from "@emailjs/browser";
 import MessengerICON from "../../../assets/images/icons/MessengerIcon.png";
 import ZaloICON from "../../../assets/images/icons/ZaloIcon.png";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function QuestionForm() {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [question, setQuestion] = useState<string>("");
-
-    const handleSubmitForm = (event: FormEvent<HTMLFormElement>) => {
+    const formCurrent= useRef<HTMLFormElement>(null);
+    const [loading,setLoading]= useState(false);
+    const handleSubmitForm = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        alert(
-            `Submit form with data: name = ${name} / email = ${email} / question = ${question}`
-        );
+        if(name ==="" || email ==="" || question === ""){
+            alert("Vui lòng điền đầy đủ thông tin");
+            return;
+        }
+        if(formCurrent.current !== null){
+            setLoading(true)
+            await emailjs
+              .sendForm("service_098shcs","template_ur5z219",formCurrent.current,{
+                publicKey: "qhD4YtB2w9gQKNXa_"
+              })
+              .then(()=>{
+                setLoading(false);
+                toast.success("Câu hỏi của bạn đã được gửi đi, chúng tôi sẽ giải đáp nhanh nhất có thể.");
+                console.log("Email sent successfully!");
+                setEmail("");
+                setName("");
+                setQuestion("");
+              },
+            (error)=>{
+              console.error("Failed to send email", error);
+            })
+        }
     };
 
     return (
@@ -26,17 +47,21 @@ export default function QuestionForm() {
                 nhanh nhất có thể cho bạn. Câu trả lời sẽ được gửi về thông báo
                 và email của bạn.
             </p>
-            <form onSubmit={handleSubmitForm}>
+            <form onSubmit={handleSubmitForm} ref={formCurrent}>
                 <div>
                     <input
                         type="text"
+                        name="fullName"
                         placeholder="Họ và tên"
+                        value={name}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setName(event.target.value);
                         }}
                     />
                     <input
                         type="text"
+                        name="email"
+                        value={email}
                         placeholder="Email của bạn"
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setEmail(event.target.value);
@@ -45,11 +70,13 @@ export default function QuestionForm() {
                 </div>
                 <textarea
                     placeholder="Nội dung câu hỏi của bạn"
-                    name="note"
+                    name="content"
+                    value={question}
                     onChange={(event: ChangeEvent<HTMLTextAreaElement>) => {
                         setQuestion(event.target.value);
                     }}></textarea>
-                <button>Gửi câu hỏi</button>
+                    {loading ? <div className={cx("loader")}></div>: <button type="submit">Gửi câu hỏi</button>}
+                
             </form>
             <span>
                 Liên hệ với chúng tôi qua các trang mạng xã hội để được hỗ trợ

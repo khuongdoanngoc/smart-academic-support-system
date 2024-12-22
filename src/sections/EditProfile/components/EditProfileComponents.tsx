@@ -1,38 +1,55 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
-import { RootState, useAppDispatch, useAppSelector } from "../../../redux/store";
-// import {
-//   EditProfileAction,
-//   // resetState,
-// } from "../../../redux/EditProfileSlice/EditProfileSlice";
-import avatar from "../../../assets/images/Frame 8720.png";
-import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import {
+  EditProfileAction,
+  // GetProFileAction,
+  // resetState,
+} from "../../../redux/EditProfileSlice/EditProfileSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { debounce } from "lodash";
+import {
+  clearSearchFaculty,
+  SearchFacultyAction,
+} from "../../../redux/UploadFileSlice/uploadFileSlice";
+import avartar from "../../../assets/images/Frame 8720.png";
 
 const cx = classNames.bind(styles);
 
 const EditProfileComponents = () => {
-  const dispatch = useAppDispatch()
-  const { isloading, success } = useAppSelector(
-    (state: RootState) => state.editProfile
-  );
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const { useData } = location.state || { useData: null };
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    useData.profilePicture
+  );
+
+  const formatDateToYYYYMMDD = (date: string | Date): string => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    gender: "",
-    birthDate: "",
-    hometown: "",
-    email: "",
-    phoneNumber: "",
-    facultyId: "",
-    major: "Software Technology CMU",
+    firstName: useData.firstName,
+    lastName: useData.lastName,
+    gender: useData.gender,
+    birthDate: useData.birthDate ? formatDateToYYYYMMDD(useData.birthDate) : "",
+    hometown: useData.hometown,
+    phoneNumber: useData.phoneNumber,
+    facultyId: 0,
+    major: useData.major,
     enrollmentYear: new Date().getFullYear(),
-    classNumber: "27",
-    avatar: null as File | null,
+    classNumber: useData.classNumber,
+    profilePicture: useData.profilePicture,
   });
 
   const handleInputChange = (
@@ -45,60 +62,93 @@ const EditProfileComponents = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log("formData", formData.avatar);
-    // dispatch(EditProfileAction(formData));
-    if (success) {
-      toast.success("Cập nhật thông tin thành công!");
-    }
-  };
-
   // useEffect(() => {
-  //   if (success) {
-  //     toast.success("Cập nhật thông tin thành công!");
-  //     setFormData({
-  //       firstName: "",
-  //       lastName: "",
-  //       gender: "",
-  //       birthDate: "",
-  //       hometown: "",
-  //       email: "",
-  //       phoneNumber: "",
-  //       facultyId: "",
-  //       major: "Software Technology CMU",
-  //       enrollmentYear: new Date().getFullYear(),
-  //       classNumber: "27",
-  //       avatar: null,
+  //   if (
+  //     formData.profilePicture &&
+  //     formData.profilePicture !== useData.profilePicture
+  //   ) {
+  //     const newPreview = URL.createObjectURL(formData.profilePicture);
+  //     setAvatarPreview((prev) => {
+  //       if (prev && prev !== useData.profilePicture) {
+  //         URL.revokeObjectURL(prev); // Giải phóng URL cũ nếu cần
+  //       }
+  //       return newPreview;
   //     });
-  //     dispatch(resetState());
   //   }
-  //   if (error) {
-  //     toast.error(error);
-  //   }
-  // }, [success, error, dispatch]);
-
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-
-  // Khi avatar thay đổi, tạo URL mới và giải phóng URL cũ
-  useEffect(() => {
-    if (formData.avatar) {
-      const newPreview = URL.createObjectURL(formData.avatar);
-      setAvatarPreview((prev) => {
-        if (prev) {
-          URL.revokeObjectURL(prev); // Giải phóng URL cũ
-        }
-        return newPreview;
-      });
-    }
-  }, [formData.avatar]);
+  // }, [formData.profilePicture, useData.profilePicture]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, avatar: e.target.files[0] });
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        profilePicture: file,
+      }));
+      setAvatarPreview(URL.createObjectURL(file)); // Tạo ảnh xem trước
     }
   };
+
   const handleOpenFileDialog = () => {
     fileInputRef.current?.click();
+  };
+  const searchFaculty =
+    useAppSelector((state) => state.uploadFile.searchFaculty) || [];
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceSearchFaculty = useCallback(
+    debounce(
+      (value: string) => dispatch(SearchFacultyAction(value)).unwrap(),
+      1000
+    ),
+    [dispatch, SearchFacultyAction]
+  );
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceClearFaculty = useCallback(
+    debounce(() => dispatch(clearSearchFaculty()), 1000),
+    [dispatch, clearSearchFaculty]
+  );
+
+  const handleSearchFaculty = async (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { value } = e.target;
+
+    if (!value.trim()) {
+      // Nếu giá trị rỗng, xóa danh sách tìm kiếm và cập nhật major về rỗng
+      debounceClearFaculty();
+      setFormData((prev) => ({
+        ...prev,
+        major: "", // Đảm bảo major được cập nhật thành rỗng
+        facultyId: 0, // Reset facultyId nếu cần
+      }));
+      return;
+    }
+    try {
+      // Thực hiện tìm kiếm với giá trị nhập vào
+      debounceSearchFaculty(value);
+    } catch (error) {
+      console.error(error);
+    }
+    setFormData((prev) => ({
+      ...prev,
+      major: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const dataToSubmit = {
+      ...formData,
+      profilePicture: formData.profilePicture || avartar,
+      facultyId: formData.facultyId,
+    };
+
+    console.log("dataToSubmit", dataToSubmit);
+
+    dispatch(EditProfileAction(dataToSubmit));
+    setTimeout(() => {
+      navigate("/document/profile-personal");
+    }, 3000);
   };
 
   return (
@@ -111,18 +161,20 @@ const EditProfileComponents = () => {
           <div className={cx("main-body-top")}>
             <div className={cx("main-body-avatar")}>
               <h3>Ảnh đại diện</h3>
-              <img src={avatarPreview || avatar} alt="avatar" />
+              <img src={avatarPreview || avartar} alt="avatar" />
               <div className={cx("file-input")}>
                 <input
                   type="file"
-                  name="avatar"
+                  name="profilePicture"
                   ref={fileInputRef}
                   onChange={handleFileChange}
                   style={{ display: "none" }}
                 />
                 <button onClick={handleOpenFileDialog}>
-                  {" "}
-                  {formData.avatar ? "Đổi ảnh" : "Chọn ảnh"}
+                  {formData.profilePicture &&
+                  formData.profilePicture !== useData.profilePicture
+                    ? "Đổi ảnh"
+                    : "Chọn ảnh"}
                 </button>
               </div>
             </div>
@@ -132,24 +184,24 @@ const EditProfileComponents = () => {
               </div>
               <div className={cx("body-individual-input")}>
                 <div className={cx("individual-input-name")}>
-                  <div className={cx("input-name-lastname")}>
+                  <div className={cx("input-name-firstmame")}>
                     <label>Họ</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Nguyễn"
-                    />
-                  </div>
-                  <div className={cx("input-name-firstname")}>
-                    <label>Tên</label>
                     <input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      placeholder="Quốc Huy"
+                      placeholder={useData.firstName}
+                    />
+                  </div>
+                  <div className={cx("input-name-lastmame")}>
+                    <label>Tên</label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder={useData.lastName}
                     />
                   </div>
                   <div className={cx("input-infor-sex")}>
@@ -157,7 +209,7 @@ const EditProfileComponents = () => {
                     <select
                       className={cx("infor-sex-select")}
                       name="gender"
-                      value={formData.gender}
+                      value={useData.gender}
                       onChange={handleInputChange}
                     >
                       <option>Nam</option>
@@ -173,6 +225,7 @@ const EditProfileComponents = () => {
                       name="birthDate"
                       value={formData.birthDate}
                       onChange={handleInputChange}
+                      placeholder={useData.birthDate}
                     />
                   </div>
 
@@ -183,12 +236,12 @@ const EditProfileComponents = () => {
                       name="hometown"
                       value={formData.hometown}
                       onChange={handleInputChange}
-                      placeholder="Phong Bình - Gio Linh - Quảng Trị"
+                      placeholder={useData.hometown}
                     />
                   </div>
                 </div>
                 <div className={cx("individual-input-contact")}>
-                  <div className={cx("input-contact-email")}>
+                  {/* <div className={cx("input-contact-email")}>
                     <label>Email</label>
                     <input
                       type="email"
@@ -197,7 +250,7 @@ const EditProfileComponents = () => {
                       onChange={handleInputChange}
                       placeholder="nguyenquochuy@gmail.com"
                     />
-                  </div>
+                  </div> */}
                   <div className={cx("input-contact-phone")}>
                     <label>SĐT</label>
                     <input
@@ -205,7 +258,7 @@ const EditProfileComponents = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="+84 353940610"
+                      placeholder={useData.phoneNumber}
                     />
                   </div>
                 </div>
@@ -220,34 +273,66 @@ const EditProfileComponents = () => {
               <div className={cx("student-input-school")}>
                 <div className={cx("input-school-department")}>
                   <label>Khoa - Trường</label>
-                  <select
-                    name="facultyId"
-                    value={formData.facultyId}
-                    onChange={handleInputChange}
-                  >
-                    <option value={"Đào tạo Quốc Tế 1"}>
-                      Đào tạo Quốc Tế 1
-                    </option>
-                    <option value={"Đào tạo Quốc Tế 2"}>
-                      Đào tạo Quốc Tế 2
-                    </option>
-                  </select>
+                  <div className={cx("list-item-search")}>
+                    <input
+                      type="text"
+                      placeholder="Nhập mã hoặc tên chuyên ngành"
+                      value={formData.major}
+                      onChange={handleSearchFaculty}
+                    />
+
+                    {formData.major.trim() && searchFaculty?.length > 0 && (
+                      <div className={cx("search-results")}>
+                        <ul>
+                          {searchFaculty.map((result, index) => (
+                            <li
+                              key={index}
+                              onClick={() => {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  major: result.facultyName,
+                                  facultyId: index,
+                                }));
+                                dispatch(clearSearchFaculty());
+                              }}
+                            >
+                              {result.facultyName}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className={cx("input-school-specialized")}>
+                {/* <div className={cx("input-school-department")}>
                   <label>Chuyên ngành</label>
-                  <select
-                    name="major"
-                    value={formData.major}
-                    onChange={handleInputChange}
-                  >
-                    <option value={"Software Technology CMU"}>
-                      Software Technology CMU
-                    </option>
-                    <option value={"Software Technology CMU 2"}>
-                      Software Technology CMU 2
-                    </option>
-                  </select>
-                </div>
+                  <div className={cx("list-item-search")}>
+                    <input
+                      type="text"
+                      placeholder="Nhập mã hoặc tên chuyên ngành"
+                      value={formData.major}
+                      onChange={handleSearchMajor}
+                    />
+
+                    {majorFile.trim() && searchMajor?.length > 0 && (
+                      <div className={cx("search-results")}>
+                        <ul>
+                          {searchMajor.map((result, index) => (
+                            <li
+                              key={index}
+                              onClick={() => {
+                                setMajorFile(result.facultyName);
+                                dispatch(clearSearchFaculty());
+                              }}
+                            >
+                              {result.facultyName}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div> */}
               </div>
               <div className={cx("student-input-information")}>
                 <div className={cx("input-information-position")}>
@@ -260,7 +345,8 @@ const EditProfileComponents = () => {
                     // onChange={handleInputChange}
                     // min={2000}
                     // max={new Date().getFullYear()}
-                    placeholder="Sinh viên"
+                    value={useData.roles}
+                    // placeholder="Sinh viên"
                   />
                 </div>
                 <div className={cx("input-information-year")}>
@@ -293,16 +379,11 @@ const EditProfileComponents = () => {
           </div>
           <button
             onClick={handleSubmit}
-            disabled={isloading}
             className={cx("body-individual-submit")}
           >
-            {isloading ? "Đang lưu..." : "Lưu thay đổi"}
+            "Lưu thay đổi"
           </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isloading}
-            className={cx("body-individual-delete")}
-          >
+          <button className={cx("body-individual-delete")}>
             Xoá tài khoản
           </button>
         </div>

@@ -108,7 +108,7 @@
             & > .individual-input-name {
               display: flex;
               justify-content: space-between;
-              & > .input-name-lastname {
+              & > .input-name-lastmame {
                 display: flex;
                 flex-direction: column;
                 & > label {
@@ -124,7 +124,7 @@
                   font-size: 15px;
                 }
               }
-              & > .input-name-firstname {
+              & > .input-name-firstmame {
                 display: flex;
                 flex-direction: column;
                 & > label {
@@ -295,16 +295,64 @@
               flex-direction: column;
               width: 45%;
 
-              & > select {
-                border-radius: 10px;
-                padding: 10px 17px;
-                border: 1px solid #00000080;
-                gap: 10px;
-                color: #000;
-                font-size: 16px;
-                font-weight: 500;
-                line-height: 19px;
-                outline: none;
+              // & > select {
+              //   border-radius: 10px;
+              //   padding: 10px 17px;
+              //   border: 1px solid #00000080;
+              //   gap: 10px;
+              //   color: #000;
+              //   font-size: 16px;
+              //   font-weight: 500;
+              //   line-height: 19px;
+              //   outline: none;
+              // }
+
+              & > .list-item-search {
+                & > input {
+                  width: 100%;
+                  padding: 15px 32px;
+                  border-radius: 20px;
+                  border: 1.5px solid #00000099;
+                  font-size: 16px;
+                  line-height: 19.5px;
+                  color: #00000099;
+                  font-weight: 500;
+                  position: relative;
+                }
+                & > div {
+                  width: 100%;
+                  & > div {
+                    border-radius: 20px;
+                    border: 1.5px solid #00000099;
+                    font-size: 16px;
+                    line-height: 19.5px;
+                    color: #00000099;
+                    font-weight: 500;
+                    position: relative;
+
+                    & > fieldset {
+                      border-color: #fff;
+                      border-width: 0px;
+                    }
+                  }
+                }
+                & > .search-results {
+                  background: #fff;
+                  position: absolute;
+                  z-index: 100;
+                  width: 28%;
+                  height: 121px;
+                  overflow: auto;
+                  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+                  & > ul {
+                    & > li {
+                      padding: 10px 0;
+                      margin: 6px 0;
+                      list-style-type: none;
+                      cursor: pointer;
+                    }
+                  }
+                }
               }
             }
             & > .input-school-specialized {

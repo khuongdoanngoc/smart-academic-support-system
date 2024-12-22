@@ -1,5 +1,5 @@
 .search-user {
-  width: 70%;
+  width: 100%;
   padding: 0 50px;
   & > .search-user-header {
     margin-top: 30px;
@@ -41,6 +41,11 @@
   }
   & > .search-user-body {
     width: 94%;
+    &>.not-found{
+      margin-top: 2rem;
+      font-size: 25px;
+      text-align: center;
+    }
     & > .user-body-list {
       background: #ebebeb;
       display: flex;
@@ -113,6 +118,7 @@
   & > .search-user-footer {
     margin-top: 25px;
     margin-bottom: 40px;
+    text-align: center;
     & > nav {
       & > ul {
         justify-content: center;

@@ -10,6 +10,7 @@ interface PropsType {
     children: React.ReactNode;
 }
 
+
 export default function Main(props: PropsType) {
     const location = useLocation();
     const { loading, isLogined } = useAppSelector(
@@ -46,6 +47,10 @@ export default function Main(props: PropsType) {
     }
   }, [isLogined,location.pathname]);
 
+  console.log(loading);
+  console.log(loadingElement);
+  
+
     return (
         <>
             <div style={{ marginTop: "100px", width: "100%", display: "flex" }}>
@@ -61,7 +66,7 @@ export default function Main(props: PropsType) {
                 )}
 
                 {/* {location.pathname !== "/document/uploadfile" && <Sidebar />} */}
-                {loading || loadingElement ? (
+                {(loading || loadingElement ) ? (
                     <Loader height={100} />
                 ) : (
                     <div
@@ -73,6 +78,14 @@ export default function Main(props: PropsType) {
                         {props.children}
                     </div>
                 )}
+                {/* <div
+                        style={{
+                            width: "100%",
+                            ...(hasOverlay ? { marginLeft: "80px" } : {}),
+                        }}
+                        className="main">
+                        {props.children}
+                    </div> */}
             </div>
         </>
     );

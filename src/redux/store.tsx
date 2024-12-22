@@ -14,26 +14,37 @@ import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 import EditProfileReducer from "./EditProfileSlice/EditProfileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
+import profilePersonalReducer from "./ProfilePersonalSlice/ProfilePersonalSlice";
+import dashBoardReducer from "./DashBoardSlice/DashBoardSlice";
 
 import statsReducer from "./StatsSlice/statsSlice";
 
 const store = configureStore({
-    reducer: {
-        uploadFile: UploadFileReducer,
-        document: DocumentReducer,
-        tag: TagReducers,
-        notication: NoticatonReducer,
-        chatbot: ChatBotReducer,
-        authentication: authenticationReducer,
-        searchUser: searchUserReducer,
-        editProfile: EditProfileReducer,
-        // downloadDocument: profileAuthorReducer,
-        profileAuthor: profileAuthorReducer,
-        search: SearchReducer,
-        folder: FolderReducer,
-        adminDashboard: AdminDashboardReducer,
+  reducer: {
+    uploadFile: UploadFileReducer,
+    document: DocumentReducer,
+    tag: TagReducers,
+    notication: NoticatonReducer,
+    chatbot: ChatBotReducer,
+    authentication: authenticationReducer,
+    searchUser: searchUserReducer,
+    editProfile: EditProfileReducer,
+    // downloadDocument: profileAuthorReducer,
+    profileAuthor: profileAuthorReducer,
+    profilePersonal: profilePersonalReducer,
+    profileDashBoard: dashBoardReducer,
+    search: SearchReducer,
+    folder: FolderReducer,
+    adminDashboard: AdminDashboardReducer,
         stats: statsReducer,
-    },
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["EditProfileAction/fulfilled"], // Ignore specific actions
+        ignoredPaths: ["editProfile.profileData.profilePicture"],
+      },
+    }),
 });
 
 export default store;

@@ -1,0 +1,1 @@
+export {default as FAQDetailComponent} from "./FAQDetailComponent";

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./Content.module.scss";
 const cx = classNames.bind(styles);
@@ -7,6 +9,7 @@ import { Docs } from "./Docs";
 
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
+import { Subjects } from "./Subjects";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useEffect, useState } from "react";
 import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlice";
@@ -39,21 +42,21 @@ export default function Content() {
         }
     }, [popularFolders, stats]);
 
-    const handleLoadMore = (status: string) => {
-        if (status === "loadmore") {
-            dispatch(getAllDocumentsAction(9));
-        } else {
-            dispatch(getAllDocumentsAction(3));
-        }
-    };
+  const handleLoadMore = (status: string) => {
+    if (status === "loadmore") {
+      dispatch(getAllDocumentsAction(9));
+    } else {
+      dispatch(getAllDocumentsAction(3));
+    }
+  };
 
-    // configs for pagination
-    const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    const [currentPage, setCurrentPage] = useState<string>(alphabet[-1]);
+  // configs for pagination
+  const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+  const [currentPage, setCurrentPage] = useState<string>(alphabet[-1]);
 
-    const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-        setCurrentPage(alphabet[value - 1]);
-    };
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(alphabet[value - 1]);
+  };
 
     const filteredDataList = (data: DocumentResponse[] | undefined) => {
         const newListDocuments = [...(data ?? [])];
@@ -73,18 +76,16 @@ export default function Content() {
     return (
         <div className={cx("content")}>
             <img src={Background} alt="bg" />
-
             <div className={cx("central")}>
                 <div className={cx("category")}>
-                    <Docs
-                        title={"Tài liệu phổ biến"}
-                        onLoadMore={handleLoadMore}
-                        docs={filteredDataList(documents)}
-                    />
+                        <Docs
+                            title={"Tài liệu phổ biến"}
+                            onLoadMore={handleLoadMore}
+                            docs={filteredDataList(documents)}
+                        />
                 </div>
                 <Statistics data={statsData} />
             </div>
-
             <Pagination
                 count={alphabet.length}
                 defaultPage={-1}

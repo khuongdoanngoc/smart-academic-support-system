@@ -37,10 +37,10 @@ import {
   SearchFacultyAction,
   SearchFolderAction,
   SearchSubjectAction,
-  UploadFileAction
+  UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { debounce } from "@mui/material";
 
 const cx = classNames.bind(styles);
@@ -79,16 +79,16 @@ const UploadFileComponents = () => {
   const searchFaculty =
     useAppSelector((state) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
   const searchSubject =
-  useAppSelector((state) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+    useAppSelector((state) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
   const searchFolder =
-  useAppSelector((state) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+    useAppSelector((state) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
 
   let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(1);
-    
+
     const newFile = e.target.files?.[0]; //lấy file từ input
-    console.log("newFile",newFile);
+    console.log("newFile", newFile);
     if (newFile) {
       const originalName = newFile.name; //lấy tên file
       const sizeFile = newFile.size; //lấy kích thước file
@@ -118,8 +118,6 @@ const UploadFileComponents = () => {
 
         setFileList(upDatedList);
       } else {
-       
-
         for (const file of fileList) {
           if (!file.name.includes(originalName) || file.size === sizeFile) {
             isFileAlreadyUploaded = true;
@@ -163,13 +161,15 @@ const UploadFileComponents = () => {
 
   const handleDeleteFile = () => {
     // setFileList([]);
-    handleResetUpload()
-    
+    handleResetUpload();
+
     setFileSelected(null);
     setMenuDeleButton(false);
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = ''; // Đặt lại giá trị input file
+      fileInput.value = ""; // Đặt lại giá trị input file
     }
   };
   const handleCancelFile = () => {
@@ -199,13 +199,12 @@ const UploadFileComponents = () => {
       setUploadFileSuccess(false);
     }
   }, [isUpload]);
-  React.useEffect(()=>{
-    if(isFileAlreadyUploaded){
-      handleResetUpload()
+  React.useEffect(() => {
+    if (isFileAlreadyUploaded) {
+      handleResetUpload();
     }
-  })
+  });
   console.log(fileList);
-  
 
   const handleItemNext = () => {
     if (isColorItemButton === 2) {
@@ -343,6 +342,20 @@ const UploadFileComponents = () => {
   };
   const isActiveTitle = (step: number) => isColorItemButton === step;
   const isActiveBorder = (step: number) => isColorItemButton >= step;
+
+  const location = useLocation();
+  const linkFile = location.state?.fileData || [];
+  console.log("linkFile", linkFile);
+  console.log("setFileSelected", fileSelected);
+
+  React.useEffect(() => {
+    if (linkFile) {
+      setFileSelected(linkFile.filePath);
+      // setIsColorItemButton(2);
+      // setDefaultUploadFile(true);
+      // setFileList(linkFile);
+    }
+  }, []);
 
   return (
     <div className={cx("file-component-main")}>
