@@ -1,32 +1,28 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
-import styles from "./UploadFileComponents.module.scss";
+import styles from "./EditDocumentComponents.module.scss";
 import Vector1 from "../../../assets/images/Vector 9.png";
 import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
-import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
-import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
-import { debounce } from "lodash";
+// import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
+// import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
 import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useRef, useState, useCallback } from "react";
 
+import { useRef, useState, useCallback } from "react";
 import {
   ArrowBack,
   ArrowForward,
   ArrowUpward,
-  Clear,
-  DeleteForever,
+  // Clear,
+  // DeleteForever,
   Description,
-  Info,
-  InsertDriveFile,
+  // Info,
+  // InsertDriveFile,
   KeyboardArrowDown,
   KeyboardArrowUp,
   RestoreFromTrash,
-  TextSnippet,
 } from "@mui/icons-material";
 import { HeaderUploadFile } from "../../../layouts/header/HeaderUploadFile";
 
@@ -39,30 +35,27 @@ import {
   SearchSubjectAction,
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { debounce } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "@mui/material";
 
 const cx = classNames.bind(styles);
-
-const UploadFileComponents = () => {
+const EditDocumentComponents = () => {
   const wrapperRef = useRef<HTMLDivElement>(null); //use ref để kiểm tra khi kéo file vào
   const [fileList, setFileList] = useState<{ name: string; size: number }[]>(
     []
   ); //use state hiển thị list file
   const [fileSelected, setFileSelected] = useState<File | null>(null); //use state kiểm tra xem file đó đã được chọn chưa
-  const [isDragging, setIsDragging] = useState(false); //trạng thái kéo file để hiện component Drop It
 
-  const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
-  const [alertFile, setAlertFile] = useState(false); //trạng thái hiện thông báo nếu upload file lỗi
-  const [informationAlert, setInformationAlert] = useState(""); //use state hiển thị nội dung thông báo file lỗi
+  // const [menuDeleButton, setMenuDeleButton] = useState(false); //trạng thái ẩn hiện menu delete file
+  // const [alertFile, setAlertFile] = useState(false); //trạng thái hiện thông báo nếu upload file lỗi
+  // const [informationAlert, setInformationAlert] = useState(""); //use state hiển thị nội dung thông báo file lỗi
   const [defaultUploadFile, setDefaultUploadFile] = useState(false); //use state hiển thị phần chi tiết của default upload file
   const [isColorItemButton, setIsColorItemButton] = useState(1); //use state  xem đang ở trạng thái tải tài liệu,chi tiết,hay hoàn thành
 
   const [fileDetailLoad, setFileDetailLoad] = useState(false); //use state hiển thị mục 2 của phần chi tiết default upload file
-
   const [menuCheckItemRow, setmenuCheckItemRow] = useState(false); //trạng thải ẩn và hiện của nút button tn hay tl
-
   const [uploadFileSuccess, setUploadFileSuccess] = useState(false); //use state hiển thị component hoàn thành
 
   const [titleFile, setTitleFile] = useState(fileList[0]?.name || "");
@@ -72,17 +65,9 @@ const UploadFileComponents = () => {
   const [facultyFile, setFacultyFile] = useState("");
   const [folderFile, setFolderFile] = useState("");
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
-  const isUpload = useAppSelector((state) => state.uploadFile.isupload);
-  const searchFaculty =
-    useAppSelector((state) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
-  const searchSubject =
-    useAppSelector((state) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
-  const searchFolder =
-    useAppSelector((state) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
-
+  const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
   let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(1);
@@ -96,21 +81,21 @@ const UploadFileComponents = () => {
       const allowedExtensions = ["pdf"]; //đuôi file được phép upload
       if (!allowedExtensions.includes(fileExtension || "")) {
         //kiểm tra đuôi file nếu không phải pdf thì báo lỗi
-        setInformationAlert("Only docx files are allowed.");
-        setAlertFile(true);
-        setTimeout(() => {
-          setAlertFile(false);
-        }, 3000);
-        return;
+        // setInformationAlert("Only docx files are allowed.");
+        // setAlertFile(true);
+        // setTimeout(() => {
+        //   setAlertFile(false);
+        // }, 3000);
+        // return;
       }
       if (fileSelected === null) {
+        //kiểm tra file đã được chọn chưa
         setFileSelected(newFile);
         setTitleFile(originalName);
         const shortenedName =
           originalName.length > 14
             ? `${originalName.slice(0, 13)}...${originalName.slice(-8)}`
             : originalName;
-
         const upDatedList = [
           ...fileList,
           { name: shortenedName, size: sizeFile },
@@ -124,33 +109,22 @@ const UploadFileComponents = () => {
             break;
           }
         }
-
-        if (isFileAlreadyUploaded) {
-          setInformationAlert(
-            `This file seems to have been already uploaded: ${originalName}`
-          );
-
-          setAlertFile(true);
-          setTimeout(() => {
-            setAlertFile(false);
-          }, 3000);
-          return;
-        }
-        if (fileList.length >= 1) {
-          setInformationAlert("Only 1 file can be uploaded.");
-          setAlertFile(true);
-          setTimeout(() => {
-            setAlertFile(false);
-          }, 3000);
-          return;
-        }
+        // if (isFileAlreadyUploaded) {
+        //   setInformationAlert(
+        //     `This file seems to have been already uploaded: ${originalName}`
+        //   );
+        //   setAlertFile(true);
+        //   setTimeout(() => {
+        //     setAlertFile(false);
+        //   }, 3000);
+        //   return;
+        // }
       }
     }
 
     e.target.value = "";
     return;
   };
-
   const formatFileSize = (size: number) => {
     return size < 1024
       ? `${size} bytes`
@@ -158,38 +132,35 @@ const UploadFileComponents = () => {
       ? `${(size / 1024).toFixed(0)} KB`
       : `${(size / (1024 * 1024)).toFixed(0)} MB`;
   };
+  // const handleDeleteFile = () => {
 
-  const handleDeleteFile = () => {
-    // setFileList([]);
-    handleResetUpload();
+  //   handleResetUpload();
 
-    setFileSelected(null);
-    setMenuDeleButton(false);
-    const fileInput = document.querySelector(
-      'input[type="file"]'
-    ) as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = ""; // Đặt lại giá trị input file
-    }
-  };
-  const handleCancelFile = () => {
-    setMenuDeleButton(false);
-  };
+  //   setFileSelected(null);
+  //   setMenuDeleButton(false);
+  //   const fileInput = document.querySelector(
+  //     'input[type="file"]'
+  //   ) as HTMLInputElement;
+  //   if (fileInput) {
+  //     fileInput.value = ""; // Đặt lại giá trị input file
+  //   }
+  // };
+  // const handleCancelFile = () => {
+  //   setMenuDeleButton(false);
+  // };
+  // const handleMenuDeleteButton = () => {
+  //   setMenuDeleButton(true);
+  // };
+  // const handleClearAlert = () => {
+  //   setAlertFile(false);
+  // };
+  // const handleDefaultUpload = () => {
+  //   if (fileList.length >= 1) {
+  //     setDefaultUploadFile(true);
 
-  const handleMenuDeleteButton = () => {
-    setMenuDeleButton(true);
-  };
-
-  const handleClearAlert = () => {
-    setAlertFile(false);
-  };
-  const handleDefaultUpload = () => {
-    if (fileList.length >= 1) {
-      setDefaultUploadFile(true);
-      setIsDragging(false);
-      setIsColorItemButton(2);
-    }
-  };
+  //     setIsColorItemButton(2);
+  //   }
+  // };
   React.useEffect(() => {
     if (isUpload) {
       setUploadFileSuccess(true);
@@ -230,7 +201,6 @@ const UploadFileComponents = () => {
     }
     setIsColorItemButton((item) => Math.min(item + 1, 3));
   };
-
   const handleItemBack = () => {
     setIsColorItemButton((item) => Math.max(item - 1, 1));
     if (isColorItemButton === 2) {
@@ -238,16 +208,21 @@ const UploadFileComponents = () => {
       setFileDetailLoad(false);
     }
   };
-
   const handleChangeItemRow = (value: string) => {
     setTypeFile(value);
     setmenuCheckItemRow(false);
   };
-
   const handleMenuCheckItemRow = () => {
     setmenuCheckItemRow(!menuCheckItemRow);
   };
 
+  const searchFaculty =
+    useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
+  const searchSubject =
+    useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+  const searchFolder =
+    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchFaculty = useCallback(
     debounce(
       (value: string) => dispatch(SearchFacultyAction(value)).unwrap(),
@@ -255,6 +230,7 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchFacultyAction]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchSubject = useCallback(
     debounce(
       (value: string) => dispatch(SearchSubjectAction(value)).unwrap(),
@@ -262,23 +238,17 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchSubjectAction]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearFaculty = useCallback(
     debounce(() => dispatch(clearSearchFaculty()), 1000),
     [dispatch, clearSearchFaculty]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearSubject = useCallback(
     debounce(() => dispatch(clearSearchSubject()), 1000),
     [dispatch, clearSearchSubject]
   );
 
-  // const debounceSearching = useCallback(
-  //   debounce(
-  //     async (nextValue) =>
-  //       await dispatch(SearchFacultyAction(nextValue)).unwrap(),
-  //     1000
-  //   ),
-  //   [dispatch]
-  // );
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
     if (!value.trim()) {
@@ -318,7 +288,7 @@ const UploadFileComponents = () => {
     setFileList([]);
     setDefaultUploadFile(false);
     setUploadFileSuccess(false);
-    setIsDragging(false);
+
     setFileSelected(null); // Reset selected file
     setIsColorItemButton(1); // Reset step indicator to first step
     setTitleFile("");
@@ -332,30 +302,14 @@ const UploadFileComponents = () => {
   const handleClickDefaultUpload = () => {
     handleResetUpload();
   };
-
   const handleDelectFileUpload = () => {
     handleResetUpload();
   };
-
   const handleNavigateDocument = () => {
     navigate("/document");
   };
   const isActiveTitle = (step: number) => isColorItemButton === step;
   const isActiveBorder = (step: number) => isColorItemButton >= step;
-
-  const location = useLocation();
-  const linkFile = location.state?.fileData || [];
-  console.log("linkFile", linkFile);
-  console.log("setFileSelected", fileSelected);
-
-  React.useEffect(() => {
-    if (linkFile) {
-      setFileSelected(linkFile.filePath);
-      // setIsColorItemButton(2);
-      // setDefaultUploadFile(true);
-      // setFileList(linkFile);
-    }
-  }, []);
 
   return (
     <div className={cx("file-component-main")}>
@@ -390,20 +344,7 @@ const UploadFileComponents = () => {
             ></div>
           </div>
         </div>
-        {isDragging ? (
-          <div
-            className={cx("main-body-center")}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            <input onChange={onFileDrop} type="file" />
-            <div className={cx("main-body-hover")}>
-              <div>
-                <TextSnippet />
-                <p>Drop It</p>
-              </div>
-            </div>
-          </div>
-        ) : defaultUploadFile ? (
+        {defaultUploadFile ? (
           <form className={cx("body-center-detail")}>
             {fileList.map((file: FileItem, index: number) => (
               <div className={cx("center-detail-upload")} key={index}>
@@ -433,7 +374,6 @@ const UploadFileComponents = () => {
                         value={facultyFile}
                         onChange={(e) => handleSearchFaculty(e.target.value)}
                       />
-
                       {facultyFile.trim() && searchFaculty?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
@@ -465,7 +405,7 @@ const UploadFileComponents = () => {
                       {subjectFile.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
-                            {searchSubject.map((result: any, index: number) => (
+                            {searchSubject.map((result, index) => (
                               <li
                                 key={index}
                                 onClick={() => {
@@ -642,7 +582,6 @@ const UploadFileComponents = () => {
             </div>
           </div>
         )}
-
         {defaultUploadFile ? (
           <div className={cx("main-detail-button")}>
             <button
@@ -660,59 +599,10 @@ const UploadFileComponents = () => {
         ) : uploadFileSuccess ? (
           <></>
         ) : (
-          <div className={cx("main-body-bottom")}>
-            <div className={cx("body-bottom-file")}>
-              {fileList.map((item: FileItem, index) => (
-                <div className={cx("bottom-file-list")} key={index}>
-                  <div className={cx("bottom-file-icon")}>
-                    <div className={cx("file-icon-img")}>
-                      <InsertDriveFile />
-                    </div>
-                    <div className={cx("file-icon-size")}>
-                      <p>{formatFileSize(item.size)}</p>
-                    </div>
-                  </div>
-                  <div className={cx("bottom-file-title")}>
-                    <p>{item.name}</p>
-                    <div className={cx("file-title-bar")}>
-                      <div className={cx("bar-list")}></div>
-                    </div>
-                  </div>
-                  <div className={cx("bottom-file-del")}>
-                    <img src={Delfile} onClick={handleMenuDeleteButton} />
-                    <p>100%</p>
-                  </div>
-                  {menuDeleButton && (
-                    <ul className={cx("bottom-menu-dell")}>
-                      <li onClick={handleDeleteFile}>
-                        <button>
-                          <DeleteForever />
-                          Delete document
-                        </button>
-                      </li>
-                      <li onClick={handleCancelFile}>
-                        <button>
-                          <Clear />
-                          Cancel
-                        </button>
-                      </li>
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className={cx("main-body-button")}>
-              <button onClick={handleDefaultUpload}>
-                <div>
-                  <img src={arrowUp} />
-                  <span>Gửi tài liệu</span>
-                </div>
-              </button>
-            </div>
-          </div>
+          <></>
         )}
       </div>
-      {alertFile && (
+      {/* {alertFile && (
         <div className={cx("component-main-alert")}>
           <div className={cx("main-alert-title")}>
             <Info />
@@ -722,9 +612,8 @@ const UploadFileComponents = () => {
             <Clear />
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
-
-export default UploadFileComponents;
+export default EditDocumentComponents;

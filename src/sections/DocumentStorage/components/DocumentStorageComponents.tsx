@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import classnames from "classnames/bind";
 import styles from "./DocumentStorageComponents.module.scss";
 import File from "../../../assets/images/File_dock.svg";
@@ -7,16 +6,18 @@ import ImportLight from "../../../assets/images/Import_light.png";
 import Delect from "../../../assets/images/Frame 8819.png";
 import Share from "../../../assets/images/fi_share-2.png";
 import {
-  debounce,
   Pagination,
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../../redux/store";
-import { DelectDocumentStogeAction } from "../../../redux/DocumentSlice/documentSlice";
-// import { documentState } from "../../../services/DocumentAPI/DocumentAPI";
+import {
+  DelectDocumentStogeAction,
+  GetDocumentStogeAction,
+} from "../../../redux/DocumentSlice/documentSlice";
+import { GetDocument } from "../../../services/DocumentAPI/DocumentAPI";
 
 const cx = classnames.bind(styles);
 // interface Subject {
@@ -100,27 +101,52 @@ const cx = classnames.bind(styles);
 // ];
 
 const DocumentStorageComponents = () => {
-  const alphabet = Array.from("1234567");
+  const alphabet = Array.from("01234567");
   const dispatch = useAppDispatch();
 
-  const itemsPerPage = 9;
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  // const debounceSearch=useCallback(debounce((pageSize:number,pageNum:number)=>dispatch(GetDocumentStogeAction({pageSize,pageNum})),1000),[dispatch])
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value);
-    // debounceSearch(itemsPerPage,value);
+  // const itemsPerPage = 9;
+  // const [currentPage, setCurrentPage] = useState<number>(1);
+  // const debounceSearch = useCallback(
+  //   debounce(
+  //     (page: number) => dispatch(GetDocumentStogeAction({ page })),
+  //     1000
+  //   ),
+  //   [dispatch]
+  // );
+
+  const { documentStoge } = useSelector((state: RootState) => state.document);
+
+  const [dataList, setDataList] = useState<GetDocument[]>(
+    documentStoge?.content || []
+  );
+
+  const handlePageChange = async (
+    _: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    const actualPage = value - 1;
+    const data = await dispatch(GetDocumentStogeAction({ page: actualPage }));
+    if (data && data.payload) {
+      const newDocumentList = Array.isArray(data.payload.content)
+        ? data.payload.content
+        : [];
+      setDataList(newDocumentList);
+    }
+  };
+  console.log("dataList", dataList);
+
+  const handleDelectDocument = async (docId: number) => {
+    console.log("docId", docId);
+
+    const res = await dispatch(DelectDocumentStogeAction(docId));
+    if (res.meta.requestStatus === "fulfilled") {
+      setDataList((data) => data.filter((doc) => doc.docId !== docId));
+    }
   };
 
-  // const {documentStoge}:{documentStoge:documentState[]} =useSelector((state:RootState) => state.document);
-
-  // const filteredDataList = (data: documentState[]) => {
-  //   const startIndex = (currentPage - 1) * itemsPerPage;
-  //   const endIndex = startIndex + itemsPerPage;
-  //   return data.slice(startIndex, endIndex);
-  // };
-  const handleDelectDocument=(id:number)=>{
-    dispatch(DelectDocumentStogeAction(id));
-  }
+  useEffect(() => {
+    dispatch(GetDocumentStogeAction({ page: 0 }));
+  }, [dispatch]);
 
   return (
     <div className={cx("author-component")}>
@@ -135,19 +161,23 @@ const DocumentStorageComponents = () => {
               <p>Chức năng</p>
             </div>
             <div className={cx("bottom-list-table")}>
-              {/* {filteredDataList(documentStoge).map((data) => (
-                <div className={cx("bottom-list-item")} key={data.id}>
+              {dataList.map((data) => (
+                <div className={cx("bottom-list-item")} key={data.docId}>
                   <div className={cx("list-item-left")}>
                     <img src={File} alt="file" />
                     <p>{data.title}</p>
                   </div>
                   <div className={cx("list-item-right")}>
-                    <img src={ImportLight} alt="down"  />
+                    <img src={ImportLight} alt="down" />
                     <img src={Share} alt="share" />
-                    <img src={Delect} alt="Delect" onClick={() => handleDelectDocument(data.id)} />
+                    <img
+                      src={Delect}
+                      alt="Delect"
+                      onClick={() => handleDelectDocument(data.docId)}
+                    />
                   </div>
                 </div>
-              ))} */}
+              ))}
             </div>
           </div>
         </div>
@@ -155,7 +185,7 @@ const DocumentStorageComponents = () => {
           <Pagination
             count={alphabet.length}
             defaultPage={1}
-            siblingCount={7}
+            siblingCount={1}
             onChange={handlePageChange}
             variant="outlined"
             renderItem={(item: PaginationRenderItemParams) => (

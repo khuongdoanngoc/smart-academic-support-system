@@ -1,10 +1,22 @@
 .edit-profile {
   width: 100%;
   margin-top: 23px;
+
   & > .edit-profile-main {
     width: 92%;
     margin: 0 auto;
+    & > .profile-main-title {
+      & > span {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.5px;
+        text-align: left;
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+      }
+    }
     & > .profile-main-header {
+      margin-top: 60px;
       & > h3 {
         font-size: 24px;
         color: #00000099;
@@ -83,7 +95,7 @@
               display: flex;
               justify-content: center;
               align-items: center;
-              background: #00ba06;
+              background: #eb2930;
               color: #fff;
               border-radius: 5px;
               border: 1px solid #00000080;
@@ -108,7 +120,7 @@
             & > .individual-input-name {
               display: flex;
               justify-content: space-between;
-              & > .input-name-lastmame {
+              & > .input-name-lastname {
                 display: flex;
                 flex-direction: column;
                 & > label {
@@ -124,7 +136,7 @@
                   font-size: 15px;
                 }
               }
-              & > .input-name-firstmame {
+              & > .input-name-firstname {
                 display: flex;
                 flex-direction: column;
                 & > label {
@@ -149,7 +161,7 @@
                   line-height: 20px;
                   color: #00000099;
                 }
-                & > select {
+                & > input {
                   padding: 8px 7px;
                   border: 1px solid #00000080;
                   border-radius: 10px;
@@ -295,64 +307,16 @@
               flex-direction: column;
               width: 45%;
 
-              // & > select {
-              //   border-radius: 10px;
-              //   padding: 10px 17px;
-              //   border: 1px solid #00000080;
-              //   gap: 10px;
-              //   color: #000;
-              //   font-size: 16px;
-              //   font-weight: 500;
-              //   line-height: 19px;
-              //   outline: none;
-              // }
-
-              & > .list-item-search {
-                & > input {
-                  width: 100%;
-                  padding: 15px 32px;
-                  border-radius: 20px;
-                  border: 1.5px solid #00000099;
-                  font-size: 16px;
-                  line-height: 19.5px;
-                  color: #00000099;
-                  font-weight: 500;
-                  position: relative;
-                }
-                & > div {
-                  width: 100%;
-                  & > div {
-                    border-radius: 20px;
-                    border: 1.5px solid #00000099;
-                    font-size: 16px;
-                    line-height: 19.5px;
-                    color: #00000099;
-                    font-weight: 500;
-                    position: relative;
-
-                    & > fieldset {
-                      border-color: #fff;
-                      border-width: 0px;
-                    }
-                  }
-                }
-                & > .search-results {
-                  background: #fff;
-                  position: absolute;
-                  z-index: 100;
-                  width: 28%;
-                  height: 121px;
-                  overflow: auto;
-                  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-                  & > ul {
-                    & > li {
-                      padding: 10px 0;
-                      margin: 6px 0;
-                      list-style-type: none;
-                      cursor: pointer;
-                    }
-                  }
-                }
+              & > select {
+                border-radius: 10px;
+                padding: 10px 17px;
+                border: 1px solid #00000080;
+                gap: 10px;
+                color: #000;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 19px;
+                outline: none;
               }
             }
             & > .input-school-specialized {
@@ -361,57 +325,90 @@
               width: 45%;
             }
           }
-          & > .student-input-information {
-            // width: 90%;
-            & > .input-information-position {
-              width: 50%;
-              & > input {
-                cursor: not-allowed;
-              }
+        }
+        & > .student-input-information {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          & > .input-information-position {
+            display: flex;
+            flex-direction: column;
+            width: 45%;
+            & > input {
+              border-radius: 10px;
+              padding: 10px 17px;
+              border: 1px solid rgba(0, 0, 0, 0.5019607843);
+              gap: 10px;
+              color: #000;
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 19px;
+              outline: none;
             }
-            & > .input-information-year {
-              width: 25%;
-              & > select {
-                height: max-content;
-                width: 95%;
-                outline: none;
-              }
+          }
+          & > .input-information-year {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            & > input {
+              border-radius: 10px;
+              padding: 10px 17px;
+              border: 1px solid rgba(0, 0, 0, 0.5019607843);
+              gap: 10px;
+              color: #000;
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 19px;
+              outline: none;
             }
-            & > .input-infor-lock {
-              width: 18%;
+          }
+          & > .input-infor-lock {
+            width: 18%;
+            display: flex;
+            flex-direction: column;
+            & > input {
+              border-radius: 10px;
+              padding: 10px 17px;
+              border: 1px solid rgba(0, 0, 0, 0.5019607843);
+              gap: 10px;
+              color: #000;
+              font-size: 16px;
+              font-weight: 500;
+              line-height: 19px;
+              outline: none;
             }
           }
         }
       }
-      & > .body-individual-submit {
-        width: 90%;
-        background-color: #0a75e6;
-        padding: 13px 0;
-        border-radius: 10px;
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 700;
-        line-height: 24px;
-        margin-bottom: 30px;
-        border: none;
-        cursor: pointer;
-      }
-      & > .body-individual-delete {
-        width: 25%;
-        margin: 90px 0 29px 0;
-        background-color: #dc4342;
-        border-radius: 20px;
-        padding: 11px 0;
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 700;
-        line-height: 24px;
-        border: none;
-        cursor: pointer;
-      }
+      // & > .body-individual-submit {
+      //   width: 90%;
+      //   background-color: #0a75e6;
+      //   padding: 13px 0;
+      //   border-radius: 10px;
+      //   color: #ffffff;
+      //   font-size: 20px;
+      //   font-weight: 700;
+      //   line-height: 24px;
+      //   margin-bottom: 30px;
+      //   border: none;
+      //   cursor: pointer;
+      // }
+      // & > .body-individual-delete {
+      //   width: 25%;
+      //   margin: 90px 0 29px 0;
+      //   background-color: #dc4342;
+      //   border-radius: 20px;
+      //   padding: 11px 0;
+      //   color: #ffffff;
+      //   font-size: 20px;
+      //   font-weight: 700;
+      //   line-height: 24px;
+      //   border: none;
+      //   cursor: pointer;
+      // }
     }
-    & > .profile-main-footer {
-      margin: 40px 0;
-    }
+    // & > .profile-main-footer {
+    //   margin: 40px 0;
+    // }
   }
 }

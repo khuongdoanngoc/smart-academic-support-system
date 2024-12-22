@@ -1,15 +1,11 @@
 import { AxiosError } from "axios";
 import { axiosInstance } from "../../utils/AxiosInterceptor";
 
-export interface listSearch {
-  id: number;
-  title: string;
-}
 export interface GetProfileRequest {
   firstName: string;
   lastName: string;
   email: string;
-  profilePicture: string;
+  profilePicture: string | null;
   birthDate: string;
   gender: string;
   hometown: string;
@@ -20,24 +16,22 @@ export interface GetProfileRequest {
   classNumber: string;
   follower: string;
   following: string;
-  role: string | null;
-  documentDtos: [];
+  roles: string | null;
 }
-export const SearchDocProfilePersonalAPI = async (name: string) => {
+
+export const GetProfileDashBoardAPI = async () => {
   try {
-    const response = await axiosInstance.get<listSearch[]>(
-      `document/search/${name}`
-    );
+    const response = await axiosInstance.get("/user/profile");
     return response;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     throw new Error(error.response?.data.message || error.message);
   }
 };
-export const GetProfileAPI = async () => {
-  try {
-    const response = await axiosInstance.get("/user/profile");
 
+export const DelectProfilePictureAPI = async () => {
+  try {
+    const response = await axiosInstance.delete("/user/delete-profile-picture");
     return response;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;

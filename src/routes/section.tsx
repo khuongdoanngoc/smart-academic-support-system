@@ -3,8 +3,8 @@ import Layout from "../layouts";
 import HomePage from "../pages/Home";
 import DocumentPage from "../pages/Document";
 import { DocumentLayout } from "../components/DocumentLayout";
-import SupportPage from "../pages/Support";
-import FAQDetailPage from "../pages/FAQDetail";
+// import SupportPage from "../pages/Support";
+// import FAQDetailPage from "../pages/FAQDetail";
 import Login from "../pages/Login";
 import ForgotPassWord from "../pages/ForgotPassWord";
 import { ChangePassWord, ProfileAuthor, Register, UploadFile } from "../pages";
@@ -26,6 +26,8 @@ import Directory from "../pages/Directory";
 import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
+import UserInformation from "../pages/Admin/UserInformation";
+import { EditDocumentComponents } from "../sections/EditDocument/components";
 import CommingSoonPage from "../pages/CommingSoon";
 export default function Router() {
   const routes = useRoutes([
@@ -47,27 +49,27 @@ export default function Router() {
         { path: "new-password", element: <NewPassword />, index: true },
       ],
     },
-    {
-      path: "/document",
-      element: (
-        <DocumentLayout>
-            <Outlet />
-          </DocumentLayout>
-      ),
-      children: [
-        { path: "support", element: <SupportPage /> },
-        { path: "support/:id", element: <FAQDetailPage /> },
-        {
-          path: "*",
-          element: <Navigate to="/document/coming-soon" replace />,
-        },
-        {
-          path: "coming-soon",
-          element: <CommingSoonPage />,
-          index: true,
-        }
-      ]
-    },
+    // {
+    //   path: "/document",
+    //   element: (
+    //     <DocumentLayout>
+    //       <Outlet />
+    //     </DocumentLayout>
+    //   ),
+    //   children: [
+    //     { path: "support", element: <SupportPage /> },
+    //     { path: "support/:id", element: <FAQDetailPage /> },
+    //     {
+    //       path: "*",
+    //       element: <Navigate to="/document/coming-soon" replace />,
+    //     },
+    //     {
+    //       path: "coming-soon",
+    //       element: <CommingSoonPage />,
+    //       index: true,
+    //     },
+    //   ],
+    // },
     {
       path: "/document",
       element: (
@@ -94,12 +96,17 @@ export default function Router() {
           path: "edit-profile",
           element: <EditProfile />,
         },
+        // {
+        //   path: "edit-profile/:id",
+        //   element: <EditProfile />,
+        // },
         {
           path: "notification",
           element: <Notification />,
         },
         {
-          path: ":id",
+          path: ":majorSlug/:folderSlug/id",
+          // path: ":id",
           element: <DocumentDetailPage />,
         },
         {
@@ -119,6 +126,10 @@ export default function Router() {
           path: "profile-personal-teacher",
           element: <PersonalTeacher />,
         },
+        // {
+        //   path: "profile-personal-teacher:id",
+        //   element: <PersonalTeacher />,
+        // },
         {
           path: "search-user",
           element: <SearchUser />,
@@ -127,7 +138,12 @@ export default function Router() {
           path: "document-storage",
           element: <DocumentStorage />,
           index: true,
-        }
+        },
+        {
+          path: "edit-document-file",
+          element: <EditDocumentComponents />,
+          index: true,
+        },
       ],
     },
     {
@@ -149,6 +165,10 @@ export default function Router() {
         {
           path: "users",
           element: <AdminUsers />,
+        },
+        {
+          path: "user-information",
+          element: <UserInformation />,
         },
       ],
     },
@@ -174,7 +194,7 @@ export default function Router() {
       path: "/404",
       element: <CommingSoonPage />,
       index: true,
-    }
+    },
   ]);
 
   return routes;

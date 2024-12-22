@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
 });
 
 const ChangePassWordViewComponents = () => {
-  const dispath=useAppDispatch();
+  const dispath = useAppDispatch();
   const handleSubmit = (
     //hàm onclick kiểm tra email,captcha
     _values: { password: string; newpassword: string; confirmPass: string },
@@ -36,13 +36,12 @@ const ChangePassWordViewComponents = () => {
     }: // resetForm,
     { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
   ) => {
-    const data ={
-      password:_values.password,
-      newpassword:_values.newpassword}
-      console.log("data",data);
-      
-  
-dispath(ChangePasswordAction(data))
+    const data = {
+      newPassword: _values.newpassword,
+      oldPassword: _values.password,
+    };
+
+    dispath(ChangePasswordAction(data));
     resetForm();
     setSubmitting(false); // Đặt lại isSubmitting để nút submit hoạt động lại
   };
@@ -50,7 +49,12 @@ dispath(ChangePasswordAction(data))
   return (
     <div className={cx("change-password")}>
       <Formik
-        initialValues={{ password: "", newpassword: "", confirmPass: "", checkPass: false }}
+        initialValues={{
+          password: "",
+          newpassword: "",
+          confirmPass: "",
+          checkPass: false,
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
