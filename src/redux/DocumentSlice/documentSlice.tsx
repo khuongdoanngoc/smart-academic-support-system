@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 import {
   DelectDocumentStoge,
@@ -18,13 +18,13 @@ import {
   GetDocumentSizeAPI,
   SaveDownLoadHistoryApi,
   SaveDocummentStogeAPI,
+  GetDocumentStorage,
 } from "../../services/DocumentAPI/DocumentAPI";
 import { DocumentResponse } from "./InterfaceResponse";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 interface InitialStateStyles {
-  Loading: boolean;
   Error: string;
   Documents: DocumentResponse[] | undefined;
   DocumentDetail: DocumentResponse | undefined;
@@ -32,7 +32,7 @@ interface InitialStateStyles {
   error: string;
   document: DocumentResponse[];
   informationDocument: GetDocument | null;
-  documentStoge: GetDocument[];
+  documentStoge: GetDocumentStorage | null;
 }
 
 export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
@@ -50,7 +50,7 @@ export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
 );
 
 export const GetDocumentSizeAction = createAsyncThunk<any, { pageNum: number }>(
-  "GetDocumentStogeAction",
+  "GetDocumentSizeAction",
   async ({ pageNum }) => {
     try {
       const response = await GetDocumentSizeAPI(pageNum);
@@ -147,7 +147,7 @@ export const GetDocumentStogeAction = createAsyncThunk<any, { page: number }>(
     try {
       const response = await GetDocumentStogeAPI(page);
 
-      return response as unknown as GetDocument;
+      return response as unknown as GetDocumentStorage;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw new Error(error.response?.data.message || error.message);
@@ -242,8 +242,7 @@ const initialState: InitialStateStyles = {
   loading: false,
   error: "",
   document: [],
-  documentStoge: [],
-  Loading: false,
+  documentStoge: null,
   Error: "",
   Documents: [],
   DocumentDetail: undefined,
@@ -257,84 +256,84 @@ export const DocumentSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getDocumentByIDAction.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getDocumentByIDAction.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.DocumentDetail = action.payload;
       })
       .addCase(getDocumentByIDAction.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message || "error when i call api get document by id!";
       })
       .addCase(getAllDocumentsAction.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getAllDocumentsAction.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Documents = action.payload;
       })
       .addCase(getAllDocumentsAction.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message || "error when calling api get all documents";
       })
       .addCase(getDocumentByTitle.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getDocumentByTitle.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.DocumentDetail = action.payload;
       })
       .addCase(getDocumentByTitle.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by title";
       })
       .addCase(getDocumentBySubject.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getDocumentBySubject.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.DocumentDetail = action.payload;
       })
       .addCase(getDocumentBySubject.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by subject";
       })
       .addCase(getDocumentByFolder.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getDocumentByFolder.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.DocumentDetail = action.payload;
       })
       .addCase(getDocumentByFolder.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by folder";
       })
       .addCase(getDocumentByFalcuty.pending, (state) => {
-        state.Loading = true;
+        state.loading = true;
       })
       .addCase(getDocumentByFalcuty.fulfilled, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.DocumentDetail = action.payload;
       })
       .addCase(getDocumentByFalcuty.rejected, (state, action) => {
-        state.Loading = false;
+        state.loading = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by falcuty";
       })
-      // .addCase(GetDocumentStogeAction.pending, (state) => {
-      //   state.loading = true;
-      // })
+      .addCase(GetDocumentStogeAction.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(GetDocumentSizeAction.pending, (state) => {
         state.loading = true;
       })
@@ -347,11 +346,13 @@ export const DocumentSlice = createSlice({
       .addCase(SaveDocumentStogeAction.pending, (state) => {
         state.loading = true;
       })
-      // .addCase(GetDocumentStogeAction.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.informationDocument = action.payload;
-      //   // state.documentStoge = action.payload;
-      // })
+      .addCase(
+        GetDocumentStogeAction.fulfilled,
+        (state, action: PayloadAction<GetDocumentStorage>) => {
+          state.loading = false;
+          state.documentStoge = action.payload;
+        }
+      )
       .addCase(GetDocumentSizeAction.fulfilled, (state, action) => {
         state.loading = false;
         state.informationDocument = action.payload;
@@ -372,13 +373,13 @@ export const DocumentSlice = createSlice({
         state.error = action.payload;
         toast.success("Đã lưu tài liệu thanh công");
       })
-      // .addCase(GetDocumentStogeAction.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.error.message || "Get Document Stoge Failed";
-      // })
       .addCase(SaveDocumentStogeAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Lưu tài liệu thất bại";
+      })
+      .addCase(GetDocumentStogeAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Get Document Failed";
       })
       .addCase(GetDocumentSizeAction.rejected, (state, action) => {
         state.loading = false;

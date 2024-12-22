@@ -176,6 +176,7 @@ const ProfileAuthorComponent = () => {
   useEffect(() => {
     dispatch(GetProFileAction());
   }, [dispatch]);
+  console.log("getUserProfile", getUserProfile);
 
   const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
   const handleEditClick = () => {

@@ -18,7 +18,6 @@ import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlic
 export default function Content() {
   const dispatch = useAppDispatch();
   const documents = useAppSelector((state) => state.document.Documents);
-  console.log("documents", documents);
 
   useEffect(() => {
     dispatch(getAllDocumentsAction(3));

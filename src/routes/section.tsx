@@ -96,10 +96,10 @@ export default function Router() {
           path: "edit-profile",
           element: <EditProfile />,
         },
-        {
-          path: "edit-profile/:id",
-          element: <EditProfile />,
-        },
+        // {
+        //   path: "edit-profile/:id",
+        //   element: <EditProfile />,
+        // },
         {
           path: "notification",
           element: <Notification />,
@@ -140,7 +140,7 @@ export default function Router() {
           index: true,
         },
         {
-          path: "edit-profile",
+          path: "edit-document-file",
           element: <EditDocumentComponents />,
           index: true,
         },

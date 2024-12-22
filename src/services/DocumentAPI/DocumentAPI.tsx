@@ -13,8 +13,13 @@ export interface GetDocument {
   title: string;
   filePath: string;
 }
+export interface GetDocumentStorage {
+  first: boolean;
+  content: [];
+}
 import { DocumentByAccountRequest } from "../../redux/DocumentSlice/InterfaceResponse";
 import { DocumentDtos } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
+import { toast } from "react-toastify";
 
 export const GetDocumentByID = async (id: number) => {
   try {
@@ -206,19 +211,27 @@ export const SaveDocummentStogeAPI = async (docId: number) => {
     const res = await axiosInstance.post(`/saved-documents/save`, null, {
       params: { docId },
     });
+
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
+    if (
+      error.status === 502 ||
+      error.response?.data.message ===
+        "Error saving document: Document already saved."
+    ) {
+      toast.error("Tài liệu đã tồn tại trong kho lưu trữ!");
+    }
     throw new Error(error.response?.data.message || error.message);
   }
 };
 
 export const GetDocumentStogeAPI = async (
   page: number = 0,
-  size: number = 10
+  size: number = 5
 ) => {
   try {
-    const response = await axiosInstance.get(`document/all`, {
+    const response = await axiosInstance.get(`/saved-documents/list`, {
       params: { page, size },
     });
     return response;
@@ -229,19 +242,12 @@ export const GetDocumentStogeAPI = async (
 };
 export const DelectDocumentStoge = async (docId: number) => {
   try {
-    const res = await axiosInstance.delete(`/saved-documents/delete/${docId}`);
+    const res = await axiosInstance.delete(`/saved-documents/delete`, {
+      params: { docId },
+    });
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     throw new Error(error.response?.data.message || error.message);
   }
 };
-// export const DelectDocumentStoge = async (id: number) => {
-//     try {
-//         const res = await axiosInstance.delete(`/document/${id}`);
-//         return res;
-//     } catch (err: unknown) {
-//         const error = err as AxiosError<{ message?: string }>;
-//         throw new Error(error.response?.data.message || error.message);
-//     }
-// };

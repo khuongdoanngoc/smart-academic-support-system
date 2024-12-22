@@ -32,6 +32,13 @@ const store = configureStore({
     search: SearchReducer,
     folder: FolderReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["EditProfileAction/fulfilled"], // Ignore specific actions
+        ignoredPaths: ["editProfile.profileData.profilePicture"],
+      },
+    }),
 });
 
 export default store;

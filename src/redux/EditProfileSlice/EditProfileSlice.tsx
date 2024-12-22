@@ -11,7 +11,7 @@ interface EditProfileState {
   loading: boolean;
   error: string | null;
   success: boolean;
-  profileData: Omit<UpdateProfileRequest, "profilePicture"> | null;
+  profileData: UpdateProfileRequest | null;
 }
 const initialState: EditProfileState = {
   loading: false,
@@ -24,9 +24,8 @@ export const EditProfileAction = createAsyncThunk(
   "EditProfileAction",
   async (data: UpdateProfileRequest) => {
     try {
-      EditProfileAPI(data);
-      const { ...serializableData } = data;
-      return serializableData;
+      const res = await EditProfileAPI(data);
+      return res as unknown as UpdateProfileRequest;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
       throw new Error(error.response?.data.message || error.message);
@@ -48,13 +47,7 @@ const editProfileSlice = createSlice({
 
       .addCase(
         EditProfileAction.fulfilled,
-        (
-          state,
-          action: PayloadAction<Omit<
-            UpdateProfileRequest,
-            "profilePicture"
-          > | null>
-        ) => {
+        (state, action: PayloadAction<UpdateProfileRequest>) => {
           state.loading = false;
           state.success = true;
           state.profileData = action.payload;

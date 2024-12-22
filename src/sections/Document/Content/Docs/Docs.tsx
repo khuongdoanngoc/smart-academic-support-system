@@ -30,25 +30,23 @@ export default function Docs({ title, docs, onLoadMore }: any) {
   };
 
   // configs cho nút ... trên tài liệu
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget);
+  const [anchorEls, setAnchorEls] = React.useState<{
+    [key: number]: HTMLElement | null;
+  }>({});
+  const open = (docId: number) => Boolean(anchorEls[docId]);
+  const handleClick = (event: React.MouseEvent<HTMLElement>, docId: number) => {
+    setAnchorEls((prev) => ({ ...prev, [docId]: event.currentTarget }));
   };
 
   const dispatch = useAppDispatch();
   const handleClose = (option: string, docId: number) => {
-    setAnchorEl(null);
     if (option === "Lưu tài liệu") {
-      console.log("option", option);
-      console.log("docId", docId);
-      const los = dispatch(SaveDocumentStogeAction(docId));
-      console.log("los", los);
+      dispatch(SaveDocumentStogeAction(docId));
     }
+    setAnchorEls((prev) => ({ ...prev, [docId]: null }));
   };
-  const handleClickSlose = () => {
-    setAnchorEl(null);
+  const handleClickClose = (docId: number) => {
+    setAnchorEls((prev) => ({ ...prev, [docId]: null }));
   };
 
   const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
@@ -72,78 +70,87 @@ export default function Docs({ title, docs, onLoadMore }: any) {
         </span>
       </div>
       <div className={cx("cards")}>
-        {docs?.map((data: any, index: number) => (
-          <div key={index} className={cx("card")}>
-            <div className={cx("author")}>
-              <div className={cx("name")}>
-                <img src={`src/assets/images/avatar.png`} alt="avt" />
-                <p>{data.authorName}</p>
-              </div>
-              <IconButton
-                aria-label="more"
-                id="long-button"
-                aria-controls={open ? "long-menu" : undefined}
-                aria-expanded={open ? "true" : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-              >
-                <MoreHorizIcon />
-              </IconButton>
-              <Menu
-                id="long-menu"
-                MenuListProps={{
-                  "aria-labelledby": "long-button",
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClickSlose}
-                slotProps={{
-                  paper: {
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                      width: "13ch",
+        {docs?.map((data: any, index: number) => {
+          return (
+            <div key={index} className={cx("card")}>
+              <div className={cx("author")}>
+                <div className={cx("name")}>
+                  <img src={`src/assets/images/avatar.png`} alt="avt" />
+                  <p>{data.authorName}</p>
+                </div>
+                <IconButton
+                  aria-label="more"
+                  id={`long-button-${data.docId}`}
+                  aria-controls={
+                    open(data.docId) ? `long-menu-${data.docId}` : undefined
+                  }
+                  aria-expanded={open(data.docId) ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={(event) => handleClick(event, data.docId)}
+                >
+                  <MoreHorizIcon />
+                </IconButton>
+                <Menu
+                  id={`long-menu-${data.docId}`}
+                  anchorEl={anchorEls[data.docId]}
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  open={open(data.docId)}
+                  onClose={() => handleClickClose(data.docId)}
+                  slotProps={{
+                    paper: {
+                      style: {
+                        maxHeight: ITEM_HEIGHT * 4.5,
+                        width: "13ch",
+                      },
                     },
-                  },
-                }}
-              >
-                {options.map((option) => (
-                  <MenuItem
-                    key={option}
-                    selected={option === "Pyxis"}
-                    onClick={() => handleClose(option, data.docId)}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </div>
-            <img
-              onClick={() => navigate(`/document/${data.docId}`)}
-              src={`src/assets/images/library.document.png`}
-              alt="doc"
-            />
-            <h3 onClick={() => navigate(`/document/${data.docId}`)}>
-              {truncateTextWithLength(data.title, 45)}
-            </h3>
-            <span>{data.subject}</span>
-            <span>{data.facultyName}</span>
-            <div className={cx("actions")}>
-              <span>{data.downloadCount}+ lượt tải</span>
-              <div>
-                <div
-                  onClick={() => {
-                    downloadFile(data.filePath, data.title);
                   }}
                 >
-                  <FileDownloadOutlinedIcon sx={{ color: "#EB2930" }} />
-                </div>
-                <div onClick={() => handleOpenModal(data.docId)}>
-                  <ShareOutlinedIcon sx={{ color: "#EB2930" }} />
+                  {options.map((option) => {
+                    const docIdCopy = data.docId;
+
+                    return (
+                      <MenuItem
+                        key={option}
+                        onClick={() => {
+                          handleClose(option, docIdCopy);
+                        }}
+                      >
+                        {option}
+                      </MenuItem>
+                    );
+                  })}
+                </Menu>
+              </div>
+              <img
+                onClick={() => navigate(`/document/${data.docId}`)}
+                src={`src/assets/images/library.document.png`}
+                alt="doc"
+              />
+              <h3 onClick={() => navigate(`/document/${data.docId}`)}>
+                {truncateTextWithLength(data.title, 45)}
+              </h3>
+              <span>{data.subject}</span>
+              <span>{data.facultyName}</span>
+              <div className={cx("actions")}>
+                <span>{data.downloadCount}+ lượt tải</span>
+                <div>
+                  <div
+                    onClick={() => {
+                      downloadFile(data.filePath, data.title);
+                    }}
+                  >
+                    <FileDownloadOutlinedIcon sx={{ color: "#EB2930" }} />
+                  </div>
+                  <div onClick={() => handleOpenModal(data.docId)}>
+                    <ShareOutlinedIcon sx={{ color: "#EB2930" }} />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ import {
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../../redux/store";
 import {
@@ -101,11 +101,11 @@ const cx = classnames.bind(styles);
 // ];
 
 const DocumentStorageComponents = () => {
-  const alphabet = Array.from("1234567");
+  const alphabet = Array.from("01234567");
   const dispatch = useAppDispatch();
 
-  const itemsPerPage = 9;
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // const itemsPerPage = 9;
+  // const [currentPage, setCurrentPage] = useState<number>(1);
   // const debounceSearch = useCallback(
   //   debounce(
   //     (page: number) => dispatch(GetDocumentStogeAction({ page })),
@@ -113,23 +113,40 @@ const DocumentStorageComponents = () => {
   //   ),
   //   [dispatch]
   // );
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value);
-    dispatch(GetDocumentStogeAction({ page: value }));
-  };
 
   const { documentStoge } = useSelector((state: RootState) => state.document);
 
-  const filteredDataList = (data: GetDocument[]) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return data.slice(startIndex, endIndex);
+  const [dataList, setDataList] = useState<GetDocument[]>(
+    documentStoge?.content || []
+  );
+
+  const handlePageChange = async (
+    _: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    const actualPage = value - 1;
+    const data = await dispatch(GetDocumentStogeAction({ page: actualPage }));
+    if (data && data.payload) {
+      const newDocumentList = Array.isArray(data.payload.content)
+        ? data.payload.content
+        : [];
+      setDataList(newDocumentList);
+    }
   };
-  const handleDelectDocument = (docId: number) => {
-    dispatch(DelectDocumentStogeAction(docId));
+  console.log("dataList", dataList);
+
+  const handleDelectDocument = async (docId: number) => {
+    console.log("docId", docId);
+
+    const res = await dispatch(DelectDocumentStogeAction(docId));
+    if (res.meta.requestStatus === "fulfilled") {
+      setDataList((data) => data.filter((doc) => doc.docId !== docId));
+    }
   };
 
-  console.log(documentStoge);
+  useEffect(() => {
+    dispatch(GetDocumentStogeAction({ page: 0 }));
+  }, [dispatch]);
 
   return (
     <div className={cx("author-component")}>
@@ -144,7 +161,7 @@ const DocumentStorageComponents = () => {
               <p>Chức năng</p>
             </div>
             <div className={cx("bottom-list-table")}>
-              {filteredDataList(documentStoge).map((data) => (
+              {dataList.map((data) => (
                 <div className={cx("bottom-list-item")} key={data.docId}>
                   <div className={cx("list-item-left")}>
                     <img src={File} alt="file" />
@@ -168,7 +185,7 @@ const DocumentStorageComponents = () => {
           <Pagination
             count={alphabet.length}
             defaultPage={1}
-            siblingCount={7}
+            siblingCount={1}
             onChange={handlePageChange}
             variant="outlined"
             renderItem={(item: PaginationRenderItemParams) => (

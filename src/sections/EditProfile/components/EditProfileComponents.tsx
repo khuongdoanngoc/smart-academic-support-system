@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
@@ -14,6 +14,7 @@ import {
   clearSearchFaculty,
   SearchFacultyAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
+import avartar from "../../../assets/images/Frame 8720.png";
 
 const cx = classNames.bind(styles);
 
@@ -61,20 +62,20 @@ const EditProfileComponents = () => {
     }));
   };
 
-  useEffect(() => {
-    if (
-      formData.profilePicture &&
-      formData.profilePicture !== useData.profilePicture
-    ) {
-      const newPreview = URL.createObjectURL(formData.profilePicture);
-      setAvatarPreview((prev) => {
-        if (prev && prev !== useData.profilePicture) {
-          URL.revokeObjectURL(prev); // Giải phóng URL cũ nếu cần
-        }
-        return newPreview;
-      });
-    }
-  }, [formData.profilePicture, useData.profilePicture]);
+  // useEffect(() => {
+  //   if (
+  //     formData.profilePicture &&
+  //     formData.profilePicture !== useData.profilePicture
+  //   ) {
+  //     const newPreview = URL.createObjectURL(formData.profilePicture);
+  //     setAvatarPreview((prev) => {
+  //       if (prev && prev !== useData.profilePicture) {
+  //         URL.revokeObjectURL(prev); // Giải phóng URL cũ nếu cần
+  //       }
+  //       return newPreview;
+  //     });
+  //   }
+  // }, [formData.profilePicture, useData.profilePicture]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -138,7 +139,7 @@ const EditProfileComponents = () => {
   const handleSubmit = () => {
     const dataToSubmit = {
       ...formData,
-      profilePicture: formData.profilePicture || useData.profilePicture,
+      profilePicture: formData.profilePicture || avartar,
       facultyId: formData.facultyId,
     };
 
@@ -160,7 +161,7 @@ const EditProfileComponents = () => {
           <div className={cx("main-body-top")}>
             <div className={cx("main-body-avatar")}>
               <h3>Ảnh đại diện</h3>
-              <img src={avatarPreview || useData.profilePicture} alt="avatar" />
+              <img src={avatarPreview || avartar} alt="avatar" />
               <div className={cx("file-input")}>
                 <input
                   type="file"
@@ -344,7 +345,8 @@ const EditProfileComponents = () => {
                     // onChange={handleInputChange}
                     // min={2000}
                     // max={new Date().getFullYear()}
-                    placeholder="Sinh viên"
+                    value={useData.roles}
+                    // placeholder="Sinh viên"
                   />
                 </div>
                 <div className={cx("input-information-year")}>
