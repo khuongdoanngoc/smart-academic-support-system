@@ -59,3 +59,14 @@ export const DeleteFolder = async (folderId: number) => {
         throw Error(error.message);
     }
 };
+
+export const GetPopularFolders = async (size: number) => {
+    try {
+        const res = await axiosInstance.get(
+            `/history/top-folders?size=${size}`
+        );
+        return res;
+    } catch (err: any) {
+        throw Error(err.message);
+    }
+};

@@ -4,9 +4,9 @@ import {
     DeleteFolder,
     GetAllFolders,
     GetFolderById,
+    GetPopularFolders,
     UpdateFolder,
 } from "../../services/FolderAPI/FolderAPI";
-
 
 export const getAllFolders = createAsyncThunk<any>(
     "folder/getAllFolders",
@@ -59,10 +59,17 @@ export const updateFolder = createAsyncThunk<any, FolderUpdateDTO>(
     }
 );
 
-const deleteFolder = async (folderId: number) => {
-    const res = await DeleteFolder(folderId);
-    return res.data;
-};
+export const getPopularFolders = createAsyncThunk<any, number>(
+    "folder/getPopularFolders",
+    async (size: number) => {
+        try {
+            const response = await GetPopularFolders(size);
+            return response;
+        } catch (err: any) {
+            throw Error(err.message);
+        }
+    }
+);
 
 interface InitialStateStyles {
     loading: boolean;
@@ -126,6 +133,18 @@ const folderSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(getAllFolders.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "An error occurred";
+            })
+            .addCase(getPopularFolders.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getPopularFolders.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getPopularFolders.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "An error occurred";
             });

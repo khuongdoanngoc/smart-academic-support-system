@@ -8,12 +8,16 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import SearchReducer from "./SearchSlice/searchSlice";
 import FolderReducer from "./FolderSlice/folderSlice";
 
+import AdminDashboardReducer from "./AdminDashboardSlice/AdminDashboardSlice";
+
 import authenticationReducer from "./AuthenticationSlice/AuthenticationSlice";
 import EditProfileReducer from "./EditProfileSlice/EditProfileSlice";
 import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 import profilePersonalReducer from "./ProfilePersonalSlice/ProfilePersonalSlice";
 import dashBoardReducer from "./DashBoardSlice/DashBoardSlice";
+
+import statsReducer from "./StatsSlice/statsSlice";
 
 const store = configureStore({
   reducer: {
@@ -31,6 +35,8 @@ const store = configureStore({
     profileDashBoard: dashBoardReducer,
     search: SearchReducer,
     folder: FolderReducer,
+    adminDashboard: AdminDashboardReducer,
+        stats: statsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
