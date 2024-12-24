@@ -251,3 +251,14 @@ export const DelectDocumentStoge = async (docId: number) => {
     throw new Error(error.response?.data.message || error.message);
   }
 };
+
+export const GetPopularDocuments = async () => {
+    try {
+        const res = await axiosInstance.get(`/history/popular`);
+        return res;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
+    }
+};
+

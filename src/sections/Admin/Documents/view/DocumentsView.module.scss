@@ -31,6 +31,21 @@
             margin-left: auto;
             display: flex;
             gap: 10px;
+            & > .reload-btn {
+                padding: 9px 15px;
+                font-size: 14px;
+                font-weight: 700;
+                line-height: 14.63px;
+                color: white;
+                background-color: burlywood;
+                border: none;
+                border-radius: 10px;
+                transition: 0.3s ease;
+                cursor: pointer;
+            }
+            & > .reload-btn:hover {
+                scale: 1.1;
+            }
             & > .delete-btn {
                 padding: 9px 15px;
                 font-size: 14px;
@@ -65,5 +80,3 @@
         }
     }
 }
-
-
