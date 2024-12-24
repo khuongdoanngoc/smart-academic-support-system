@@ -27,8 +27,10 @@ import { toast } from "react-toastify";
 interface InitialStateStyles {
   Error: string;
   Documents: DocumentResponse[] | undefined;
+  DocumentsSearch: DocumentResponse[];
   DocumentDetail: DocumentResponse | undefined;
   loading: boolean;
+  isSearching: boolean;
   error: string;
   document: DocumentResponse[];
   informationDocument: GetDocument | null;
@@ -193,12 +195,12 @@ export const getAllDocumentsAction = createAsyncThunk<any, number>(
 );
 
 // Document Searches
-export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
+export const getDocumentByTitle = createAsyncThunk<DocumentResponse[], string>(
   "documents/getDocumentByTitle",
   async (title: string) => {
     try {
       const response = await GetDocumentByTitle(title);
-      return response.data as DocumentResponse;
+      return response as unknown as DocumentResponse[];
     } catch (err: any) {
       throw Error(err.message);
     }
@@ -247,12 +249,18 @@ const initialState: InitialStateStyles = {
   Documents: [],
   DocumentDetail: undefined,
   informationDocument: null,
+  DocumentsSearch: [],
+  isSearching: false
 };
 
 export const DocumentSlice = createSlice({
   name: "documents",
   initialState,
-  reducers: {},
+  reducers: {
+    clearDocumentSearch: (state)=>{
+      state.DocumentsSearch = [];
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(getDocumentByIDAction.pending, (state) => {
@@ -280,14 +288,14 @@ export const DocumentSlice = createSlice({
           action.error.message || "error when calling api get all documents";
       })
       .addCase(getDocumentByTitle.pending, (state) => {
-        state.loading = true;
+        state.isSearching = true;
       })
       .addCase(getDocumentByTitle.fulfilled, (state, action) => {
-        state.loading = false;
-        state.DocumentDetail = action.payload;
+        state.isSearching = false;
+        state.DocumentsSearch = action.payload;
       })
       .addCase(getDocumentByTitle.rejected, (state, action) => {
-        state.loading = false;
+        state.isSearching = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by title";
@@ -396,4 +404,5 @@ export const DocumentSlice = createSlice({
   },
 });
 
+export const {clearDocumentSearch} = DocumentSlice.actions;
 export default DocumentSlice.reducer;
