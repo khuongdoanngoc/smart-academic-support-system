@@ -1,10 +1,15 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 // import  ButtonSubmit  from "../../../components/Button/Button";
 import styles from "./EditProfileComponents.module.scss";
 import classNames from "classnames/bind";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/store";
 import {
   EditProfileAction,
+  ResetEditProfileSuccess,
   // GetProFileAction,
   // resetState,
 } from "../../../redux/EditProfileSlice/EditProfileSlice";
@@ -93,6 +98,7 @@ const EditProfileComponents = () => {
   };
   const searchFaculty =
     useAppSelector((state) => state.uploadFile.searchFaculty) || [];
+  // console.log("searchFaculty");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchFaculty = useCallback(
@@ -114,18 +120,16 @@ const EditProfileComponents = () => {
   ) => {
     const { value } = e.target;
 
-    if (!value.trim()) {
-      // Nếu giá trị rỗng, xóa danh sách tìm kiếm và cập nhật major về rỗng
+    if (!value) {
       debounceClearFaculty();
       setFormData((prev) => ({
         ...prev,
-        major: "", // Đảm bảo major được cập nhật thành rỗng
-        facultyId: 0, // Reset facultyId nếu cần
+        major: "",
+        facultyId: 0,
       }));
       return;
     }
     try {
-      // Thực hiện tìm kiếm với giá trị nhập vào
       debounceSearchFaculty(value);
     } catch (error) {
       console.error(error);
@@ -136,6 +140,11 @@ const EditProfileComponents = () => {
     }));
   };
 
+  const success = useAppSelector(
+    (state: RootState) => state.editProfile.success
+  );
+  // console.log("formData.success", success);
+
   const handleSubmit = () => {
     const dataToSubmit = {
       ...formData,
@@ -143,13 +152,18 @@ const EditProfileComponents = () => {
       facultyId: formData.facultyId,
     };
 
-    console.log("dataToSubmit", dataToSubmit);
-
+    // console.log("dataToSubmit", dataToSubmit);
     dispatch(EditProfileAction(dataToSubmit));
-    setTimeout(() => {
-      navigate("/document/profile-personal");
-    }, 3000);
   };
+  useEffect(() => {
+    if (success) {
+      const timeoutId = setTimeout(() => {
+        navigate("/document/profile-personal");
+        dispatch(ResetEditProfileSuccess());
+      }, 3000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [success, navigate, dispatch]);
 
   return (
     <div className={cx("edit-profile")}>
@@ -161,7 +175,10 @@ const EditProfileComponents = () => {
           <div className={cx("main-body-top")}>
             <div className={cx("main-body-avatar")}>
               <h3>Ảnh đại diện</h3>
-              <img src={avatarPreview || avartar} alt="avatar" />
+              <img
+                src={avatarPreview || useData.profilePicture || avartar}
+                alt="avatar"
+              />
               <div className={cx("file-input")}>
                 <input
                   type="file"
@@ -281,19 +298,26 @@ const EditProfileComponents = () => {
                       onChange={handleSearchFaculty}
                     />
 
-                    {formData.major.trim() && searchFaculty?.length > 0 && (
+                    {formData.major && searchFaculty?.length > 0 && (
                       <div className={cx("search-results")}>
                         <ul>
                           {searchFaculty.map((result, index) => (
                             <li
                               key={index}
                               onClick={() => {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  major: result.facultyName,
-                                  facultyId: index,
-                                }));
-                                dispatch(clearSearchFaculty());
+                                if (result?.facultyId) {
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    major: result.facultyName,
+                                    facultyId: result.facultyId,
+                                  }));
+                                  dispatch(clearSearchFaculty());
+                                } else {
+                                  console.error(
+                                    "Faculty ID is undefined for result:",
+                                    result
+                                  );
+                                }
                               }}
                             >
                               {result.facultyName}
@@ -381,7 +405,7 @@ const EditProfileComponents = () => {
             onClick={handleSubmit}
             className={cx("body-individual-submit")}
           >
-            "Lưu thay đổi"
+            Lưu thay đổi
           </button>
           <button className={cx("body-individual-delete")}>
             Xoá tài khoản

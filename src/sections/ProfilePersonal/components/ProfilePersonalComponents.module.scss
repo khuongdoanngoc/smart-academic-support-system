@@ -20,6 +20,7 @@
               width: 48px;
               height: 48px;
               border-radius: 50%;
+              object-fit: cover;
             }
             & > div {
               text-align: left;
@@ -74,11 +75,11 @@
       flex-direction: column;
       justify-content: right;
       align-items: end;
-      width: 49%;
+      width: 53%;
 
       & > .information-right-title {
         background: #ffffff;
-        width: 600px;
+        width: 700px;
         padding: 0 10px;
         border-radius: 10px;
         display: flex;

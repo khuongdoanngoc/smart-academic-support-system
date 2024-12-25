@@ -20,7 +20,10 @@ import {
   SaveDocummentStogeAPI,
   GetDocumentStorage,
 } from "../../services/DocumentAPI/DocumentAPI";
-import { DocumentResponse } from "./InterfaceResponse";
+import {
+  DocumentByAccountRequest,
+  DocumentResponse,
+} from "./InterfaceResponse";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
@@ -49,19 +52,19 @@ export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
   }
 );
 
-export const GetDocumentSizeAction = createAsyncThunk<any, { pageNum: number }>(
-  "GetDocumentSizeAction",
-  async ({ pageNum }) => {
-    try {
-      const response = await GetDocumentSizeAPI(pageNum);
+export const GetDocumentSizeAction = createAsyncThunk<
+  GetDocument,
+  DocumentByAccountRequest
+>("GetDocumentSizeAction", async (data: DocumentByAccountRequest) => {
+  try {
+    const response = await GetDocumentSizeAPI(data);
 
-      return response as unknown as GetDocument;
-    } catch (err: unknown) {
-      const error = err as AxiosError<{ message?: string }>;
-      throw new Error(error.response?.data.message || error.message);
-    }
+    return response as unknown as GetDocument;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.response?.data.message || error.message);
   }
-);
+});
 
 // export const DownloadDocumentAuthorAction = createAsyncThunk<string, number>(
 //   "DocumentSlice/DownloadDocumentAuthorAction",
@@ -181,7 +184,7 @@ export const DelectDocumentStogeAction = createAsyncThunk<string, number>(
 // );
 
 export const getAllDocumentsAction = createAsyncThunk<any, number>(
-  "documents/getAllDocuments",
+  "DocumentSlice/getAllDocuments",
   async (size: number) => {
     try {
       const response = await GetAllDocuments(size);
@@ -194,7 +197,7 @@ export const getAllDocumentsAction = createAsyncThunk<any, number>(
 
 // Document Searches
 export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentByTitle",
+  "DocumentSlice/getDocumentByTitle",
   async (title: string) => {
     try {
       const response = await GetDocumentByTitle(title);
@@ -205,7 +208,7 @@ export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
   }
 );
 export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentBySubject",
+  "DocumentSlice/getDocumentBySubject",
   async (subject: string) => {
     try {
       const response = await GetDocumentBySubject(subject);
@@ -216,7 +219,7 @@ export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
   }
 );
 export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentByFolder",
+  "DocumentSlice/getDocumentByFolder",
   async (folder: string) => {
     try {
       const response = await GetDocumentByFolder(folder);
@@ -227,7 +230,7 @@ export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
   }
 );
 export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentByFalcuty",
+  "DocumentSlice/getDocumentByFalcuty",
   async (falcuty: string) => {
     try {
       const response = await GetDocumentByFalcuty(falcuty);

@@ -1,13 +1,20 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import {
   EditDocument,
   EditDocumentAPI,
 } from "../../services/EditDocumentAPI/EditDocumentAPI";
 import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 interface IEditDocument {
   loding: boolean;
   error: string;
+  success: boolean;
   editDocument: EditDocument | null;
 }
 
@@ -15,7 +22,7 @@ export const EditDocumentAction = createAsyncThunk(
   "editDocumentSlice/EditDocumentAction",
   async (data: EditDocument) => {
     try {
-      const res = EditDocumentAPI(data);
+      const res = await EditDocumentAPI(data);
       return res as unknown as EditDocument;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
@@ -24,34 +31,46 @@ export const EditDocumentAction = createAsyncThunk(
     }
   }
 );
+export const ResetEditDocumentSuccess = createAction(
+  "editDocument/resetSuccess"
+);
 
 const initialState: IEditDocument = {
   loding: false,
   error: "",
   editDocument: null,
+  success: false,
 };
 
-const editDocumentSlice = createSlice({
-  name: "EditDocumentSlce",
+const EditDocumentSlice = createSlice({
+  name: "EditDocumentSlice",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(EditDocumentAction.pending, (state) => {
         state.loding = true;
+        state.success = false;
+      })
+      .addCase(ResetEditDocumentSuccess, (state) => {
+        state.success = false;
       })
       .addCase(
         EditDocumentAction.fulfilled,
         (state, action: PayloadAction<EditDocument>) => {
           state.loding = false;
           state.editDocument = action.payload;
+          state.success = true;
+          toast.success("Cập nhật tài liệu thành công");
         }
       )
       .addCase(EditDocumentAction.rejected, (state, action) => {
         state.loding = false;
+        state.success = false;
         state.error = action.error.message || "Cập nhật thất bại";
+        toast.error("Cập nhật tài liệu thất bại");
       });
   },
 });
 
-export default editDocumentSlice.reducer;
+export default EditDocumentSlice.reducer;

@@ -27,8 +27,8 @@ import SearchPage from "../pages/SearchPage";
 import FolderDetailPage from "../pages/FolderDetail";
 import AISupportPage from "../pages/AISupport";
 import UserInformation from "../pages/Admin/UserInformation";
-import { EditDocumentComponents } from "../sections/EditDocument/components";
 import CommingSoonPage from "../pages/CommingSoon";
+import EditDocument from "../pages/EditDocument";
 export default function Router() {
   const routes = useRoutes([
     {
@@ -141,7 +141,7 @@ export default function Router() {
         },
         {
           path: "edit-document-file",
-          element: <EditDocumentComponents />,
+          element: <EditDocument />,
           index: true,
         },
       ],

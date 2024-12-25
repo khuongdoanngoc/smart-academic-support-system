@@ -11,7 +11,7 @@ interface ApiPostFile {
   facultyName: string;
 }
 export interface SearchFaculty {
-  id: number;
+  facultyId: number;
   facultyName: string;
 }
 export interface SearchFolder {
@@ -64,9 +64,7 @@ export const searchFacultyAPI = async (data: string) => {
 
 export const searchFolderAPI = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/folder/all`
-    );
+    const res = await axiosInstance.get(`/folder/all`);
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
