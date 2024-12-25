@@ -74,30 +74,24 @@ const UploadFileComponents = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  console.log("informationAlert", informationAlert);
-  console.log("alertFile", alertFile);
-
   const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
   let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
-    console.log("newFile 1");
 
     if (newFile) {
-      console.log("newFile 2", newFile);
       const originalName = newFile.name; //lấy tên file
       const sizeFile = newFile.size; //lấy kích thước file
       const fileExtension = originalName.split(".").pop()?.toLowerCase(); //lấy đuôi file
       const allowedExtensions = ["pdf"]; //đuôi file được phép upload
-
       if (!allowedExtensions.includes(fileExtension || "")) {
         //kiểm tra đuôi file nếu không phải pdf thì báo lỗi
-        setInformationAlert("Only docx files are allowed.");
+        setInformationAlert("Chỉ chấp nhận file pdf.");
         setAlertFile(true);
         setTimeout(() => {
           setAlertFile(false);
-          setInformationAlert("");
         }, 3000);
+        e.target.value = "";
         return;
       }
       if (fileSelected === null) {
@@ -124,15 +118,13 @@ const UploadFileComponents = () => {
         }
 
         if (isFileAlreadyUploaded) {
-          setInformationAlert(
-            `This file seems to have been already uploaded: ${originalName}`
-          );
+          setInformationAlert(`File đã được chọn: ${originalName}.`);
 
           setAlertFile(true);
           setTimeout(() => {
             setAlertFile(false);
-            setInformationAlert("");
           }, 3000);
+          e.target.value = "";
           return;
         }
       }
