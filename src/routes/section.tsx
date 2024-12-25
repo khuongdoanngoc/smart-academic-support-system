@@ -149,9 +149,11 @@ export default function Router() {
     {
       path: "/admin",
       element: (
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Outlet />
+          </DashboardLayout>
+        </ProtectedRoute>
       ),
       children: [
         {
