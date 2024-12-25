@@ -58,7 +58,7 @@ export const GetAllDocuments = async (size: number) => {
 
 export const GetDocumentByTitle = async (title: string) => {
   try {
-    const res = await axiosInstance.get(`/search/${title}`);
+    const res = await axiosInstance.get(`/search/title?title=${title}`);
     return res;
   } catch (error: any) {
     throw new Error(error.message);
