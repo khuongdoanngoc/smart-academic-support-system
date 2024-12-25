@@ -10,13 +10,17 @@ import DownICON from "../../../assets/images/icons/DownloadICON.png";
 import ShareICON from "../../../assets/images/icons/ShareICON.png";
 import { useEffect, useState } from "react";
 import { Button } from "../../../components/Button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
+    deleteFolder,
     getFolderById,
     updateFolder,
 } from "../../../redux/FolderSlice/folderSlice";
 import { toast } from "react-toastify";
+import Loader from "../../../components/Loader/Loader";
+import { downloadFile } from "../../../utils/downloadFile";
+import { useSharingModal } from "../../../contexts/SharingModalContext";
 
 const filterDocuments = (docs: any[] | undefined, searchValue: string) => {
     if (!docs) return [];
@@ -40,11 +44,30 @@ export default function FolderDetailView() {
 
     const data: any = useAppSelector((state) => state.folder.data);
     const error: any = useAppSelector((state) => state.folder.error);
+    const { loading, successMessage } = useAppSelector((state) => state.folder);
+    const navigate = useNavigate();
+    // configs cho nút chia sẻ
+    const { openSharingModal, setUrl } = useSharingModal();
+    const handleOpenModal = (id: number) => {
+        setUrl(`${import.meta.env.VITE_CLIENT_URL}/document/${id}`);
+        openSharingModal();
+    };
 
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            navigate("/document/directory");
+        }
+    }, [successMessage]);
+
     const handleEditFolder = () => {
         setIsUpdating(true);
+    };
+
+    const handleDeleteFolder = () => {
+        dispatch(deleteFolder(id));
     };
 
     useEffect(() => {
@@ -57,7 +80,8 @@ export default function FolderDetailView() {
 
     useEffect(() => {
         if (error) {
-            toast.error("Xảy ra lỗi trong quá trình cập nhật");
+            console.log(error);
+            toast.error("Xảy ra lỗi!");
         }
     }, [error]);
 
@@ -90,6 +114,10 @@ export default function FolderDetailView() {
         dispatch(updateFolder({ folderId: id, folderName, description }));
         toast.success("Cập nhật thông tin thành công!");
     };
+
+    if (loading) {
+        return <Loader height={100} />;
+    }
 
     return (
         <div className={cx("folder-detail-view")}>
@@ -135,6 +163,7 @@ export default function FolderDetailView() {
                             paddingX={15}
                             paddingY={4}
                             fontSize={14}
+                            onClick={handleDeleteFolder}
                         />
                     </div>
                     <div className={cx("search-container")}>
@@ -162,24 +191,42 @@ export default function FolderDetailView() {
                                 filterDocuments(data.documents, filterDoc).map(
                                     (value: any, index: number) => (
                                         <div key={index} className={cx("doc")}>
-                                            <div className={cx("doc-title")}>
+                                            <a
+                                                href={`/document/${value.docId}`}
+                                                className={cx("doc-title")}>
                                                 <DescriptionOutlinedIcon />
                                                 {value.title}
-                                            </div>
+                                            </a>
                                             <div className={cx("actions")}>
-                                                <button>
+                                                <button
+                                                    onClick={() =>
+                                                        downloadFile(
+                                                            value.filePath,
+                                                            value.title
+                                                        )
+                                                    }>
                                                     <img
                                                         src={DownICON}
                                                         alt="down"
                                                     />
                                                 </button>
-                                                <button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleOpenModal(
+                                                            value.docId
+                                                        )
+                                                    }>
                                                     <img
                                                         src={ShareICON}
                                                         alt="share"
                                                     />
                                                 </button>
-                                                <button>
+                                                <button
+                                                    onClick={() => {
+                                                        alert(
+                                                            "navigate to edit page"
+                                                        );
+                                                    }}>
                                                     <img
                                                         src={EditICON}
                                                         alt="edit"
@@ -201,7 +248,9 @@ export default function FolderDetailView() {
                 <div className={cx("form-container")}>
                     {phase1Form}
                     <div className={cx("actions")}>
-                        <button style={{ backgroundColor: "#827878" }}>
+                        <button
+                            onClick={() => setIsUpdating(false)}
+                            style={{ backgroundColor: "#827878" }}>
                             Quay lại
                         </button>
                         <button

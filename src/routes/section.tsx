@@ -105,8 +105,8 @@ export default function Router() {
           element: <Notification />,
         },
         {
-          path: ":majorSlug/:folderSlug/id",
-          // path: ":id",
+        //   path: ":majorSlug/:folderSlug/id",
+          path: ":id",
           element: <DocumentDetailPage />,
         },
         {

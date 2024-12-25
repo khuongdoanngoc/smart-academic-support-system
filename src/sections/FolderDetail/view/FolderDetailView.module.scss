@@ -140,7 +140,9 @@
                         font-weight: 600;
                         line-height: 19.5px;
                         width: 600px;
+                        text-decoration: none;
                         word-break: break-word;
+                        width: fit-content;
                     }
                     & > .actions {
                         display: flex;

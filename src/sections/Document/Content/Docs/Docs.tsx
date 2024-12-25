@@ -19,7 +19,7 @@ import { useAppSelector } from "../../../../redux/store";
 import Loader from "../../../../components/Loader/Loader";
 // import { SharingModal } from "../../../../components/SharingModal"
 
-const options = ["Gắn thẻ", "Lưu tài liệu", "Tải xuống", "Chia sẻ", "Báo cáo"];
+const options = ["Lưu tài liệu", "Tải xuống", "Chia sẻ"];
 
 const ITEM_HEIGHT = 48;
 
@@ -50,6 +50,12 @@ export default function Docs({ title, docs, onLoadMore }: any) {
         if (option === "Lưu tài liệu") {
             dispatch(SaveDocumentStogeAction(docId));
         }
+        if (option === "Tải xuống") {
+        }
+        if (option === "Chia sẻ") {
+            handleOpenModal(docId);
+        }
+        console.log(option);
         setAnchorEls((prev) => ({ ...prev, [docId]: null }));
     };
     const handleClickClose = (docId: number) => {

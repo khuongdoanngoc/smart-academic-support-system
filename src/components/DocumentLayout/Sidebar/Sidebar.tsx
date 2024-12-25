@@ -33,8 +33,8 @@ import { appear } from "../../../utils/animations";
 
 const menuItems = [
   { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
-  { title: "Thư viện", icon: BookOutlinedIcon, pathAcitve: "#unknown" },
-  { title: "Sách", icon: AutoStoriesOutlinedIcon, pathAcitve: "#unknown" },
+  { title: "Thư viện", icon: BookOutlinedIcon, pathAcitve: "/404" },
+  { title: "Sách", icon: AutoStoriesOutlinedIcon, pathAcitve: "/404" },
 ];
 const docItems = [
   {
@@ -47,7 +47,7 @@ const docItems = [
     title: "Môn học",
     icon: StickyNote2OutlinedIcon,
     regex: /^\/document\/(subject)/,
-    linkTo: "/document#",
+    linkTo: "/404",
   },
   {
     title: "Thông báo",
@@ -65,7 +65,7 @@ const searchItems = [
   {
     title: "Tài liệu đã lưu",
     icon: BookmarkAddedOutlinedIcon,
-    pathAcitve: "#unknown",
+    pathAcitve: "/document/document-storage",
   },
   {
     title: "Hỗ trợ AI",
