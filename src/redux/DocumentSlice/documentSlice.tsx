@@ -102,6 +102,7 @@ export const DownloadDocumentAction = createAsyncThunk<
       link.click(); // Kích hoạt tải xuống
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url); // Xóa URL tạm thời
+      toast.success('Tải thành công!')
       await SaveDownLoadHistoryApi(username, docId);
     } else {
       throw new Error("File URL is invalid");

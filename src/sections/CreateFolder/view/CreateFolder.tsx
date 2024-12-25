@@ -8,6 +8,7 @@ import Background from "../../../assets/images/create-folder-finisher.png";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/store";
 import { createFolder } from "../../../redux/FolderSlice/folderSlice";
+import { toast } from "react-toastify";
 export default function CreateFolder() {
     const dispatch = useAppDispatch();
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -19,6 +20,11 @@ export default function CreateFolder() {
         if (folderName !== "" && description !== "") {
             dispatch(createFolder({ folderName, description }));
             setIsSuccess(true);
+        } else {
+            if (folderName === "")
+                toast.error("Tên thư mục không được để trống!");
+            if (description === "")
+                toast.error("Mô tả thư mục không được để trống!");
         }
     };
 
@@ -30,6 +36,7 @@ export default function CreateFolder() {
                     type="text"
                     value={folderName}
                     onChange={(e) => setFolderName(e.target.value)}
+                    required
                     placeholder="Nhập tên thư mục"
                 />
             </div>
@@ -38,6 +45,7 @@ export default function CreateFolder() {
                 <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    required
                     placeholder="Nhập loại thư mục"
                 />
             </div>

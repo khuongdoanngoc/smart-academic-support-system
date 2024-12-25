@@ -2,44 +2,43 @@ import classNames from "classnames/bind";
 import styles from "./Directory.module.scss";
 const cx = classNames.bind(styles);
 import Background from "../../../assets/images/library.background.jpeg";
-import folderDirectory from "../folder_directory.json";
-import docsDirectory from "../docs_directory.json";
-import { DocsDirectory } from "./DocsDirectory";
 import FolderDirectory from "./FolderDirectory/FolderDirectory";
 import { RouterTitle } from "../../../components/RouterTitle";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllFolders } from "../../../redux/FolderSlice/folderSlice";
+import Loader from "../../../components/Loader/Loader";
 
 const DirectoryComponents = () => {
     const dispatch = useAppDispatch();
 
     const folders: any = useAppSelector((state) => state.folder.data);
+    const [foldersData, setFoldersData] = useState<any[]>([]);
+    const { loading } = useAppSelector((state) => state.folder);
 
     useEffect(() => {
         dispatch(getAllFolders());
     }, []);
 
+    useEffect(() => {
+        if (folders) {
+            setFoldersData(folders);
+        }
+    }, [folders]);
+
     return (
         <div className={cx("directory-component")}>
             <img src={Background} alt="bg" />
             <RouterTitle title="TÀI LIỆU" />
-            <div className={cx("component-folder")}>
-                <div className={cx("component-folder-main")}>
-                    <FolderDirectory data={folders} />
+            {loading ? (
+                <Loader height={10} />
+            ) : (
+                <div className={cx("component-folder")}>
+                    <div className={cx("component-folder-main")}>
+                        <FolderDirectory data={foldersData} />
+                    </div>
                 </div>
-            </div>
-            {/* <div className={cx("component-docs")}>
-                <div className={cx("component-docs-main")}>
-                    {docsDirectory.map((data, index) => (
-                        <DocsDirectory
-                            key={index}
-                            title={data.title}
-                            docs={data.docs}
-                        />
-                    ))}
-                </div>
-            </div> */}
+            )}
         </div>
     );
 };

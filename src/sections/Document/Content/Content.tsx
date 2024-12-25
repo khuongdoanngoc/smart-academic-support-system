@@ -26,12 +26,12 @@ export default function Content() {
     const [dataPopularFolders, setDataPopularFolders] = useState<any[]>([]);
     const [statsData, setStatsData] = useState<any>({});
 
-
     useEffect(() => {
+        console.log("do call api");
         dispatch(getAllDocumentsAction(3));
         dispatch(getPopularFolders(8));
         dispatch(getStatsForUser());
-    }, [dispatch]);
+    }, []);
 
     useEffect(() => {
         if (popularFolders) {
@@ -42,21 +42,21 @@ export default function Content() {
         }
     }, [popularFolders, stats]);
 
-  const handleLoadMore = (status: string) => {
-    if (status === "loadmore") {
-      dispatch(getAllDocumentsAction(9));
-    } else {
-      dispatch(getAllDocumentsAction(3));
-    }
-  };
+    const handleLoadMore = (status: string) => {
+        if (status === "loadmore") {
+            dispatch(getAllDocumentsAction(9));
+        } else {
+            dispatch(getAllDocumentsAction(3));
+        }
+    };
 
-  // configs for pagination
-  const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-  const [currentPage, setCurrentPage] = useState<string>(alphabet[-1]);
+    // configs for pagination
+    const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    const [currentPage, setCurrentPage] = useState<string>(alphabet[-1]);
 
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(alphabet[value - 1]);
-  };
+    const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+        setCurrentPage(alphabet[value - 1]);
+    };
 
     const filteredDataList = (data: DocumentResponse[] | undefined) => {
         const newListDocuments = [...(data ?? [])];
@@ -78,11 +78,11 @@ export default function Content() {
             <img src={Background} alt="bg" />
             <div className={cx("central")}>
                 <div className={cx("category")}>
-                        <Docs
-                            title={"Tài liệu phổ biến"}
-                            onLoadMore={handleLoadMore}
-                            docs={filteredDataList(documents)}
-                        />
+                    <Docs
+                        title={"Tài liệu phổ biến"}
+                        onLoadMore={handleLoadMore}
+                        docs={filteredDataList(documents)}
+                    />
                 </div>
                 <Statistics data={statsData} />
             </div>

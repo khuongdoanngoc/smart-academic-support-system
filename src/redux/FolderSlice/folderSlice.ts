@@ -59,6 +59,18 @@ export const updateFolder = createAsyncThunk<any, FolderUpdateDTO>(
     }
 );
 
+export const deleteFolder = createAsyncThunk<any, number>(
+    "folder/deleteFolder",
+    async (id: number) => {
+        try {
+            const response = await DeleteFolder(id);
+            return response;
+        } catch (err: any) {
+            throw Error(err.message);
+        }
+    }
+);
+
 export const getPopularFolders = createAsyncThunk<any, number>(
     "folder/getPopularFolders",
     async (size: number) => {
@@ -75,11 +87,13 @@ interface InitialStateStyles {
     loading: boolean;
     error: string | null;
     data: any;
+    successMessage: string;
 }
 const initialState: InitialStateStyles = {
     loading: false,
     error: null,
     data: [], // Hoặc dữ liệu mặc định
+    successMessage: "",
 };
 
 const folderSlice = createSlice({
@@ -133,6 +147,18 @@ const folderSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(getAllFolders.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "An error occurred";
+            })
+            .addCase(deleteFolder.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteFolder.fulfilled, (state) => {
+                state.loading = false;
+                state.successMessage = "Xoá thư mục thành công!";
+            })
+            .addCase(deleteFolder.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "An error occurred";
             })
