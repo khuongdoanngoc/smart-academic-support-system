@@ -38,7 +38,7 @@ import {
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { AppDispatch, RootState, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "@mui/material";
 
@@ -76,6 +76,7 @@ const UploadFileComponents = () => {
 
   const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
   let isFileAlreadyUploaded = false;
+  const {ilogins}= useAppSelector(state=>state.authentication);
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
 
@@ -329,7 +330,9 @@ const UploadFileComponents = () => {
 
   return (
     <div className={cx("file-component-main")}>
-      <HeaderUploadFile />
+      <HeaderUploadFile avatar={{
+        profilePicture: ilogins?.profilePicture
+      }} />
       <div className={cx("component-main-body")}>
         <div className={cx("main-body-top")}>
           <div className={cx("body-top-list", { active: isActiveTitle(1) })}>
