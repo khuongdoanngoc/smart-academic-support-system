@@ -72,8 +72,6 @@ export default function Sidebar() {
     const pathName = useLocation().pathname;
     const { username } = useAppSelector((state) => state.authentication);
 
-    console.log(username);
-
     return (
         <div className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
             <div className={cx("account")}>
@@ -85,7 +83,7 @@ export default function Sidebar() {
                 />
                 {isOpen && (
                     <div>
-                        <h3>{username ? username : "Name User"}</h3>
+                        <h3>{username !== 'null null' ? username : "N/A"}</h3>
                         <span>Admin</span>
                     </div>
                 )}

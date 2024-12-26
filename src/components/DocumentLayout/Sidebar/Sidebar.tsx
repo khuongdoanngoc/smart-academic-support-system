@@ -150,7 +150,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
         {isOpen && (
           <div>
             <h3 onClick={handleClickProfile}>
-              {username ? username : "Name User"}
+              {username !== 'null null' ? username : "N/A"}
             </h3>
             <a href="#">+ Add information</a>
           </div>

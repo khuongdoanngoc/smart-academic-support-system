@@ -84,7 +84,7 @@ export const GetDocumentSizeAction = createAsyncThunk<
 
 export const DownloadDocumentAction = createAsyncThunk<
   void,
-  { documentId: number; username: string }
+  { username: string; documentId: number }
 >(
   "DocumentSlice/DownloadDocumentAuthorAction",
   async ({ documentId, username }) => {
@@ -201,7 +201,7 @@ export const getAllDocumentsAction = createAsyncThunk<any, number>(
 );
 
 // Document Searches
-export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
+export const getDocumentByTitle = createAsyncThunk<DocumentResponse[], string>(
   "DocumentSlice/getDocumentByTitle",
   async (title: string) => {
     try {

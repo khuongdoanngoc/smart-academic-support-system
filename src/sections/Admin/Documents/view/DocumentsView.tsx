@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import {
     approveDocuments,
     checkDocument,
+    clearError,
     deleteDocuments,
     getDocumentsForAdmin,
 } from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
@@ -75,9 +76,11 @@ export default function DocumentsView() {
         (state: any) => state.adminDashboard.documents?.content
     );
 
-    const { loading, successMessage, error } = useAppSelector(
+    const { loading, successMessage } = useAppSelector(
         (state) => state.adminDashboard
     );
+
+    let { error } = useAppSelector((state) => state.adminDashboard);
 
     useEffect(() => {
         if (documents && documents.length !== 0) {
@@ -196,10 +199,12 @@ export default function DocumentsView() {
                 setOpenApproveDialog(false);
             }
             toast.error(error);
+            dispatch(clearError());
             setSelectedIds([]);
             handleReloadTable();
         }
     }, [error]);
+
 
     return (
         <div className={cx("admin-documents-view")}>

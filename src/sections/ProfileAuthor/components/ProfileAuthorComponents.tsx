@@ -25,6 +25,7 @@ import {
 import { useGlobalContextLoin } from "../../../layouts/useContext";
 import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
 import Loader from "../../../components/Loader/Loader";
+import { Link } from "react-router-dom";
 
 const cx = classnames.bind(styles);
 
@@ -85,7 +86,7 @@ const ProfilePersonalComponents = () => {
   };
 
   const handleDownLoad = async (docId: number) => {
-    await dispatch(DownloadDocumentAction({ fullname, docId })).unwrap();
+    await dispatch(DownloadDocumentAction({ username: fullname, documentId: docId })).unwrap();
   };
   const handleOpenShare = () => {
     setIsOpenShare(!isOpenShare);
@@ -218,7 +219,7 @@ const ProfilePersonalComponents = () => {
                     <div className={cx("bottom-list-item")} key={data.docId}>
                       <div className={cx("list-item-left")}>
                         <img src={File} alt="file" />
-                        <p>{data.title}</p>
+                        <Link to={`/document/${data.docId}`} style={{ cursor: 'pointer', textDecoration: 'none', color: '#dc4342', fontWeight: 500}}>{data.title}</Link>
                       </div>
                       <div className={cx("list-item-right")}>
                         <img
@@ -231,7 +232,6 @@ const ProfilePersonalComponents = () => {
                           alt="share"
                           onClick={() => handleOpenShare()}
                         />
-                        <img src={EditIcon} alt="EditIcon" />
                       </div>
                     </div>
                   ))}
