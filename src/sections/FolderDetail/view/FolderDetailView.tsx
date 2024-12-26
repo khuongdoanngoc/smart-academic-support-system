@@ -76,6 +76,7 @@ export default function FolderDetailView() {
 
     useEffect(() => {
         setFolderName(data.folderName);
+        setDescription(data.description)
     }, [data]);
 
     useEffect(() => {

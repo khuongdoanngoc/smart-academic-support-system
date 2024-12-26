@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./Docs.module.scss";
 const cx = classNames.bind(styles);
+// import avartar from "../../../../assets/images/Frame 8720.png";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -12,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useSharingModal } from "../../../../contexts/SharingModalContext";
 import { useNavigate } from "react-router-dom";
 import { truncateTextWithLength } from "../../../../utils/truncateText";
-import { downloadFile } from "../../../../utils/downloadFile";
+// import { downloadFile } from "../../../../utils/downloadFile";
 import { useAppDispatch } from "../../../../redux/store";
 import {
   DownloadDocumentAction,
@@ -49,8 +51,6 @@ export default function Docs({ title, docs, onLoadMore }: any) {
   const handleClose = (option: string, docId: number) => {
     if (option === "Lưu tài liệu") {
       dispatch(SaveDocumentStogeAction(docId));
-    }
-    if (option === "Tải xuống") {
     }
     if (option === "Chia sẻ") {
       handleOpenModal(docId);
