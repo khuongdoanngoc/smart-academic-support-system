@@ -13,6 +13,8 @@ import { Button } from "../../../components/Button";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
+    clearError,
+    clearMessage,
     deleteFolder,
     getFolderById,
     updateFolder,
@@ -61,8 +63,9 @@ export default function FolderDetailView() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        if (successMessage) {
+        if (successMessage !== "") {
             toast.success(successMessage);
+            dispatch(clearMessage());
             navigate("/document/directory");
         }
     }, [successMessage]);
@@ -74,7 +77,6 @@ export default function FolderDetailView() {
     const handleDeleteFolder = () => {
         if (data.accountId === accountId) {
             dispatch(deleteFolder(id));
-            toast.success("Cập nhật thông tin thành công!");
         } else {
             toast.error("Bạn không có quyền chỉnh sửa!");
         }
@@ -92,6 +94,7 @@ export default function FolderDetailView() {
     useEffect(() => {
         if (error) {
             console.log(error);
+            dispatch(clearError());
             toast.error("Xảy ra lỗi!");
         }
     }, [error]);
@@ -242,8 +245,16 @@ export default function FolderDetailView() {
                                                     accountId && (
                                                     <button
                                                         onClick={() => {
+                                                            const fileData = {
+                                                                docId: data.documents[index].docId,
+                                                                    title: data.documents[index].title,
+                                                                    description: data.documents[index].description,
+                                                                    type: data.documents[index].type,
+                                                                    subjectName: data.documents[index].subjectName,
+                                                                    facultyName: data.documents[index].facultyName,
+                                                            }
                                                             navigate("/document/edit-document-file", {
-                                                                state: { fileData: data, avatar: profilePicture },
+                                                                state: { fileData, avatar: profilePicture },
                                                               });
                                                         }}>
                                                         <img

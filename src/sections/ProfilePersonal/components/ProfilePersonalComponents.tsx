@@ -27,7 +27,7 @@ import {
   GetProFilePageAction
   // ViewProfilePersonalByEmailAction,
 } from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
 import { GetDocument } from "../../../services/DocumentAPI/DocumentAPI";
@@ -336,7 +336,14 @@ const ProfileAuthorComponent = () => {
                   <div className={cx("bottom-list-item")} key={data.docId}>
                     <div className={cx("list-item-left")}>
                       <img src={File} alt="file" />
-                      <p>{data.title}</p>
+                      <Link style={{
+                        fontSize: '16px',
+                        lineHeight: '20px',
+                        fontWeight: 600,
+                        color: '#DC4342',
+                        textDecoration: 'none',
+                        cursor: 'pointer'
+                      }} to={`/document/${data.docId}`}>{data.title}</Link>
                     </div>
                     <div className={cx("list-item-right")}>
                       <img

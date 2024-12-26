@@ -99,7 +99,14 @@ const initialState: InitialStateStyles = {
 const folderSlice = createSlice({
     name: "folder",
     initialState,
-    reducers: {},
+    reducers: {
+        clearError: (state) => {
+            state.error = null;
+        },
+        clearMessage: (state) => {
+            state.successMessage = "";
+        },
+    },
     extraReducers(builder) {
         builder
             .addCase(createFolder.pending, (state) => {
@@ -178,3 +185,4 @@ const folderSlice = createSlice({
 });
 
 export default folderSlice.reducer;
+export const { clearError, clearMessage } = folderSlice.actions;
