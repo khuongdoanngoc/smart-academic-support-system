@@ -27,9 +27,10 @@ import Badge from "@mui/material/Badge";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAppSelector } from "../../../redux/store";
+import { RootState, useAppSelector } from "../../../redux/store";
 import { motion, AnimatePresence } from "framer-motion";
 import { appear } from "../../../utils/animations";
+import { useSelector } from "react-redux";
 
 const menuItems = [
   { title: "Trang chủ", icon: HomeOutlinedIcon, pathAcitve: "/document" },
@@ -134,14 +135,16 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
       )}
     </AnimatePresence>
   );
-
+  const ilogins = useSelector(
+    (state: RootState) => state.authentication.ilogins
+  );
   return (
     <div
       style={isOpenAndModal ? { position: "fixed" } : {}}
       className={cx("sidebar", { open: isOpen, closed: !isOpen })}
     >
       <div className={cx("account")}>
-        <img src={Avatar} alt="avatar" />
+        <img src={ilogins?.profilePicture || Avatar} alt="avatar" />
         {isOpen && (
           <div>
             <h3 onClick={handleClickProfile}>
@@ -163,15 +166,15 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
         {isOpen && (
           <div className={cx("statistics-in4")}>
             <div>
-              <h3>0</h3>
+              <h3>{ilogins?.follower || 0}</h3>
               <h4>Followers</h4>
             </div>
             <div>
-              <h3>0</h3>
+              <h3>{ilogins?.upload || 0}</h3>
               <h4>Upload</h4>
             </div>
             <div>
-              <h3>0</h3>
+              <h3>{ilogins?.following || 0}</h3>
               <h4>Following</h4>
             </div>
           </div>

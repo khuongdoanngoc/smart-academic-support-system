@@ -21,7 +21,10 @@ import {
   GetDocumentStorage,
   GetPopularDocuments,
 } from "../../services/DocumentAPI/DocumentAPI";
-import { DocumentResponse } from "./InterfaceResponse";
+import {
+  DocumentByAccountRequest,
+  DocumentResponse,
+} from "./InterfaceResponse";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
@@ -52,19 +55,19 @@ export const getDocumentByIDAction = createAsyncThunk<DocumentResponse, number>(
   }
 );
 
-export const GetDocumentSizeAction = createAsyncThunk<any, { pageNum: number }>(
-  "GetDocumentSizeAction",
-  async ({ pageNum }) => {
-    try {
-      const response = await GetDocumentSizeAPI(pageNum);
+export const GetDocumentSizeAction = createAsyncThunk<
+  GetDocument,
+  DocumentByAccountRequest
+>("GetDocumentSizeAction", async (data: DocumentByAccountRequest) => {
+  try {
+    const response = await GetDocumentSizeAPI(data);
 
-      return response as unknown as GetDocument;
-    } catch (err: unknown) {
-      const error = err as AxiosError<{ message?: string }>;
-      throw new Error(error.response?.data.message || error.message);
-    }
+    return response as unknown as GetDocument;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.response?.data.message || error.message);
   }
-);
+});
 
 // export const DownloadDocumentAuthorAction = createAsyncThunk<string, number>(
 //   "DocumentSlice/DownloadDocumentAuthorAction",
@@ -81,38 +84,39 @@ export const GetDocumentSizeAction = createAsyncThunk<any, { pageNum: number }>(
 
 export const DownloadDocumentAction = createAsyncThunk<
   void,
-  { docId: number; username: string }
->("DocumentSlice/DownloadDocumentAuthorAction", async ({ docId, username }) => {
-  try {
-    const response = await DownloadDocumentAuthorApi(docId); // Gọi API
-    const fileUrl = response.data || response; // Lấy URL từ phản hồi
-    if (fileUrl) {
-      const fileResponse = await fetch(fileUrl);
-      if (!fileResponse.ok) {
-        throw new Error("Failed to fetch the file from the URL");
+  { documentId: number; username: string }
+>(
+  "DocumentSlice/DownloadDocumentAuthorAction",
+  async ({ documentId, username }) => {
+    try {
+      const response = await DownloadDocumentAuthorApi(documentId); // Gọi API
+      const fileUrl = response.data || response; // Lấy URL từ phản hồi
+      if (fileUrl) {
+        const fileResponse = await fetch(fileUrl);
+        if (!fileResponse.ok) {
+          throw new Error("Failed to fetch the file from the URL");
+        }
+        const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
+        const link = document.createElement("a");
+        const fileName = fileUrl.split("/").pop() || "download_file";
+        const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Đặt thuộc tính download
+        document.body.appendChild(link);
+        link.click(); // Kích hoạt tải xuống
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Xóa URL tạm thời
+        await SaveDownLoadHistoryApi(username, documentId);
+      } else {
+        throw new Error("File URL is invalid");
       }
-      const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
-      const link = document.createElement("a");
-      const fileName = fileUrl.split("/").pop() || "download_file";
-
-      const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
-      link.href = url;
-      link.setAttribute("download", fileName); // Đặt thuộc tính download
-      document.body.appendChild(link);
-      link.click(); // Kích hoạt tải xuống
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url); // Xóa URL tạm thời
-      toast.success('Tải thành công!')
-      await SaveDownLoadHistoryApi(username, docId);
-    } else {
-      throw new Error("File URL is invalid");
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      console.error("Download Error:", err.message);
+      toast.error(err.response?.data?.message || "Download failed");
     }
-  } catch (error) {
-    const err = error as AxiosError<{ message?: string }>;
-    console.error("Download Error:", err.message);
-    toast.error(err.response?.data?.message || "Download failed");
   }
-});
+);
 
 // export const SaveDownLoadHistoryAction = createAsyncThunk<
 //   string,
@@ -185,7 +189,7 @@ export const DelectDocumentStogeAction = createAsyncThunk<string, number>(
 // );
 
 export const getAllDocumentsAction = createAsyncThunk<any, number>(
-  "documents/getAllDocuments",
+  "DocumentSlice/getAllDocuments",
   async (size: number) => {
     try {
       const response = await GetAllDocuments(size);
@@ -197,8 +201,8 @@ export const getAllDocumentsAction = createAsyncThunk<any, number>(
 );
 
 // Document Searches
-export const getDocumentByTitle = createAsyncThunk<DocumentResponse[], string>(
-  "documents/getDocumentByTitle",
+export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
+  "DocumentSlice/getDocumentByTitle",
   async (title: string) => {
     try {
       const response = await GetDocumentByTitle(title);
@@ -209,7 +213,7 @@ export const getDocumentByTitle = createAsyncThunk<DocumentResponse[], string>(
   }
 );
 export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentBySubject",
+  "DocumentSlice/getDocumentBySubject",
   async (subject: string) => {
     try {
       const response = await GetDocumentBySubject(subject);
@@ -220,7 +224,7 @@ export const getDocumentBySubject = createAsyncThunk<DocumentResponse, string>(
   }
 );
 export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentByFolder",
+  "DocumentSlice/getDocumentByFolder",
   async (folder: string) => {
     try {
       const response = await GetDocumentByFolder(folder);
@@ -231,7 +235,7 @@ export const getDocumentByFolder = createAsyncThunk<DocumentResponse, string>(
   }
 );
 export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
-  "documents/getDocumentByFalcuty",
+  "DocumentSlice/getDocumentByFalcuty",
   async (falcuty: string) => {
     try {
       const response = await GetDocumentByFalcuty(falcuty);

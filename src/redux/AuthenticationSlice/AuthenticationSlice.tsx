@@ -28,6 +28,10 @@ interface ILoginS {
   accessToken: string;
   refreshToken: string;
   username: string;
+  follower: number;
+  following: number;
+  upload: number;
+  profilePicture: string;
 }
 
 interface IRegister {
@@ -36,7 +40,6 @@ interface IRegister {
   password: string;
   roleName: string;
 }
-
 interface InitialStateStylesLogin {
   //interface initial state login
   loading: boolean;
@@ -52,6 +55,7 @@ interface InitialStateStylesLogin {
   refreshToken: string | null;
   otp: string | null;
   otpExpires: string | null;
+  ilogins:ILoginS |null;
 }
 const getStorageItem = (key: string) => {
   //hàm lấy item từ local storage
@@ -73,6 +77,7 @@ const initialState: InitialStateStylesLogin = {
   otp: null,
   otpExpires: null,
   accountId: 0,
+  ilogins:null
 };
 
 export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
@@ -306,7 +311,7 @@ const AuthenticationSlice = createSlice({
           state.accountId = null;
         });
       })
-      .addCase(AutoLoginAction.fulfilled, (state, action) => {
+      .addCase(AutoLoginAction.fulfilled, (state, action:PayloadAction<ILoginS>) => {
         state.loading = false;
         if(window.location.pathname.startsWith("/admin")){
           if(action.payload.listRoles && action.payload.listRoles.length>0 && action.payload.listRoles[0]!=="ADMIN"){
@@ -337,7 +342,6 @@ const AuthenticationSlice = createSlice({
             state.accountId = action.payload.accountId;
           }
         }
-        
       })
       .addCase(ChangePasswordAction.fulfilled, (state) => {
         state.loading = false;

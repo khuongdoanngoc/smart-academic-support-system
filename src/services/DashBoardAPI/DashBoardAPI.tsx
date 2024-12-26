@@ -19,9 +19,9 @@ export interface GetProfileRequest {
   roles: string | null;
 }
 
-export const GetProfileDashBoardAPI = async () => {
+export const GetProfileDashBoardAPI = async (id: number) => {
   try {
-    const response = await axiosInstance.get("/user/profile");
+    const response = await axiosInstance.get(`/admin/dashboard/users/${id}`);
     return response;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;

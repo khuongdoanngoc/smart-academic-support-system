@@ -16,6 +16,7 @@ import searchUserReducer from "./SearchUserSlice/SearchUserSlice";
 import profileAuthorReducer from "./ProfileAuthorSlice/ProfileAuthorSlice";
 import profilePersonalReducer from "./ProfilePersonalSlice/ProfilePersonalSlice";
 import dashBoardReducer from "./DashBoardSlice/DashBoardSlice";
+import EditDocumentReducer from "./EditDocumentSlice/EditDocumentSlice";
 
 import statsReducer from "./StatsSlice/statsSlice";
 
@@ -33,6 +34,7 @@ const store = configureStore({
     profileAuthor: profileAuthorReducer,
     profilePersonal: profilePersonalReducer,
     profileDashBoard: dashBoardReducer,
+    editDocument: EditDocumentReducer,
     search: SearchReducer,
     folder: FolderReducer,
     adminDashboard: AdminDashboardReducer,

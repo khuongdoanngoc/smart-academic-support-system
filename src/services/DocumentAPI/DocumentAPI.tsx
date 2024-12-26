@@ -2,6 +2,10 @@
 
 import { AxiosError } from "axios";
 import { axiosInstance } from "../../utils/AxiosInterceptor";
+import { DocumentByAccountRequest } from "../../redux/DocumentSlice/InterfaceResponse";
+import { DocumentDtos } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
+import { toast } from "react-toastify";
+import { GetProfileRequest } from "../ProfilePersonalAPI/ProfilePersonalAPI";
 
 // export interface DocumentStorage {
 //   saveId: number;
@@ -15,11 +19,18 @@ export interface GetDocument {
 }
 export interface GetDocumentStorage {
   first: boolean;
+  totalPages: number;
   content: [];
 }
-import { DocumentByAccountRequest } from "../../redux/DocumentSlice/InterfaceResponse";
-import { DocumentDtos } from "../../redux/ProfileAuthorSlice/ProfileAuthorSlice";
-import { toast } from "react-toastify";
+
+// export interface GetEditDocument {
+//   docId: number;
+//   title: string;
+//   description: string;
+//   type: string;
+//   subjectName: string;
+//   facultyName: string;
+// }
 
 export const GetDocumentByID = async (id: number) => {
   try {
@@ -96,6 +107,19 @@ export const FindAllDocumentByEmailAPI = async (
   }
 };
 
+export const AllDocumentPersonalByEmailAPI = async (
+  data: DocumentByAccountRequest
+) => {
+  try {
+    const res = await axiosInstance.get(
+      `/document/account?email=${data.email}&pageNum=${data.pageNum}&pageSize=${data.pageSize}`
+    );
+    return res as unknown as GetProfileRequest;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 // export const GetDocumentByFalcuty = async (falcuty: string) => {
 //     try {
 //         const res = await axiosInstance.get(baseUrl + `/search/${falcuty}`);
@@ -129,24 +153,21 @@ export const GetDocumentByFalcuty = async (falcuty: string) => {
 //   }
 // };
 
-export const GetDocumentSizeAPI = async (
-  pageNum: number,
-  pageSize: number = 10
-) => {
+export const GetDocumentSizeAPI = async (data: DocumentByAccountRequest) => {
   try {
-    const response = await axiosInstance.get<any>(`document/account`, {
-      params: { pageSize, pageNum },
-    });
-    return response;
+    const res = await axiosInstance.get(
+      `/document/account?email=${data.email}&pageNum=${data.pageNum}&pageSize=${data.pageSize}`
+    );
+    return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
     throw new Error(error.response?.data.message || error.message);
   }
 };
 
-export const DownloadDocumentAuthorApi = async (docId: number) => {
+export const DownloadDocumentAuthorApi = async (documentId: number) => {
   try {
-    const response = await axiosInstance.get(`/download/${docId}`, {
+    const response = await axiosInstance.get(`/download/${documentId}`, {
       responseType: "text", // Chỉ định kiểu phản hồi là plain text
     });
 
