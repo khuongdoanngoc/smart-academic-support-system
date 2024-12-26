@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./UploadFileComponents.module.scss";
 import Vector1 from "../../../assets/images/Vector 9.png";
@@ -7,13 +5,13 @@ import Vector2 from "../../../assets/images/Vector 114.png";
 import logoSuccess from "../../../assets/images/fa7c78e152e8e8d45fafa21dc604d937.gif";
 import arrowUp from "../../../assets/images/arrow-up-dashed-square--arrow-keyboard-button-up-square-dashes.png";
 import Delfile from "../../../assets/images//browser-delete--app-code-apps-fail-delete-window-remove-cross.png";
-import { debounce } from "lodash";
+
 import * as React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useRef, useState, useCallback } from "react";
 
+import { useRef, useState, useCallback } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -39,9 +37,10 @@ import {
   SearchSubjectAction,
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { debounce } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "@mui/material";
 
 const cx = classNames.bind(styles);
 
@@ -72,23 +71,14 @@ const UploadFileComponents = () => {
   const [facultyFile, setFacultyFile] = useState("");
   const [folderFile, setFolderFile] = useState("");
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const isUpload = useAppSelector((state) => state.uploadFile.isupload);
-  const searchFaculty =
-    useAppSelector((state) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
-  const searchSubject =
-    useAppSelector((state) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
-  const searchFolder =
-    useAppSelector((state) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
-
+  const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
   let isFileAlreadyUploaded = false;
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(1);
-
     const newFile = e.target.files?.[0]; //lấy file từ input
-    console.log("newFile", newFile);
+
     if (newFile) {
       const originalName = newFile.name; //lấy tên file
       const sizeFile = newFile.size; //lấy kích thước file
@@ -96,14 +86,16 @@ const UploadFileComponents = () => {
       const allowedExtensions = ["pdf"]; //đuôi file được phép upload
       if (!allowedExtensions.includes(fileExtension || "")) {
         //kiểm tra đuôi file nếu không phải pdf thì báo lỗi
-        setInformationAlert("Only docx files are allowed.");
+        setInformationAlert("Chỉ chấp nhận file pdf.");
         setAlertFile(true);
         setTimeout(() => {
           setAlertFile(false);
         }, 3000);
+        e.target.value = "";
         return;
       }
       if (fileSelected === null) {
+        //kiểm tra file đã được chọn chưa
         setFileSelected(newFile);
         setTitleFile(originalName);
         const shortenedName =
@@ -126,22 +118,13 @@ const UploadFileComponents = () => {
         }
 
         if (isFileAlreadyUploaded) {
-          setInformationAlert(
-            `This file seems to have been already uploaded: ${originalName}`
-          );
+          setInformationAlert(`File đã được chọn: ${originalName}.`);
 
           setAlertFile(true);
           setTimeout(() => {
             setAlertFile(false);
           }, 3000);
-          return;
-        }
-        if (fileList.length >= 1) {
-          setInformationAlert("Only 1 file can be uploaded.");
-          setAlertFile(true);
-          setTimeout(() => {
-            setAlertFile(false);
-          }, 3000);
+          e.target.value = "";
           return;
         }
       }
@@ -204,7 +187,6 @@ const UploadFileComponents = () => {
       handleResetUpload();
     }
   });
-  console.log(fileList);
 
   const handleItemNext = () => {
     if (isColorItemButton === 2) {
@@ -223,7 +205,6 @@ const UploadFileComponents = () => {
           subjectName: subjectFile,
           facultyName: facultyFile,
         };
-        console.log("data", data);
 
         dispatch(UploadFileAction(data));
       }
@@ -248,6 +229,14 @@ const UploadFileComponents = () => {
     setmenuCheckItemRow(!menuCheckItemRow);
   };
 
+  const searchFaculty =
+    useSelector((state: RootState) => state.uploadFile.searchFaculty) || []; //use selector hiển thị kết quả tìm kiếm chuyên ngành
+  const searchSubject =
+    useSelector((state: RootState) => state.uploadFile.searchSubject) || []; //use selector hiển thị kết quả tìm kiếm môn học
+  const searchFolder =
+    useSelector((state: RootState) => state.uploadFile.searchFolder) || []; //use selector hiển thị kết quả tìm kiếm nội dung file
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchFaculty = useCallback(
     debounce(
       (value: string) => dispatch(SearchFacultyAction(value)).unwrap(),
@@ -255,6 +244,7 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchFacultyAction]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchSubject = useCallback(
     debounce(
       (value: string) => dispatch(SearchSubjectAction(value)).unwrap(),
@@ -262,23 +252,17 @@ const UploadFileComponents = () => {
     ),
     [dispatch, SearchSubjectAction]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearFaculty = useCallback(
     debounce(() => dispatch(clearSearchFaculty()), 1000),
     [dispatch, clearSearchFaculty]
   );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceClearSubject = useCallback(
     debounce(() => dispatch(clearSearchSubject()), 1000),
     [dispatch, clearSearchSubject]
   );
 
-  // const debounceSearching = useCallback(
-  //   debounce(
-  //     async (nextValue) =>
-  //       await dispatch(SearchFacultyAction(nextValue)).unwrap(),
-  //     1000
-  //   ),
-  //   [dispatch]
-  // );
   const handleSearchFaculty = async (value: string) => {
     setFacultyFile(value);
     if (!value.trim()) {
@@ -343,20 +327,6 @@ const UploadFileComponents = () => {
   const isActiveTitle = (step: number) => isColorItemButton === step;
   const isActiveBorder = (step: number) => isColorItemButton >= step;
 
-  const location = useLocation();
-  const linkFile = location.state?.fileData || [];
-  console.log("linkFile", linkFile);
-  console.log("setFileSelected", fileSelected);
-
-  React.useEffect(() => {
-    if (linkFile) {
-      setFileSelected(linkFile.filePath);
-      // setIsColorItemButton(2);
-      // setDefaultUploadFile(true);
-      // setFileList(linkFile);
-    }
-  }, []);
-
   return (
     <div className={cx("file-component-main")}>
       <HeaderUploadFile />
@@ -396,6 +366,7 @@ const UploadFileComponents = () => {
             onDragOver={(e) => e.preventDefault()}
           >
             <input onChange={onFileDrop} type="file" />
+
             <div className={cx("main-body-hover")}>
               <div>
                 <TextSnippet />
@@ -465,7 +436,7 @@ const UploadFileComponents = () => {
                       {subjectFile.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
-                            {searchSubject.map((result: any, index: number) => (
+                            {searchSubject.map((result, index) => (
                               <li
                                 key={index}
                                 onClick={() => {

@@ -111,14 +111,21 @@ const LoginComponents: React.FC<PopsInformation> = ({
       dispatch(loginStart()); //dispatch loginStart
       const result = await dispatch(LoginAction(values)); //dispatch LoginAction
       const payload = result.payload as {
-        user?: ILogin;
+        username?: ILogin;
         accessToken?: string;
         refreshToken?: string;
+        listRoles?: string[];
       };
+      console.log(payload);
+      
       if (!payload || !payload.accessToken) {
         toast.error("Email or password incorrect");
       } else {
-        navigate("/document");
+        if(payload.listRoles && payload.listRoles.length > 0 && payload.listRoles[0]!=="ADMIN") {
+          navigate("/document");
+        }else{
+          navigate("/admin/dashboard");
+        }
       }
       console.log("Saved token:", localStorage.getItem("token"));
     } catch (error) {
