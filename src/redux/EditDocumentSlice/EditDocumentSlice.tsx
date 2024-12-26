@@ -12,7 +12,7 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 interface IEditDocument {
-  loding: boolean;
+  loading: boolean;
   error: string;
   success: boolean;
   editDocument: EditDocument | null;
@@ -36,7 +36,7 @@ export const ResetEditDocumentSuccess = createAction(
 );
 
 const initialState: IEditDocument = {
-  loding: false,
+  loading: false,
   error: "",
   editDocument: null,
   success: false,
@@ -49,7 +49,7 @@ const EditDocumentSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(EditDocumentAction.pending, (state) => {
-        state.loding = true;
+        state.loading = true;
         state.success = false;
       })
       .addCase(ResetEditDocumentSuccess, (state) => {
@@ -58,14 +58,14 @@ const EditDocumentSlice = createSlice({
       .addCase(
         EditDocumentAction.fulfilled,
         (state, action: PayloadAction<EditDocument>) => {
-          state.loding = false;
+          state.loading = false;
           state.editDocument = action.payload;
           state.success = true;
           toast.success("Cập nhật tài liệu thành công");
         }
       )
       .addCase(EditDocumentAction.rejected, (state, action) => {
-        state.loding = false;
+        state.loading = false;
         state.success = false;
         state.error = action.error.message || "Cập nhật thất bại";
         toast.error("Cập nhật tài liệu thất bại");

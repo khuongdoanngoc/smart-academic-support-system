@@ -10,6 +10,12 @@ export interface DocumentPersonalDtos {
   filePath: string;
   title: string;
   docId: number;
+
+  //thêm
+  description: string;
+  content: string;
+  type: string;
+  subjectName: string;
 }
 export interface GetProfileRequest {
   firstName: string;
@@ -20,7 +26,7 @@ export interface GetProfileRequest {
   gender: string;
   hometown: string;
   phoneNumber: string;
-  facultyName: number;
+  // facultyName: number; //chỉnh sửa
   major: string;
   enrollmentYear: number;
   classNumber: string;
@@ -30,6 +36,10 @@ export interface GetProfileRequest {
   documentDtos: DocumentPersonalDtos[];
   totalPage: number;
   totalDocument: number;
+
+  //thêm
+  facultyName: string;
+  facultyId: number;
 }
 export const SearchDocProfilePersonalAPI = async (name: string) => {
   try {

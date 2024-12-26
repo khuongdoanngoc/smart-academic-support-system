@@ -11,6 +11,10 @@ interface ILoginS {
   accessToken: string;
   refreshToken: string;
   username: string;
+  follower: number;
+  following: number;
+  upload: number;
+  profilePicture: string;
 }
 interface IRegister {
   email: string;

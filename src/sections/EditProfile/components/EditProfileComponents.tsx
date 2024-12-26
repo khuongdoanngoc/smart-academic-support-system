@@ -50,7 +50,7 @@ const EditProfileComponents = () => {
     birthDate: useData.birthDate ? formatDateToYYYYMMDD(useData.birthDate) : "",
     hometown: useData.hometown,
     phoneNumber: useData.phoneNumber,
-    facultyId: 0,
+    facultyId: useData.facultyId,
     major: useData.major,
     enrollmentYear: new Date().getFullYear(),
     classNumber: useData.classNumber,
@@ -125,7 +125,7 @@ const EditProfileComponents = () => {
       setFormData((prev) => ({
         ...prev,
         major: "",
-        facultyId: 0,
+        // facultyId: 0,
       }));
       return;
     }
@@ -140,8 +140,8 @@ const EditProfileComponents = () => {
     }));
   };
 
-  const success = useAppSelector(
-    (state: RootState) => state.editProfile.success
+  const { success, loading } = useAppSelector(
+    (state: RootState) => state.editProfile
   );
   // console.log("formData.success", success);
 
@@ -226,7 +226,7 @@ const EditProfileComponents = () => {
                     <select
                       className={cx("infor-sex-select")}
                       name="gender"
-                      value={useData.gender}
+                      value={formData.gender}
                       onChange={handleInputChange}
                     >
                       <option>Nam</option>
@@ -404,8 +404,10 @@ const EditProfileComponents = () => {
           <button
             onClick={handleSubmit}
             className={cx("body-individual-submit")}
+            type="submit"
+            disabled={loading}
           >
-            Lưu thay đổi
+            {loading ? "Đang thay đổi" : "  Lưu thay đổi"}
           </button>
           <button className={cx("body-individual-delete")}>
             Xoá tài khoản

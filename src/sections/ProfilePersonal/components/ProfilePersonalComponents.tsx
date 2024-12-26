@@ -17,7 +17,11 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
-import { RootState, useAppDispatch } from "../../../redux/store";
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/store";
 // // import { SearchFolderAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
 // import { SearchDocProfilePersonalAPI } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
 import {
@@ -199,19 +203,21 @@ const ProfileAuthorComponent = () => {
       console.log(error);
     }
   };
+  console.log(getUserProfile);
 
-  const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
+  // const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
+  const username = useAppSelector((state) => state.authentication.username);
   const handleEditClick = () => {
     navigate("/document/edit-profile", { state: { useData: getUserProfile } });
   };
-  const handleDownloadDocuments = (docId: number) => {
-    dispatch(DownloadDocumentAction({ username, docId }));
+  const handleDownloadDocuments = (documentId: number) => {
+    dispatch(DownloadDocumentAction({ documentId, username }));
   };
   const handleChangeEditUpload = (
     data: GetDocument,
     useData: GetProfileRequest
   ) => {
-    // console.log("handleChangeEditUpload", data);
+    console.log("handleChangeEditUpload", data);
 
     navigate("/document/edit-document-file", {
       state: { fileData: data, avatar: useData },

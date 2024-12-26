@@ -81,37 +81,40 @@ export const GetDocumentSizeAction = createAsyncThunk<
 
 export const DownloadDocumentAction = createAsyncThunk<
   void,
-  { docId: number; username: string }
->("DocumentSlice/DownloadDocumentAuthorAction", async ({ docId, username }) => {
-  try {
-    const response = await DownloadDocumentAuthorApi(docId); // Gọi API
-    const fileUrl = response.data || response; // Lấy URL từ phản hồi
-    if (fileUrl) {
-      const fileResponse = await fetch(fileUrl);
-      if (!fileResponse.ok) {
-        throw new Error("Failed to fetch the file from the URL");
-      }
-      const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
-      const link = document.createElement("a");
-      const fileName = fileUrl.split("/").pop() || "download_file";
+  { documentId: number; username: string }
+>(
+  "DocumentSlice/DownloadDocumentAuthorAction",
+  async ({ documentId, username }) => {
+    try {
+      const response = await DownloadDocumentAuthorApi(documentId); // Gọi API
+      const fileUrl = response.data || response; // Lấy URL từ phản hồi
+      if (fileUrl) {
+        const fileResponse = await fetch(fileUrl);
+        if (!fileResponse.ok) {
+          throw new Error("Failed to fetch the file from the URL");
+        }
+        const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
+        const link = document.createElement("a");
+        const fileName = fileUrl.split("/").pop() || "download_file";
 
-      const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
-      link.href = url;
-      link.setAttribute("download", fileName); // Đặt thuộc tính download
-      document.body.appendChild(link);
-      link.click(); // Kích hoạt tải xuống
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url); // Xóa URL tạm thời
-      await SaveDownLoadHistoryApi(username, docId);
-    } else {
-      throw new Error("File URL is invalid");
+        const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
+        link.href = url;
+        link.setAttribute("download", fileName); // Đặt thuộc tính download
+        document.body.appendChild(link);
+        link.click(); // Kích hoạt tải xuống
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url); // Xóa URL tạm thời
+        await SaveDownLoadHistoryApi(username, documentId);
+      } else {
+        throw new Error("File URL is invalid");
+      }
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      console.error("Download Error:", err.message);
+      toast.error(err.response?.data?.message || "Download failed");
     }
-  } catch (error) {
-    const err = error as AxiosError<{ message?: string }>;
-    console.error("Download Error:", err.message);
-    toast.error(err.response?.data?.message || "Download failed");
   }
-});
+);
 
 // export const SaveDownLoadHistoryAction = createAsyncThunk<
 //   string,

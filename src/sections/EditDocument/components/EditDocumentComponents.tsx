@@ -90,7 +90,7 @@ const EditDocumentComponents = () => {
     facultyName: fileData?.facultyName || "",
   });
 
-  // console.log("formData", formData);
+  console.log("fileData", fileData);
 
   const handleSearchFaculty = async (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -169,8 +169,8 @@ const EditDocumentComponents = () => {
   const handleMenuCheckItemRow = () => {
     setmenuCheckItemRow(!menuCheckItemRow);
   };
-  const success = useAppSelector(
-    (state: RootState) => state.editDocument.success
+  const { success, loading } = useAppSelector(
+    (state: RootState) => state.editDocument
   );
   const handleDefaultUpload = () => {
     // console.log("formData handleDefaultUpload ", formData);
@@ -268,9 +268,12 @@ const EditDocumentComponents = () => {
                     type="text"
                     readOnly
                     placeholder="Trắc nghiệm hoặc tự luận"
-                    value={formData?.type}
+                    value={
+                      formData?.type === "tự luận" ? "Tự luận" : "Trắc nghiệm"
+                    }
                     name="type"
                   />
+
                   <p onClick={handleMenuCheckItemRow}>
                     {menuCheckItemRow ? (
                       <KeyboardArrowUp />
@@ -282,10 +285,10 @@ const EditDocumentComponents = () => {
                 {menuCheckItemRow && (
                   <div className={cx("list-item-row")}>
                     <ul>
-                      <li onClick={() => handleChangeItemRow("Trắc nghiệm")}>
+                      <li onClick={() => handleChangeItemRow("trắc nghiệm")}>
                         Trắc nghiệm
                       </li>
-                      <li onClick={() => handleChangeItemRow("Tự luận")}>
+                      <li onClick={() => handleChangeItemRow("tự luận")}>
                         Tự luận
                       </li>
                     </ul>
@@ -318,7 +321,7 @@ const EditDocumentComponents = () => {
               >
                 <div>
                   <img src={arrowUp} />
-                  <span>Cập nhật tài liệu</span>
+                  <span>{loading ? "Đang cập nhật" : "Cập nhật tài liệu"}</span>
                 </div>
               </button>
             </div>

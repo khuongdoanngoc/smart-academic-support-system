@@ -19,6 +19,7 @@ export interface GetDocument {
 }
 export interface GetDocumentStorage {
   first: boolean;
+  totalPages: number;
   content: [];
 }
 
@@ -164,9 +165,9 @@ export const GetDocumentSizeAPI = async (data: DocumentByAccountRequest) => {
   }
 };
 
-export const DownloadDocumentAuthorApi = async (docId: number) => {
+export const DownloadDocumentAuthorApi = async (documentId: number) => {
   try {
-    const response = await axiosInstance.get(`/download/${docId}`, {
+    const response = await axiosInstance.get(`/download/${documentId}`, {
       responseType: "text", // Chỉ định kiểu phản hồi là plain text
     });
 
