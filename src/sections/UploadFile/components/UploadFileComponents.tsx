@@ -288,6 +288,7 @@ const UploadFileComponents = () => {
   };
   const handleSearchSubject = async (value: string) => {
     setSubjectSelected(value);
+    
     if (!value.trim()) {
       debounceClearSubject();
       return;
@@ -446,7 +447,7 @@ const UploadFileComponents = () => {
                         value={subjectSelected}
                         onChange={(e) => handleSearchSubject(e.target.value)}
                       />
-                      {subjectFile.trim() && searchSubject?.length > 0 && (
+                      {subjectSelected.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
                             {searchSubject.map((result, index) => (
