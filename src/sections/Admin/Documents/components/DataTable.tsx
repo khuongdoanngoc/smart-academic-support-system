@@ -153,7 +153,7 @@ export default function DataTable({
                                                 style={{ color: "#DC4342" }}
                                                 href={
                                                     topic === "user"
-                                                        ? `/user-information/${row.accountId}`
+                                                        ? `/admin/user-information/${row.accountId}`
                                                         : `/chatbot/${row.docId}`
                                                 }>
                                                 {topic === "user" ? (

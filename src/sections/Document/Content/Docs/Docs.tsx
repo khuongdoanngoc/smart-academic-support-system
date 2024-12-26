@@ -1,6 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Docs.module.scss";
 const cx = classNames.bind(styles);
+import avartar from "../../../../assets/images/Frame 8720.png";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -91,7 +92,11 @@ export default function Docs({ title, docs, onLoadMore }: any) {
                                 <div className={cx("author")}>
                                     <div className={cx("name")}>
                                         <img
-                                            src={`src/assets/images/avatar.png`}
+                                            src={
+                                                data.profilePicture
+                                                    ? data.profilePicture
+                                                    : avartar
+                                            }
                                             alt="avt"
                                         />
                                         <p>{data.authorName}</p>
