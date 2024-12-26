@@ -10,20 +10,22 @@ import {
 } from "../../../../redux/DashBoardSlice/DashBoardSlice";
 import { useSelector } from "react-redux";
 import avartar from "../../../../assets/images/Frame 8720.png";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const cx = classNames.bind(styles);
 
 const UserInformationComponents = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const { useId } = location.state || { useId: null };
+  // const { useId } = location.state || { useId: null };
+  const { useId }: any = useParams();
 
   const handleOpenFileDialog = () => {
     dispatch(DelectProfilePictureAction());
   };
   useEffect(() => {
-    dispatch(GetProFileDashAction(useId));
+    if (useId !== null) {
+      dispatch(GetProFileDashAction(useId));
+    }
   }, [dispatch, useId]);
   const { getProfileDash } = useSelector(
     (state: RootState) => state.profileDashBoard

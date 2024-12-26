@@ -105,7 +105,7 @@ export default function Router() {
           element: <Notification />,
         },
         {
-        //   path: ":majorSlug/:folderSlug/id",
+          //   path: ":majorSlug/:folderSlug/id",
           path: ":id",
           element: <DocumentDetailPage />,
         },
@@ -170,6 +170,10 @@ export default function Router() {
         },
         {
           path: "user-information",
+          element: <UserInformation />,
+        },
+        {
+          path: "user-information/:useId",
           element: <UserInformation />,
         },
       ],
