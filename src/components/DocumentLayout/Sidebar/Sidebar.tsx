@@ -138,6 +138,8 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
   const ilogins = useSelector(
     (state: RootState) => state.authentication.ilogins
   );
+  console.log(ilogins);
+  
   return (
     <div
       style={isOpenAndModal ? { position: "fixed" } : {}}

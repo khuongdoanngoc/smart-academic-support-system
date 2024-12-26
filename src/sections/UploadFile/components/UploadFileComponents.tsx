@@ -38,7 +38,7 @@ import {
   UploadFileAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { AppDispatch, RootState, useAppSelector } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "@mui/material";
 
@@ -70,12 +70,14 @@ const UploadFileComponents = () => {
   const [subjectFile, setSubjectFile] = useState("");
   const [facultyFile, setFacultyFile] = useState("");
   const [folderFile, setFolderFile] = useState("");
+  const [subjectSelected, setSubjectSelected] = useState("");
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
   let isFileAlreadyUploaded = false;
+  const {ilogins}= useAppSelector(state=>state.authentication);
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
 
@@ -202,7 +204,7 @@ const UploadFileComponents = () => {
           title: titleFile,
           description: descriptionFile,
           type: typeFile,
-          subjectName: subjectFile,
+          subjectCode: subjectFile,
           facultyName: facultyFile,
         };
 
@@ -279,7 +281,8 @@ const UploadFileComponents = () => {
     setTitleFile(value);
   };
   const handleSearchSubject = async (value: string) => {
-    setSubjectFile(value);
+    setSubjectSelected(value);
+    
     if (!value.trim()) {
       debounceClearSubject();
       return;
@@ -309,6 +312,7 @@ const UploadFileComponents = () => {
     setDescriptionFile("");
     setTypeFile("");
     setSubjectFile("");
+    setSubjectSelected("");
     setFacultyFile("");
     setFileDetailLoad(false);
     setmenuCheckItemRow(false);
@@ -329,7 +333,9 @@ const UploadFileComponents = () => {
 
   return (
     <div className={cx("file-component-main")}>
-      <HeaderUploadFile />
+      <HeaderUploadFile avatar={{
+        profilePicture: ilogins?.profilePicture
+      }} />
       <div className={cx("component-main-body")}>
         <div className={cx("main-body-top")}>
           <div className={cx("body-top-list", { active: isActiveTitle(1) })}>
@@ -430,17 +436,18 @@ const UploadFileComponents = () => {
                       <input
                         type="text"
                         placeholder="Nhập mã hoặc tên môn học"
-                        value={subjectFile}
+                        value={subjectSelected}
                         onChange={(e) => handleSearchSubject(e.target.value)}
                       />
-                      {subjectFile.trim() && searchSubject?.length > 0 && (
+                      {subjectSelected.trim() && searchSubject?.length > 0 && (
                         <div className={cx("search-results")}>
                           <ul>
                             {searchSubject.map((result, index) => (
                               <li
                                 key={index}
                                 onClick={() => {
-                                  setSubjectFile(result.subjectName);
+                                  setSubjectFile(result.subjectCode);
+                                  setSubjectSelected(result.subjectName);
                                   dispatch(clearSearchSubject());
                                 }}
                               >

@@ -40,7 +40,7 @@ interface ApiPostFile {
   title: string;
   description: string;
   type: string;
-  subjectName: string;
+  subjectCode: string;
   facultyName: string;
 }
 

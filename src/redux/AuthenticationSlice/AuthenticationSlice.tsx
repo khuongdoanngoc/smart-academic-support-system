@@ -292,6 +292,7 @@ const AuthenticationSlice = createSlice({
           state.accessToken = action.payload.accessToken;
           state.refreshToken = action.payload.refreshToken;
           state.accountId = action.payload.accountId;
+          state.ilogins=action.payload;
         }
       )
       .addCase(RegisterAction.fulfilled, (state) => {
@@ -326,6 +327,7 @@ const AuthenticationSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.accountId = action.payload.accountId;
+            state.ilogins=action.payload;
           }
         }else{
           if(action.payload.listRoles && action.payload.listRoles.length>0 && action.payload.listRoles[0]==="ADMIN"){
@@ -340,6 +342,7 @@ const AuthenticationSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.accountId = action.payload.accountId;
+            state.ilogins=action.payload;
           }
         }
       })
