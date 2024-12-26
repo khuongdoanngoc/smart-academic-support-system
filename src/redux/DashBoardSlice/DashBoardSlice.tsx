@@ -15,9 +15,9 @@ export interface SearchDoc {
 
 export const GetProFileDashAction = createAsyncThunk(
   "DashBoardSlice/GetProFileAction",
-  async () => {
+  async (id: number) => {
     try {
-      const response = GetProfileDashBoardAPI();
+      const response = GetProfileDashBoardAPI(id);
       return response as unknown as GetProfileRequest;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
