@@ -48,6 +48,9 @@ export default function FolderDetailView() {
     const error: any = useAppSelector((state) => state.folder.error);
     const { loading, successMessage } = useAppSelector((state) => state.folder);
     const navigate = useNavigate();
+
+    const {profilePicture} = useAppSelector((state) => state.authentication);
+
     // configs cho nút chia sẻ
     const { openSharingModal, setUrl } = useSharingModal();
     const handleOpenModal = (id: number) => {
@@ -235,17 +238,20 @@ export default function FolderDetailView() {
                                                         alt="share"
                                                     />
                                                 </button>
-                                                <button
-                                                    onClick={() => {
-                                                        alert(
-                                                            "navigate to edit page"
-                                                        );
-                                                    }}>
-                                                    <img
-                                                        src={EditICON}
-                                                        alt="edit"
-                                                    />
-                                                </button>
+                                                {data.accountId ===
+                                                    accountId && (
+                                                    <button
+                                                        onClick={() => {
+                                                            navigate("/document/edit-document-file", {
+                                                                state: { fileData: data, avatar: profilePicture },
+                                                              });
+                                                        }}>
+                                                        <img
+                                                            src={EditICON}
+                                                            alt="edit"
+                                                        />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                     )
