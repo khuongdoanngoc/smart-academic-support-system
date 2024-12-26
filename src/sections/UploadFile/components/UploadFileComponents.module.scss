@@ -197,7 +197,7 @@
     }
   }
   & > .component-main-alert {
-    position: absolute;
+    position: fixed;
     width: 40%;
     background: #feebeb;
     display: flex;
@@ -206,7 +206,7 @@
     border: 1px solid #bb605d;
     border-bottom: 4px solid red;
     border-radius: 10px;
-    bottom: -54px;
+    bottom: 26px;
     /* top: -29px; */
     left: 12px;
     & > .main-alert-title {
@@ -442,7 +442,7 @@
         }
         & > div {
           width: 100%;
-          &>div{
+          & > div {
             border-radius: 20px;
             border: 1.5px solid #00000099;
             font-size: 16px;
@@ -450,13 +450,12 @@
             color: #00000099;
             font-weight: 500;
             position: relative;
-          
-              &>fieldset{
-                border-color: #fff;
-                border-width: 0px;
-              }
+
+            & > fieldset {
+              border-color: #fff;
+              border-width: 0px;
             }
-          
+          }
         }
         & > .search-results {
           background: #fff;

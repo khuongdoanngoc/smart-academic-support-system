@@ -31,7 +31,7 @@ export default function Content() {
         dispatch(getAllDocumentsAction(3));
         dispatch(getPopularFolders(8));
         dispatch(getStatsForUser());
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (popularFolders) {
