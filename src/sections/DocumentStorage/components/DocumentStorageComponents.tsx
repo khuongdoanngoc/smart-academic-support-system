@@ -144,9 +144,17 @@ const DocumentStorageComponents = () => {
       setDataList((data) => data.filter((doc) => doc.docId !== docId));
     }
   };
+  useEffect(()=>{
+    if(documentStoge?.content){
+      setDataList(documentStoge.content)
+    }
+  },[documentStoge?.content])
 
   useEffect(() => {
+    console.log(1);
+    
     dispatch(GetDocumentStogeAction({ page: 0 }));
+    
   }, [dispatch]);
 
   return (

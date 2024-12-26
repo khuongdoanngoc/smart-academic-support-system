@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames/bind";
 import styles from "./DocumentsView.module.scss";
@@ -76,11 +77,9 @@ export default function DocumentsView() {
         (state: any) => state.adminDashboard.documents?.content
     );
 
-    const { loading, successMessage } = useAppSelector(
+    const { loading, successMessage,error } = useAppSelector(
         (state) => state.adminDashboard
     );
-
-    let { error } = useAppSelector((state) => state.adminDashboard);
 
     useEffect(() => {
         if (documents && documents.length !== 0) {
@@ -143,7 +142,7 @@ export default function DocumentsView() {
     const handleDeleteUsers = () => {
         try {
             dispatch(deleteDocuments(selectedIds));
-        } catch (error) {
+        } catch (error:any) {
             toast.error("Xảy ra lỗi, vui lòng thử lại sau");
         }
     };
@@ -151,7 +150,7 @@ export default function DocumentsView() {
     const handleApproveDocuments = () => {
         try {
             dispatch(approveDocuments(selectedIds));
-        } catch (error) {
+        } catch (error:any) {
             toast.error("Xảy ra lỗi, vui lòng thử lại sau");
         }
     };
