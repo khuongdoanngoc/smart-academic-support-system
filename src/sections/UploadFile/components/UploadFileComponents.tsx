@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import {
   ArrowBack,
   ArrowForward,
@@ -32,6 +32,7 @@ import {
   clearSearchFaculty,
   clearSearchSubject,
   FileItem,
+  ResetUploadSuccess,
   SearchFacultyAction,
   SearchFolderAction,
   SearchSubjectAction,
@@ -75,9 +76,11 @@ const UploadFileComponents = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const isUpload = useSelector((state: RootState) => state.uploadFile.isupload);
+  const isUpload = useAppSelector((state) => state.uploadFile.isupload);
+  console.log("isUpload", isUpload);
+
   let isFileAlreadyUploaded = false;
-  const {ilogins}= useAppSelector(state=>state.authentication);
+  const { ilogins } = useAppSelector((state) => state.authentication);
   const onFileDrop = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = e.target.files?.[0]; //lấy file từ input
 
@@ -175,20 +178,23 @@ const UploadFileComponents = () => {
       setIsColorItemButton(2);
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     if (isUpload) {
       setUploadFileSuccess(true);
-      return;
-    } else {
       setDefaultUploadFile(false);
-      setUploadFileSuccess(false);
+      dispatch(ResetUploadSuccess());
+      return;
     }
-  }, [isUpload]);
-  React.useEffect(() => {
+  }, [isUpload, dispatch]);
+  useEffect(() => {
     if (isFileAlreadyUploaded) {
       handleResetUpload();
     }
   });
+
+  // const { loading } = useAppSelector((state) => state.uploadFile);
+
+  // console.log(loading);
 
   const handleItemNext = () => {
     if (isColorItemButton === 2) {
@@ -197,7 +203,7 @@ const UploadFileComponents = () => {
         return;
       }
 
-      setDefaultUploadFile(false);
+      // setDefaultUploadFile(false);
       if (fileSelected !== null && facultyFile !== null) {
         const data = {
           file: fileSelected,
@@ -293,7 +299,7 @@ const UploadFileComponents = () => {
       console.log(error);
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(SearchFolderAction());
   }, [dispatch]);
 
@@ -333,9 +339,11 @@ const UploadFileComponents = () => {
 
   return (
     <div className={cx("file-component-main")}>
-      <HeaderUploadFile avatar={{
-        profilePicture: ilogins?.profilePicture
-      }} />
+      <HeaderUploadFile
+        avatar={{
+          profilePicture: ilogins?.profilePicture,
+        }}
+      />
       <div className={cx("component-main-body")}>
         <div className={cx("main-body-top")}>
           <div className={cx("body-top-list", { active: isActiveTitle(1) })}>

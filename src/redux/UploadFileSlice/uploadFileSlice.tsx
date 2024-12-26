@@ -1,5 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  createAsyncThunk,
+  createAction,
+} from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import {
   postFile,
@@ -21,8 +26,8 @@ interface initState {
   error: string | null;
   success: boolean | null;
   isupload: boolean | null;
-  searchFaculty: SearchFaculty[] ;
-  searchFolder: SearchFolder[] ;
+  searchFaculty: SearchFaculty[];
+  searchFolder: SearchFolder[];
   searchSubject: SearchSubject[];
 }
 
@@ -55,12 +60,13 @@ export const UploadFileAction = createAsyncThunk<
     }
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;
-    const errorMessage =
-      error.response?.data?.message;
-   
+    const errorMessage = error.response?.data?.message;
+
     throw new Error(errorMessage);
   }
 });
+
+export const ResetUploadSuccess = createAction("uploadFile/ResetUploadSuccess");
 
 export const SearchFacultyAction = createAsyncThunk<SearchFaculty[], string>(
   "SearchFacultyAction",
@@ -124,6 +130,9 @@ const uploadFileSlice = createSlice({
         state.isupload = false;
         state.error = null;
       })
+      .addCase(ResetUploadSuccess, (state) => {
+        state.isupload = false;
+      })
       .addCase(SearchFacultyAction.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -138,7 +147,7 @@ const uploadFileSlice = createSlice({
       })
       .addCase(UploadFileAction.fulfilled, (state) => {
         state.loading = false;
-        state.isupload=true;
+        state.isupload = true;
       })
       .addCase(
         SearchFacultyAction.fulfilled,
@@ -165,7 +174,7 @@ const uploadFileSlice = createSlice({
       .addCase(UploadFileAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        toast.error('Upload failed!');
+        toast.error("Upload failed!");
         state.isupload = false;
       })
       .addCase(SearchFacultyAction.rejected, (state, action) => {

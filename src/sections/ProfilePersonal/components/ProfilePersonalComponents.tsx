@@ -35,6 +35,7 @@ import { useSelector } from "react-redux";
 import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
 import { GetDocument } from "../../../services/DocumentAPI/DocumentAPI";
 import { GetProfileRequest } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
+import Loader from "../../../components/Loader/Loader";
 const cx = classnames.bind(styles);
 // interface Subject {
 //   id: number;
@@ -288,87 +289,91 @@ const ProfileAuthorComponent = () => {
           </div>
         </div>
       </div>
-      <div className={cx("author-component-file")}>
-        <div className={cx("component-title-top")}>
-          <div className={cx("file-top-title")}>
-            <h3>THỐNG KÊ</h3>
-          </div>
-          <div className={cx("file-top-table")}>
-            <div className={cx("top-table-name")}>
-              <h4>Tài liệu của {getUserProfile?.lastName}</h4>
+      {loading ? (
+        <Loader height={1} />
+      ) : (
+        <div className={cx("author-component-file")}>
+          <div className={cx("component-title-top")}>
+            <div className={cx("file-top-title")}>
+              <h3>THỐNG KÊ</h3>
             </div>
-            <div className={cx("top-table-total")}>
-              <div>
-                <span>{getUserProfile?.totalDocument}</span>
-                <p>Đã tải lên</p>
+            <div className={cx("file-top-table")}>
+              <div className={cx("top-table-name")}>
+                <h4>Tài liệu của {getUserProfile?.lastName}</h4>
               </div>
-              <div>
-                <span>0</span>
-                <p>Đã lưu</p>
-              </div>
-              <div>
-                <span>0</span>
-                <p>Đã gắn thẻ</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={cx("conponent-file-bottom")}>
-          <div className={cx("file-bottom-title")}>
-            <h3>TÀI LIỆU ĐÃ TẢI LÊN</h3>
-          </div>
-          <div className={cx("file-bottom-list")}>
-            <div className={cx("bottom-list-title")}>
-              <p>Tiêu đề tài liệu</p>
-              <p>Chức năng</p>
-            </div>
-            <div className={cx("bottom-list-table")}>
-              {getUserProfile?.documentDtos.map((data) => (
-                <div className={cx("bottom-list-item")} key={data.docId}>
-                  <div className={cx("list-item-left")}>
-                    <img src={File} alt="file" />
-                    <p>{data.title}</p>
-                  </div>
-                  <div className={cx("list-item-right")}>
-                    <img
-                      src={ImportLight}
-                      alt="down"
-                      onClick={() => handleDownloadDocuments(data.docId)}
-                    />
-                    <img src={Share} alt="share" />
-                    <img
-                      src={EditIcon}
-                      alt="EditIcon"
-                      onClick={() =>
-                        handleChangeEditUpload(data, getUserProfile)
-                      }
-                    />
-                  </div>
+              <div className={cx("top-table-total")}>
+                <div>
+                  <span>{getUserProfile?.totalDocument}</span>
+                  <p>Đã tải lên</p>
                 </div>
-              ))}
+                <div>
+                  <span>0</span>
+                  <p>Đã lưu</p>
+                </div>
+                <div>
+                  <span>0</span>
+                  <p>Đã gắn thẻ</p>
+                </div>
+              </div>
             </div>
           </div>
+          <div className={cx("conponent-file-bottom")}>
+            <div className={cx("file-bottom-title")}>
+              <h3>TÀI LIỆU ĐÃ TẢI LÊN</h3>
+            </div>
+            <div className={cx("file-bottom-list")}>
+              <div className={cx("bottom-list-title")}>
+                <p>Tiêu đề tài liệu</p>
+                <p>Chức năng</p>
+              </div>
+              <div className={cx("bottom-list-table")}>
+                {getUserProfile?.documentDtos.map((data) => (
+                  <div className={cx("bottom-list-item")} key={data.docId}>
+                    <div className={cx("list-item-left")}>
+                      <img src={File} alt="file" />
+                      <p>{data.title}</p>
+                    </div>
+                    <div className={cx("list-item-right")}>
+                      <img
+                        src={ImportLight}
+                        alt="down"
+                        onClick={() => handleDownloadDocuments(data.docId)}
+                      />
+                      <img src={Share} alt="share" />
+                      <img
+                        src={EditIcon}
+                        alt="EditIcon"
+                        onClick={() =>
+                          handleChangeEditUpload(data, getUserProfile)
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className={cx("conponent-file-slide")}>
+            <Pagination
+              count={getUserProfile?.totalPage}
+              defaultPage={1}
+              siblingCount={7}
+              onChange={handlePageChange}
+              variant="outlined"
+              renderItem={(item: PaginationRenderItemParams) => (
+                <PaginationItem
+                  sx={{
+                    margin: "0 6px",
+                    fontFamily: "Inter",
+                  }}
+                  {...item}
+                  page={item.page ? alphabet[item.page - 1] : null}
+                />
+              )}
+            />
+          </div>
         </div>
-        <div className={cx("conponent-file-slide")}>
-          <Pagination
-            count={getUserProfile?.totalPage}
-            defaultPage={1}
-            siblingCount={7}
-            onChange={handlePageChange}
-            variant="outlined"
-            renderItem={(item: PaginationRenderItemParams) => (
-              <PaginationItem
-                sx={{
-                  margin: "0 6px",
-                  fontFamily: "Inter",
-                }}
-                {...item}
-                page={item.page ? alphabet[item.page - 1] : null}
-              />
-            )}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };

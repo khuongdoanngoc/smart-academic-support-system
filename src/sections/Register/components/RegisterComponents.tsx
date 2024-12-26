@@ -47,7 +47,8 @@ const validationSchema: Yup.ObjectSchema<Person> = Yup.object({
   // Tạo schema kiểm tra với Yup
   email: Yup.string()
     .email("Địa chỉ email khong hợp lệ")
-    .required("Vui lòng nhập email của bạn"),
+    .required("Vui lòng nhập email của bạn")
+    .matches(/^[\w.+-]+@dtu\.edu/, "Vui lòng nhập email trường"),
   roleName: Yup.string().required("Vui lòng xác nhận bạn là ?"),
   password: Yup.string()
     .required("Vui lòng nhập password")
