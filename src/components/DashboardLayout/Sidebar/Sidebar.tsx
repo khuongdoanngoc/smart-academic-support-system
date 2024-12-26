@@ -14,7 +14,7 @@ import CloseIcon from "../../../assets/images/icons/CloseArrowIcon.png";
 import OpenIcon from "../../../assets/images/icons/OpenArrowIcon.png";
 import ChecklistRtlOutlinedIcon from "@mui/icons-material/ChecklistRtlOutlined";
 
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useAppSelector } from "../../../redux/store";
 import { toast } from "react-toastify";
@@ -114,13 +114,13 @@ export default function Sidebar() {
                     Quản lý tài nguyên
                 </span>
                 {resourceItems.map((item, index) => (
-                    <a
+                    <Link
                         key={index}
                         className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        to={item.pathAcitve}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
-                    </a>
+                    </Link>
                 ))}
             </div>
             <div

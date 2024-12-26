@@ -236,8 +236,10 @@ export const AdminDashboardSlice = createSlice({
             })
             .addCase(checkDocument.rejected, (state, action) => {
                 state.loading = false;
+                console.log(action.payload);
+                
                 state.error =
-                    action.error.message || "Tài liệu chứa từ nhạy cảm!";
+                    action.error.message || "Tài liệu chứa từ nhạy cảm hoặc đã được check!";
             });
     },
 });

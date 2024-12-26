@@ -56,12 +56,12 @@ export const sendMessageAction= createAsyncThunk<ChatbotResponse,MessagesUser>(
     }
 );
 
-export const trainChatbotAction= createAsyncThunk<string, TrainChatbotRequest[]>(
+export const trainChatbotAction= createAsyncThunk<any, TrainChatbotRequest[]>(
     "trainChatbotAction",
     async (data: TrainChatbotRequest[])=>{
         try {
             const res = await trainChatbotService(data);
-            return res as unknown as string;
+            return res as any;
         } catch (error:any) {
             throw new Error(error.message);
         }
@@ -117,9 +117,9 @@ const ChatBotSlice= createSlice({
                 }
                 state.messages= [...state.messages, data];
             })
-            .addCase(trainChatbotAction.fulfilled, (state, action: PayloadAction<string>) => {
+            .addCase(trainChatbotAction.fulfilled, (state) => {
                 state.loading = false;
-                toast.success(action.payload);
+                toast.success("Tài liệu đã được train");
             })
            .addCase(sendMessageAction.rejected, (state, action) => {
                 state.loading = false;

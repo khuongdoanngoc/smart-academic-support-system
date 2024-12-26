@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import { trainChatbotAction } from "../../../../redux/ChatBotSlice/ChatBotSlice";
 import Loader from "../../../../components/Loader/Loader";
+import { toast } from "react-toastify";
 interface IDataTable {
   columns: any[];
   rows: any[];
@@ -72,16 +73,21 @@ export default function DataTable({
     setPage(0);
   };
 
-  const handleClickTrainDocument = (fileName: string, filePath: string) => {
+  const handleClickTrainDocument = (fileName: string, filePath: string,isCheck:boolean) => {
     console.log(fileName);
     console.log(filePath);
-    const data = [
-      {
-        fileName: fileName,
-        filePath: filePath,
-      },
-    ];
-    dispatch(trainChatbotAction(data));
+    if(isCheck){
+        const data = [
+            {
+              fileName: fileName,
+              filePath: filePath,
+            },
+          ];
+          dispatch(trainChatbotAction(data));
+    }else{
+        toast.info("Tài liệu chưa được kiểm tra");
+    }
+    
   };
   return (
     <>
@@ -168,7 +174,8 @@ export default function DataTable({
                                 e.preventDefault(); // prevent default link behavior
                                 handleClickTrainDocument(
                                   row.fileName,
-                                  row.filePath
+                                  row.filePath,
+                                  row.isCheck
                                 );
                               }
                             }}
@@ -181,7 +188,10 @@ export default function DataTable({
                             {topic === "user" ? (
                               <VisibilityOutlinedIcon />
                             ) : (
-                              <SmartToyOutlinedIcon />
+                                <>
+                                    {!row.isTrain && <SmartToyOutlinedIcon />}  
+                                </>
+                              
                             )}
                           </Link>
                         </TableCell>

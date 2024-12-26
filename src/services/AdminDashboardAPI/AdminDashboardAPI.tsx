@@ -47,7 +47,7 @@ export const DeleteUsers = async (accountIds: any) => {
 
 export const DeleteDocuments = async (accountIds: any) => {
     try {
-        const res = await axiosInstance.delete("/admin/dashboard/document", {
+        const res = await axiosInstance.delete("/admin/dashboard/documents", {
             data: accountIds,
         });
         return res;
