@@ -27,7 +27,6 @@ export default function Content() {
     const [statsData, setStatsData] = useState<any>({});
 
     useEffect(() => {
-        console.log("do call api");
         dispatch(getAllDocumentsAction(3));
         dispatch(getPopularFolders(8));
         dispatch(getStatsForUser());

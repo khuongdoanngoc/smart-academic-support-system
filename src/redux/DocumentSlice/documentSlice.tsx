@@ -242,11 +242,11 @@ export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
   }
 );
 
-export const getPopularDocuments = createAsyncThunk<any>(
+export const getPopularDocuments = createAsyncThunk<any, number>(
     "documents/getPopularDocuments",
-    async () => {
+    async (size:number) => {
         try {
-            const response = await GetPopularDocuments();
+            const response = await GetPopularDocuments(size);
             return response;
         } catch (err: any) {
             throw Error(err.message);
@@ -421,7 +421,7 @@ export const DocumentSlice = createSlice({
     })
     .addCase(getPopularDocuments.fulfilled, (state, action) => {
         state.loading = false;
-        state.Documents = action.payload;
+        state.Documents = action.payload.content;
     })
     .addCase(getPopularDocuments.rejected, (state, action) => {
         state.loading = false;
