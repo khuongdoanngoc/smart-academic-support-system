@@ -69,6 +69,7 @@ export default function Docs({ title, docs, onLoadMore }: any) {
   const handleDownloadDocuments = (documentId: number) => {
     dispatch(DownloadDocumentAction({ documentId, username }));
   };
+  console.log(docs)
   return (
     <div className={cx("docs")}>
       <div className={cx("titles")}>
@@ -95,7 +96,7 @@ export default function Docs({ title, docs, onLoadMore }: any) {
               <div key={index} className={cx("card")}>
                 <div className={cx("author")}>
                   <div className={cx("name")}>
-                    <img src={`src/assets/images/avatar.png`} alt="avt" />
+                    <img src={data.profilePicture} alt="avt" />
                     <p>{data.authorName}</p>
                   </div>
                   <IconButton
