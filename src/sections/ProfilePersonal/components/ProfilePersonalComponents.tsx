@@ -17,21 +17,24 @@ import {
 } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
-import { RootState, useAppDispatch } from "../../../redux/store";
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/store";
 // // import { SearchFolderAction } from "../../../redux/UploadFileSlice/uploadFileSlice";
 // import { SearchDocProfilePersonalAPI } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
 import {
   GetProFileAction,
+  GetProFilePageAction,
   SearchDocPersonalAction,
+  ViewProfilePersonalByEmailAction,
 } from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import {
-  DownloadDocumentAction,
-  GetDocumentSizeAction,
-  // GetDocumentStogeAction,
-} from "../../../redux/DocumentSlice/documentSlice";
+import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
 import { GetDocument } from "../../../services/DocumentAPI/DocumentAPI";
+import { GetProfileRequest } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
 const cx = classnames.bind(styles);
 // interface Subject {
 //   id: number;
@@ -134,13 +137,37 @@ const ProfileAuthorComponent = () => {
   //   [currentPage, itemsPerPage]
   // );
 
-  const { getUserProfile } = useSelector(
+  const { getUserProfile, loading } = useSelector(
     (state: RootState) => state.profilePersonal
   );
+  useEffect(() => {
+    dispatch(GetProFileAction());
+  }, [dispatch]);
 
-  const [dataList, setDataList] = useState<GetDocument[]>(
-    getUserProfile?.documentDtos || []
+  useEffect(() => {
+    if (getUserProfile?.email) {
+      sessionStorage.setItem("email", getUserProfile.email);
+      setEmailUser(getUserProfile.email);
+    }
+  }, [getUserProfile]);
+
+  const [emailUser, setEmailUser] = useState(
+    sessionStorage.getItem("email") || ""
   );
+
+  useEffect(() => {
+    if (emailUser) {
+      try {
+        dispatch(ViewProfilePersonalByEmailAction(emailUser));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [dispatch, emailUser]);
+
+  // const [dataList, setDataList] = useState<GetDocument[]>(
+  //   getUserProfile?.documentDtos || []
+  // );
   // const [filteredData, setFilteredData] = useState<GetDocument[]>([]);
 
   // useEffect(() => {
@@ -153,17 +180,21 @@ const ProfileAuthorComponent = () => {
     value: number
   ) => {
     // setCurrentPage(value);
-    const data = await dispatch(GetDocumentSizeAction({ pageNum: value }));
 
-    if (data && data.payload) {
-      const newDocumentList = data.payload || [];
+    if (!loading) {
+      value = value - 1;
+      const data = {
+        email: emailUser,
+        pageNum: value,
+        pageSize: 10,
+      };
+      // console.log("value", value);
 
-      setDataList(newDocumentList);
-      // setFilteredData(filteredDataList(newDocumentList));
+      dispatch(GetProFilePageAction(data));
     }
   };
 
-  const totalFile = dataList.length;
+  // const totalFile = dataList.length;
 
   const handleSearchDoc = async (name: string) => {
     try {
@@ -172,26 +203,26 @@ const ProfileAuthorComponent = () => {
       console.log(error);
     }
   };
+  console.log(getUserProfile);
 
-  useEffect(() => {
-    dispatch(GetProFileAction());
-  }, [dispatch]);
-  console.log("getUserProfile", getUserProfile);
-
-  const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
+  // const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
+  const username = useAppSelector((state) => state.authentication.username);
   const handleEditClick = () => {
     navigate("/document/edit-profile", { state: { useData: getUserProfile } });
   };
-  const handleDownloadDocuments = (docId: number) => {
-    dispatch(DownloadDocumentAction({ username, docId }));
+  const handleDownloadDocuments = (documentId: number) => {
+    dispatch(DownloadDocumentAction({ documentId, username }));
   };
-  const handleChangeEditUpload = (data: GetDocument) => {
-    console.log("n");
+  const handleChangeEditUpload = (
+    data: GetDocument,
+    useData: GetProfileRequest
+  ) => {
+    console.log("handleChangeEditUpload", data);
 
-    navigate(`/document/upload-file`, { state: { fileData: data } });
+    navigate("/document/edit-document-file", {
+      state: { fileData: data, avatar: useData },
+    });
   };
-  console.log("getUserProfile", getUserProfile);
-
   return (
     <div className={cx("author-component")}>
       <div className={cx("author-component-information")}>
@@ -201,7 +232,9 @@ const ProfileAuthorComponent = () => {
               <div className={cx("author-name")}>
                 <img src={getUserProfile?.profilePicture || avartar} />
                 <div>
-                  <h3>{username}</h3>
+                  <h3>
+                    {getUserProfile?.firstName} {getUserProfile?.lastName}
+                  </h3>
                   <p>{getUserProfile?.major}</p>
                 </div>
               </div>
@@ -229,21 +262,26 @@ const ProfileAuthorComponent = () => {
                 <p>
                   Chức vụ :
                   {getUserProfile?.role === "LECTURER"
-                    ? "Sinh viên"
-                    : "Giảng viên"}
+                    ? "Giảng viên"
+                    : "Sinh viên"}
                 </p>
-                <p>Khoa:{getUserProfile?.facultyName}</p>
+                <p>Khoa:{getUserProfile?.facultyName || "Chưa cập nhật"} </p>
               </div>
               <div>
-                <p>Chuyên ngành: {getUserProfile?.major}</p>
-                <p>Khóa:K{getUserProfile?.classNumber}</p>
+                <p>Chuyên ngành: {getUserProfile?.major || "Chưa cập nhật"}</p>
+                <p>
+                  Khóa:
+                  {getUserProfile?.classNumber
+                    ? `K${getUserProfile.classNumber}`
+                    : "Chưa cập nhật"}
+                </p>
               </div>
             </div>
           </div>
           <div className={cx("information-right-search")}>
             <input
               type="text"
-              placeholder="Tìm kiếm tài liệu của Huy"
+              placeholder={`Tìm kiếm tài liệu của ${getUserProfile?.lastName} `}
               onChange={(e) => handleSearchDoc(e.target.value)}
             />
             <SearchIcon className={cx("search-icon")} />
@@ -257,11 +295,11 @@ const ProfileAuthorComponent = () => {
           </div>
           <div className={cx("file-top-table")}>
             <div className={cx("top-table-name")}>
-              <h4>Tài liệu của Huy</h4>
+              <h4>Tài liệu của {getUserProfile?.lastName}</h4>
             </div>
             <div className={cx("top-table-total")}>
               <div>
-                <span>{totalFile}</span>
+                <span>{getUserProfile?.totalDocument}</span>
                 <p>Đã tải lên</p>
               </div>
               <div>
@@ -285,7 +323,7 @@ const ProfileAuthorComponent = () => {
               <p>Chức năng</p>
             </div>
             <div className={cx("bottom-list-table")}>
-              {dataList.map((data) => (
+              {getUserProfile?.documentDtos.map((data) => (
                 <div className={cx("bottom-list-item")} key={data.docId}>
                   <div className={cx("list-item-left")}>
                     <img src={File} alt="file" />
@@ -301,7 +339,9 @@ const ProfileAuthorComponent = () => {
                     <img
                       src={EditIcon}
                       alt="EditIcon"
-                      onClick={() => handleChangeEditUpload(data)}
+                      onClick={() =>
+                        handleChangeEditUpload(data, getUserProfile)
+                      }
                     />
                   </div>
                 </div>
@@ -311,7 +351,7 @@ const ProfileAuthorComponent = () => {
         </div>
         <div className={cx("conponent-file-slide")}>
           <Pagination
-            count={alphabet.length}
+            count={getUserProfile?.totalPage}
             defaultPage={1}
             siblingCount={7}
             onChange={handlePageChange}

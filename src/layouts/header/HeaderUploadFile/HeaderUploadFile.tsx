@@ -4,8 +4,11 @@ import styles from "./HeaderUploadFile.module.scss";
 import Avatar from "../../../assets/images/avatar.png";
 
 const cx = classNames.bind(styles);
+type AvatarType = {
+  profilePicture?: string; // Hoặc kiểu dữ liệu phù hợp, ví dụ: string | null
+};
 
-const HeaderUploadFile = () => {
+const HeaderUploadFile: React.FC<{ avatar: AvatarType }> = ({ avatar }) => {
   return (
     <div className={cx("component-main-header")}>
       <div className={cx("main-header-top")}>
@@ -19,12 +22,12 @@ const HeaderUploadFile = () => {
         </div>
         <div className={cx("main-header-right")}>
           <a href="#avatar">
-            <img src={Avatar} alt="avatar" />
+            <img src={avatar?.profilePicture || Avatar} alt="avatar" />
           </a>
         </div>
       </div>
       <div className={cx("main-header-bottom")}>
-        <h3>TẢI LÊN TÀI LIỆU CỦA BẠN</h3>
+        <h3>CẬP NHẬT TÀI LIỆU CỦA BẠN</h3>
       </div>
     </div>
   );

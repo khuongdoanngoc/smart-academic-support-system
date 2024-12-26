@@ -5,6 +5,18 @@ export interface listSearch {
   id: number;
   title: string;
 }
+
+export interface DocumentPersonalDtos {
+  filePath: string;
+  title: string;
+  docId: number;
+
+  //thêm
+  description: string;
+  content: string;
+  type: string;
+  subjectName: string;
+}
 export interface GetProfileRequest {
   firstName: string;
   lastName: string;
@@ -14,14 +26,20 @@ export interface GetProfileRequest {
   gender: string;
   hometown: string;
   phoneNumber: string;
-  facultyName: number;
+  // facultyName: number; //chỉnh sửa
   major: string;
   enrollmentYear: number;
   classNumber: string;
   follower: string;
   following: string;
   role: string | null;
-  documentDtos: [];
+  documentDtos: DocumentPersonalDtos[];
+  totalPage: number;
+  totalDocument: number;
+
+  //thêm
+  facultyName: string;
+  facultyId: number;
 }
 export const SearchDocProfilePersonalAPI = async (name: string) => {
   try {
@@ -37,7 +55,18 @@ export const SearchDocProfilePersonalAPI = async (name: string) => {
 export const GetProfileAPI = async () => {
   try {
     const response = await axiosInstance.get("/user/profile");
+    return response;
+  } catch (err: unknown) {
+    const error = err as AxiosError<{ message?: string }>;
+    throw new Error(error.response?.data.message || error.message);
+  }
+};
 
+export const ViewProfilePersonalByEmailApi = async (email: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/user/profile/email?email=${email}`
+    );
     return response;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;

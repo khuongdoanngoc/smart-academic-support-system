@@ -12,7 +12,7 @@ export interface EditDocument {
 
 export const EditDocumentAPI = async (data: EditDocument) => {
   try {
-    const res = await axiosInstance.put(`/documents/${data.docId}`, data);
+    const res = await axiosInstance.put(`/document/${data.docId}`, data);
     return res;
   } catch (err: unknown) {
     const error = err as AxiosError<{ message?: string }>;

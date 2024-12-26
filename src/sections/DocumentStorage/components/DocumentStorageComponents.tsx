@@ -101,7 +101,7 @@ const cx = classnames.bind(styles);
 // ];
 
 const DocumentStorageComponents = () => {
-  const alphabet = Array.from("01234567");
+  const alphabet = Array.from("1234567");
   const dispatch = useAppDispatch();
 
   // const itemsPerPage = 9;
@@ -115,6 +115,7 @@ const DocumentStorageComponents = () => {
   // );
 
   const { documentStoge } = useSelector((state: RootState) => state.document);
+  console.log("documentStoge", documentStoge);
 
   const [dataList, setDataList] = useState<GetDocument[]>(
     documentStoge?.content || []
@@ -183,9 +184,9 @@ const DocumentStorageComponents = () => {
         </div>
         <div className={cx("conponent-file-slide")}>
           <Pagination
-            count={alphabet.length}
+            count={documentStoge?.totalPages}
             defaultPage={1}
-            siblingCount={1}
+            siblingCount={7}
             onChange={handlePageChange}
             variant="outlined"
             renderItem={(item: PaginationRenderItemParams) => (

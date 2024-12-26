@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -32,6 +37,9 @@ export const EditProfileAction = createAsyncThunk(
     }
   }
 );
+export const ResetEditProfileSuccess = createAction(
+  "editDocument/resetSuccess"
+);
 
 const editProfileSlice = createSlice({
   name: "editProfile",
@@ -42,6 +50,9 @@ const editProfileSlice = createSlice({
       .addCase(EditProfileAction.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = false;
+      })
+      .addCase(ResetEditProfileSuccess, (state) => {
         state.success = false;
       })
 
