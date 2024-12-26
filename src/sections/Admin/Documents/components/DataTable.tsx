@@ -135,6 +135,13 @@ export default function DataTable({
                                                     </TableCell>
                                                 );
                                             } else {
+                                                if (
+                                                    index === 1 &&
+                                                    topic === "document" &&
+                                                    row.isCheck
+                                                ) {
+                                                    value = "✓ " + value;
+                                                }
                                                 if (index === 4) {
                                                     value =
                                                         customFormatDate(value);
