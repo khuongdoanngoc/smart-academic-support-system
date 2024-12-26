@@ -202,7 +202,8 @@
               width: 13%;
               margin: 0 auto;
               display: flex;
-              justify-content: space-between;
+              justify-content: center;
+              gap: 12px;
               align-items: center;
               & > img {
                 width: 24px;

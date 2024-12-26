@@ -8,6 +8,7 @@ import DataTable from "../../Documents/components/DataTable";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import {
     approveUsers,
+    clearError,
     deleteUsers,
     getUsersForAdmin,
 } from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
@@ -83,7 +84,7 @@ export default function UsersView() {
         (state: any) => state.adminDashboard.users?.content
     );
 
-    const { loading, successMessage } = useAppSelector(
+    const { loading, successMessage, error } = useAppSelector(
         (state) => state.adminDashboard
     );
 
@@ -188,6 +189,21 @@ export default function UsersView() {
             toast.success(successMessage);
         }
     }, [successMessage]);
+
+    useEffect(() => {
+        if (error !== "") {
+            if (openAlertDialog) {
+                setOpenAlertDialog(false);
+            } else {
+                setOpenApproveDialog(false);
+            }
+            toast.error(error);
+            dispatch(clearError());
+            setSelectedIds([]);
+            handleReloadTable();
+        }
+    }, [error]);
+
 
     return (
         <div className={cx("admin-users-view")}>

@@ -29,6 +29,8 @@ import AISupportPage from "../pages/AISupport";
 import UserInformation from "../pages/Admin/UserInformation";
 import CommingSoonPage from "../pages/CommingSoon";
 import EditDocument from "../pages/EditDocument";
+import FAQDetailPage from "../pages/FAQDetail";
+import SupportPage from "../pages/Support";
 export default function Router() {
   const routes = useRoutes([
     {
@@ -118,7 +120,8 @@ export default function Router() {
           element: <FolderDetailPage />,
         },
         // { path: "/directory", element: <DocumentPage /> },
-        // { path: "support", element: <SupportPage /> },
+        { path: "support", element: <SupportPage /> },
+        { path: "support/:id", element: <FAQDetailPage /> },
         { path: "profile-author", element: <ProfileAuthor /> },
         { path: "profile-author/:lastName", element: <ProfileAuthor /> },
         { path: "profile-personal", element: <ProfilePersonal /> },

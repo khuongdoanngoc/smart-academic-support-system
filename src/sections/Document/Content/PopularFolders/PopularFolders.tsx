@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 interface IFolder {
     folderId: number;
     folderName: string;
-    authorName: string;
+    ownerName: string;
     downloadCount: number;
 }
 
@@ -69,7 +69,7 @@ export default function PopularFolders({ data }: PopularFoldersProps) {
                         <div key={index} className={cx("popular-folder")}>
                             <FolderSpecialIcon sx={{ color: "#f36a1c" }} />
                             <h3>{folder.folderName}</h3>
-                            <p>by {folder.authorName}</p>
+                            <p>by {folder.ownerName}</p>
                             <p>
                                 <InsertDriveFileIcon /> {folder.downloadCount}{" "}
                                 documents

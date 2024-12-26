@@ -40,6 +40,8 @@ export default function FolderDetailView() {
     const [folderName, setFolderName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
 
+    const { accountId } = useAppSelector((state) => state.authentication);
+
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
     const data: any = useAppSelector((state) => state.folder.data);
@@ -67,7 +69,12 @@ export default function FolderDetailView() {
     };
 
     const handleDeleteFolder = () => {
-        dispatch(deleteFolder(id));
+        if (data.accountId === accountId) {
+            dispatch(deleteFolder(id));
+            toast.success("Cập nhật thông tin thành công!");
+        } else {
+            toast.error("Bạn không có quyền chỉnh sửa!");
+        }
     };
 
     useEffect(() => {
@@ -76,7 +83,7 @@ export default function FolderDetailView() {
 
     useEffect(() => {
         setFolderName(data.folderName);
-        setDescription(data.description)
+        setDescription(data.description);
     }, [data]);
 
     useEffect(() => {
@@ -112,8 +119,12 @@ export default function FolderDetailView() {
 
     const handleUpdateFolder = (e: any) => {
         e.preventDefault();
-        dispatch(updateFolder({ folderId: id, folderName, description }));
-        toast.success("Cập nhật thông tin thành công!");
+        if (data.accountId === accountId) {
+            dispatch(updateFolder({ folderId: id, folderName, description }));
+            toast.success("Cập nhật thông tin thành công!");
+        } else {
+            toast.error("Bạn không có quyền chỉnh sửa!");
+        }
     };
 
     if (loading) {
@@ -151,22 +162,24 @@ export default function FolderDetailView() {
                     </div>
                 </div>
                 <div className={cx("functions")}>
-                    <div className={cx("actions")}>
-                        <Button
-                            text="Chỉnh sửa"
-                            paddingX={15}
-                            paddingY={4}
-                            fontSize={14}
-                            onClick={handleEditFolder}
-                        />
-                        <Button
-                            text="Xoá thư mục"
-                            paddingX={15}
-                            paddingY={4}
-                            fontSize={14}
-                            onClick={handleDeleteFolder}
-                        />
-                    </div>
+                    {data.accountId === accountId && (
+                        <div className={cx("actions")}>
+                            <Button
+                                text="Chỉnh sửa"
+                                paddingX={15}
+                                paddingY={4}
+                                fontSize={14}
+                                onClick={handleEditFolder}
+                            />
+                            <Button
+                                text="Xoá thư mục"
+                                paddingX={15}
+                                paddingY={4}
+                                fontSize={14}
+                                onClick={handleDeleteFolder}
+                            />
+                        </div>
+                    )}
                     <div className={cx("search-container")}>
                         <input
                             type="text"

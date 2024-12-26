@@ -124,10 +124,16 @@ const initialState: InitialStateStyles = {
     successMessage: "",
 };
 
+
+
 export const AdminDashboardSlice = createSlice({
     name: "adminDashboard",
     initialState,
-    reducers: {},
+    reducers: {
+        clearError: (state) => {
+            state.error = "";
+        }
+    },
     extraReducers(builder) {
         builder
             .addCase(getDocumentsForAdmin.pending, (state) => {
@@ -216,7 +222,7 @@ export const AdminDashboardSlice = createSlice({
                 state.loading = false;
                 state.successMessage = "Phê duyệt tài liệu thành công!";
             })
-            .addCase(approveDocuments.rejected, (state, action) => {
+            .addCase(approveDocuments.rejected, (state) => {
                 state.loading = false;
                 state.error = "Tài liệu cần được kiểm tra!";
             })
@@ -236,3 +242,5 @@ export const AdminDashboardSlice = createSlice({
 });
 
 export default AdminDashboardSlice.reducer;
+
+export const { clearError } = AdminDashboardSlice.actions;
