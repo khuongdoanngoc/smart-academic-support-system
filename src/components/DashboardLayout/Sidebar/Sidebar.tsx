@@ -1,14 +1,10 @@
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
 const cx = classNames.bind(styles);
-import Avatar from "../../../assets/images/avatar.png";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import BookOutlinedIcon from "@mui/icons-material/BookOutlined";
-import AutoStoriesOutlinedIcon from "@mui/icons-material/AutoStoriesOutlined";
 
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
-import StickyNote2OutlinedIcon from "@mui/icons-material/StickyNote2Outlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import ReportGmailerrorredOutlinedIcon from "@mui/icons-material/ReportGmailerrorredOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -81,7 +77,12 @@ export default function Sidebar() {
     return (
         <div className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
             <div className={cx("account")}>
-                <img src={Avatar} alt="avatar" />
+                <img
+                    src={
+                        "https://storage.googleapis.com/popsocket-c5b28.appspot.com/12fe51d1-ff42-4c84-9766-eac431752662_306863005_2919623841673610_3567638065718975968_n.jpg.jpg"
+                    }
+                    alt="avatar"
+                />
                 {isOpen && (
                     <div>
                         <h3>{username ? username : "Name User"}</h3>

@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Statistics.module.scss";
 import { formatNumber } from "../../../../../utils/formatNumber";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../redux/store";
 import { getStatsForAdmin } from "../../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
 const cx = classNames.bind(styles);
@@ -17,7 +17,8 @@ const statsConfig = [
 
 export default function Statistics() {
     const dispatch = useAppDispatch();
-    const { data, loading } = useAppSelector((state) => state.adminDashboard);
+    const { data } = useAppSelector((state) => state.adminDashboard);
+    const [statsData, setStatsData] = useState<any>({});
 
     useEffect(() => {
         dispatch(getStatsForAdmin());
@@ -25,17 +26,16 @@ export default function Statistics() {
 
     useEffect(() => {
         if (data) {
+            setStatsData(data);
         }
     }, [data]);
-
-    console.log(data);
 
     return (
         <div className={cx("statistics")}>
             {statsConfig.map((stat: any, index) => (
                 <div className={cx("item")} key={index}>
                     <h3>{stat.title}</h3>
-                    <span>{data[stat.key]?.toLocaleString() || 0}</span>
+                    <span>{statsData[stat.key]?.toLocaleString() || 0}</span>
                 </div>
             ))}
         </div>

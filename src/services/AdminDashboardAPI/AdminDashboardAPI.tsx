@@ -47,12 +47,9 @@ export const DeleteUsers = async (accountIds: any) => {
 
 export const DeleteDocuments = async (accountIds: any) => {
     try {
-        const res = await axiosInstance.delete(
-            "/admin/dashboard/document",
-            {
-                data: accountIds,
-            }
-        );
+        const res = await axiosInstance.delete("/admin/dashboard/document", {
+            data: accountIds,
+        });
         return res;
     } catch (err: any) {
         throw new Error(err.message);
@@ -71,14 +68,25 @@ export const ApproveUsers = async (accountIds: any) => {
     }
 };
 
-export const ApproveDocuments = async (accountIds: any) => {
+export const ApproveDocuments = async (documentIds: any) => {
     try {
         const res = await axiosInstance.post(
             "/admin/dashboard/documents/approve",
-            accountIds
+            documentIds
         );
         return res;
     } catch (err: any) {
         throw new Error(err.message);
+    }
+};
+
+export const CheckDocument = async (documentId: number) => {
+    try {
+        const res = await axiosInstance.post(
+            "/admin/dashboard/check-document?docId=" + documentId
+        );
+        return res;
+    } catch (error: any) {
+        throw new Error(error.message);
     }
 };

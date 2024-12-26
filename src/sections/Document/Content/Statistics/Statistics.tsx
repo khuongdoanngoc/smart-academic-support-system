@@ -10,7 +10,6 @@ const statisticsLabels: { [K in keyof StatisticsData]: string } = {
     totalDocuments: "Tổng số tài liệu",
     totalFolders: "Tổng số thư mục",
     totalSubjects: "Tổng số môn học",
-    totalAdmins: "Tổng số quản trị viên",
 };
 
 interface StatisticsData {
@@ -19,7 +18,6 @@ interface StatisticsData {
     totalDocuments: number;
     totalFolders: number;
     totalSubjects: number;
-    totalAdmins: number;
 }
 
 interface StatisticsProps {
@@ -35,12 +33,19 @@ export default function Statistics({ data }: StatisticsProps) {
 
     return (
         <div className={cx("statistics")}>
-            {Object.entries(data).map(([key, value], index) => (
-                <div key={index}>
-                    <p>{statisticsLabels[key as keyof StatisticsData]}:</p>
-                    <span>{value.toLocaleString("vi-VN")}</span>
-                </div>
-            ))}
+            {Object.entries(data).map(([key, value], index) => {
+                if (key !== "totalAdmins") {
+                    return (
+                        <div key={index}>
+                            <p>
+                                {statisticsLabels[key as keyof StatisticsData]}:
+                            </p>
+                            <span>{value.toLocaleString("vi-VN")}</span>
+                        </div>
+                    );
+                }
+                return null;
+            })}
         </div>
     );
 }

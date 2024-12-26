@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
     ApproveDocuments,
     ApproveUsers,
+    CheckDocument,
     DeleteDocuments,
     DeleteUsers,
     GetDocumentsForAdmin,
@@ -83,9 +84,21 @@ export const approveUsers = createAsyncThunk<any, any[]>(
 
 export const approveDocuments = createAsyncThunk<any, any[]>(
     "adminDashboard/approveDocuments",
-    async (accountIds) => {
+    async (documentIds) => {
         try {
-            const res = await ApproveDocuments(accountIds);
+            const res = await ApproveDocuments(documentIds);
+            return res;
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+);
+
+export const checkDocument = createAsyncThunk<any, number>(
+    "adminDashboard/checkDocument",
+    async (documentId) => {
+        try {
+            const res = await CheckDocument(documentId);
             return res;
         } catch (error: any) {
             throw new Error(error.message);
@@ -205,9 +218,19 @@ export const AdminDashboardSlice = createSlice({
             })
             .addCase(approveDocuments.rejected, (state, action) => {
                 state.loading = false;
+                state.error = "Tài liệu cần được kiểm tra!";
+            })
+            .addCase(checkDocument.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(checkDocument.fulfilled, (state) => {
+                state.loading = false;
+                state.successMessage = "Kiểm tra tài liệu thành công!";
+            })
+            .addCase(checkDocument.rejected, (state, action) => {
+                state.loading = false;
                 state.error =
-                    action.error.message ||
-                    "error when i call api get stats for admin!";
+                    action.error.message || "Tài liệu chứa từ nhạy cảm!";
             });
     },
 });

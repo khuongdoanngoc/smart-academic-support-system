@@ -8,9 +8,9 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
-import EditICON from "../../../../assets/images/icons/EditIcon.png";
 import { customFormatDate } from "../../../../utils/formatDate";
-
+import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 interface IDataTable {
     columns: any[];
     rows: any[];
@@ -89,7 +89,7 @@ export default function DataTable({
                                 </TableCell>
                             ))}
                             <TableCell align="center" style={{ minWidth: 100 }}>
-                                Chỉnh sửa
+                                {topic === "user" ? "Xem" : "Train"}
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -149,11 +149,18 @@ export default function DataTable({
                                             }
                                         })}
                                         <TableCell align="center">
-                                            <a href="#">
-                                                <img
-                                                    src={EditICON}
-                                                    alt="edit"
-                                                />
+                                            <a
+                                                style={{ color: "#DC4342" }}
+                                                href={
+                                                    topic === "user"
+                                                        ? `/user-information/${row.accountId}`
+                                                        : `/chatbot/${row.docId}`
+                                                }>
+                                                {topic === "user" ? (
+                                                    <VisibilityOutlinedIcon />
+                                                ) : (
+                                                    <SmartToyOutlinedIcon />
+                                                )}
                                             </a>
                                         </TableCell>
                                     </TableRow>
