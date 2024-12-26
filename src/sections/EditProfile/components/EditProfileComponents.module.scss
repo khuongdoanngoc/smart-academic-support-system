@@ -41,6 +41,7 @@
             height: 150px;
             margin: 10px 0;
             object-fit: cover;
+
           }
           & > .file-input {
             position: relative;
@@ -89,6 +90,7 @@
               border-radius: 5px;
               border: 1px solid #00000080;
               margin-top: 14px;
+              cursor: pointer;
             }
           }
         }

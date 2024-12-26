@@ -414,7 +414,7 @@ const UploadFileComponents = () => {
                     <div className={cx("list-item-search")}>
                       <input
                         type="text"
-                        placeholder="Nhập mã hoặc tên chuyên ngành"
+                        placeholder="Nhập tên chuyên ngành"
                         value={facultyFile}
                         onChange={(e) => handleSearchFaculty(e.target.value)}
                       />
@@ -443,7 +443,7 @@ const UploadFileComponents = () => {
                     <div className={cx("list-item-search")}>
                       <input
                         type="text"
-                        placeholder="Nhập mã hoặc tên môn học"
+                        placeholder="Nhập tên môn học"
                         value={subjectSelected}
                         onChange={(e) => handleSearchSubject(e.target.value)}
                       />

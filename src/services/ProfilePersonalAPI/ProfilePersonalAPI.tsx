@@ -8,14 +8,16 @@ export interface listSearch {
 
 export interface DocumentPersonalDtos {
   filePath: string;
-  title: string;
-  docId: number;
+  
+  docId: number,
+    title: string,
+    description: string,
+    type: string,
+    subjectName: string,
+    facultyName: string,
 
   //thêm
-  description: string;
-  content: string;
-  type: string;
-  subjectName: string;
+  
 }
 export interface GetProfileRequest {
   firstName: string;

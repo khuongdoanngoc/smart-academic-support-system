@@ -13,9 +13,13 @@ import { GetProfileRequest } from "../ProfilePersonalAPI/ProfilePersonalAPI";
 // }
 
 export interface GetDocument {
-  docId: number;
-  title: string;
-  filePath: string;
+  docId: number,
+    title: string,
+    description: string,
+    type: string,
+    subjectName: string,
+    facultyName: string,
+
 }
 export interface GetDocumentStorage {
   first: boolean;
