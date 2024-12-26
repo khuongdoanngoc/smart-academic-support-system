@@ -59,7 +59,6 @@ const censorValues: any = [
     { code: "title", title: "Tên tài liệu" },
     { code: "subjectName", title: "Môn học" },
     { code: "folderName", title: "Thư mục" },
-    { code: "createdAt", title: "Ngày tạo" },
     { code: "authorName", title: "Tác giả" },
     { code: "isActive", title: "Phê duyệt" },
 ];
@@ -205,6 +204,19 @@ export default function DocumentsView() {
         }
     }, [error]);
 
+    const activeFilter = (
+        <div className={cx("search-container")}>
+            <select
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}>
+                <option defaultChecked value="unchecked">
+                    Chưa phê duyệt
+                </option>
+                <option value="checked">Đã phê duyệt</option>
+            </select>
+        </div>
+    );
+
 
     return (
         <div className={cx("admin-documents-view")}>
@@ -215,7 +227,9 @@ export default function DocumentsView() {
                     onDropdownChange={handleClassifyChange}
                     values={censorValues}
                 />
-                {censor !== "" && (
+                {censor === "isActive" ? (
+                    activeFilter
+                ) : (
                     <div className={cx("search-container")}>
                         <input
                             onChange={(e) => {
