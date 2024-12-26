@@ -1,0 +1,71 @@
+.admin-chart-container {
+    max-width: 1024px;
+    border: 1px solid #00000080;
+    box-shadow: 0px 0px 12.2px 0px #00000040;
+    border-radius: 20px;
+    width: 100%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    & > h3 {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0.5px;
+    }
+
+    & > h2 {
+        font-family: var(--font-family-third);
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 28px;
+        letter-spacing: 0.5px;
+    }
+
+    & > h4 {
+        font-family: var(--font-family-third);
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 12px;
+        letter-spacing: 0.5px;
+
+        & > span {
+            color: #32d16d;
+        }
+    }
+    & > p {
+        font-family: var(--font-family-third);
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 21px;
+        letter-spacing: 0.5px;
+        text-align: left;
+    }
+
+    & > .symbol {
+        display: flex;
+        gap: 20px;
+        & > div {
+            display: flex;
+            gap: 6px;
+            font-family: var(--font-family-third);
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 12px;
+            letter-spacing: 0.5px;
+            align-items: center;
+            & > span {
+                width: 9px;
+                height: 9px;
+                gap: 0px;
+                opacity: 0px;
+                border-radius: 50%;
+                background-color: #d8d9db;
+            }
+            & > .red {
+                background-color: var(--button-background-color) !important;
+            }
+        }
+    }
+}

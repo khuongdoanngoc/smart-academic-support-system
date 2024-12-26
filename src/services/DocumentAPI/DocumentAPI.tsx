@@ -69,7 +69,7 @@ export const GetAllDocuments = async (size: number) => {
 
 export const GetDocumentByTitle = async (title: string) => {
   try {
-    const res = await axiosInstance.get(`/search/${title}`);
+    const res = await axiosInstance.get(`/search/title?title=${title}`);
     return res;
   } catch (error: any) {
     throw new Error(error.message);
@@ -272,3 +272,14 @@ export const DelectDocumentStoge = async (docId: number) => {
     throw new Error(error.response?.data.message || error.message);
   }
 };
+
+export const GetPopularDocuments = async () => {
+    try {
+        const res = await axiosInstance.get(`/history/popular`);
+        return res;
+    } catch (err: unknown) {
+        const error = err as AxiosError<{ message?: string }>;
+        throw new Error(error.response?.data.message || error.message);
+    }
+};
+

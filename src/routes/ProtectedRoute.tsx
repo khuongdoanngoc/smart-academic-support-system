@@ -8,15 +8,14 @@ interface ProtectedRouteProps {
 }
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const dispatch = useAppDispatch();
-  const {isLogined} = useAppSelector((state) => state.authentication);
+  const {isLogined,listRoles} = useAppSelector((state) => state.authentication);
   useEffect(() => {
     if (!isLogined) {
       dispatch(AutoLoginAction());
-    }else{
+    }else if(listRoles.length>0 && listRoles[0]!=="ADMIN"){
       dispatch(CountNotificationAction());
     }
-  }, [dispatch, isLogined]);
-
+  }, [dispatch, isLogined, listRoles]);
     return <>{children}</>;
 };
 export default ProtectedRoute;

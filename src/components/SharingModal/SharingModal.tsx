@@ -9,6 +9,7 @@ import { useState } from "react";
 const cx = classNames.bind(styles);
 import emailjs from "@emailjs/browser";
 import { useAppSelector } from "../../redux/store";
+import { toast } from "react-toastify";
 
 const style = {
     position: "absolute",
@@ -28,13 +29,21 @@ const style = {
 
 export default function SharingModal() {
     const [email, setEmail] = useState<string>("");
-    const fromName = useAppSelector((state) => state.authentication.username);
+    const fromName = useAppSelector(
+        (state: any) => state.authentication.username
+    );
+    const [isSending, setIsSending] = useState<boolean>(false);
 
     // config đóng mở modal
     const { open, closeSharingModal, url } = useSharingModal();
 
     // config copy url
     const [isCopied, setIsCopied] = useState<boolean>(false);
+
+    function isValidEmail(email: string): boolean {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
 
     const handleCopy = async () => {
         try {
@@ -48,6 +57,12 @@ export default function SharingModal() {
 
     // config cho send email
     const sendEmail = () => {
+        if (!isValidEmail(email)) {
+            toast.error("Email này không tồn tại!");
+            return;
+        }
+        if (isSending) return;
+        setIsSending(true);
         var templateParams = {
             from_name: fromName,
             message: url,
@@ -65,12 +80,19 @@ export default function SharingModal() {
             .then(
                 () => {
                     console.log("SUCCESS!");
+                    toast.success("Chia sẻ thành công!");
+                    closeSharingModal();
                 },
                 (error) => {
                     console.log(error);
                     console.log("FAILED...", error.text);
+                    toast.error("Xảy ra lỗi khi chia sẻ tài liệu!");
                 }
             );
+
+        setTimeout(() => {
+            setIsSending(false);
+        }, 3000);
     };
 
     return (
@@ -101,7 +123,7 @@ export default function SharingModal() {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <Button
-                        text="Gửi Email"
+                        text={isSending ? "Đang gửi" : "Gửi Email"}
                         paddingX={20}
                         paddingY={11}
                         fontSize={15}
@@ -125,6 +147,7 @@ export default function SharingModal() {
                         paddingX={35}
                         paddingY={11}
                         fontSize={15}
+                        onClick={closeSharingModal}
                     />
                 </div>
             </Box>

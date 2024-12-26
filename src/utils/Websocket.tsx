@@ -33,7 +33,7 @@ export const WebsocketConnection: React.FC = () => {
     }
 
     stompClient = new Client({
-      webSocketFactory: () => new SockJS(`http://localhost:8089/api/v1/ws`),
+      webSocketFactory: () => new SockJS(`http://localhost:8088/api/v1/ws`),
       connectHeaders: {
         token: token,
       },

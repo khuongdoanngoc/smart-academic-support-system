@@ -19,6 +19,7 @@ import {
   SaveDownLoadHistoryApi,
   SaveDocummentStogeAPI,
   GetDocumentStorage,
+  GetPopularDocuments,
 } from "../../services/DocumentAPI/DocumentAPI";
 import {
   DocumentByAccountRequest,
@@ -30,8 +31,10 @@ import { toast } from "react-toastify";
 interface InitialStateStyles {
   Error: string;
   Documents: DocumentResponse[] | undefined;
+  DocumentsSearch: DocumentResponse[];
   DocumentDetail: DocumentResponse | undefined;
   loading: boolean;
+  isSearching: boolean;
   error: string;
   document: DocumentResponse[];
   informationDocument: GetDocument | null;
@@ -96,7 +99,6 @@ export const DownloadDocumentAction = createAsyncThunk<
         const blob = await fileResponse.blob(); // Chuyển phản hồi thành blob
         const link = document.createElement("a");
         const fileName = fileUrl.split("/").pop() || "download_file";
-
         const url = window.URL.createObjectURL(blob); // Tạo object URL từ blob
         link.href = url;
         link.setAttribute("download", fileName); // Đặt thuộc tính download
@@ -204,7 +206,7 @@ export const getDocumentByTitle = createAsyncThunk<DocumentResponse, string>(
   async (title: string) => {
     try {
       const response = await GetDocumentByTitle(title);
-      return response.data as DocumentResponse;
+      return response as unknown as DocumentResponse[];
     } catch (err: any) {
       throw Error(err.message);
     }
@@ -244,6 +246,19 @@ export const getDocumentByFalcuty = createAsyncThunk<DocumentResponse, string>(
   }
 );
 
+export const getPopularDocuments = createAsyncThunk<any>(
+    "documents/getPopularDocuments",
+    async () => {
+        try {
+            const response = await GetPopularDocuments();
+            return response;
+        } catch (err: any) {
+            throw Error(err.message);
+        }
+    }
+);
+
+
 const initialState: InitialStateStyles = {
   loading: false,
   error: "",
@@ -253,12 +268,18 @@ const initialState: InitialStateStyles = {
   Documents: [],
   DocumentDetail: undefined,
   informationDocument: null,
+  DocumentsSearch: [],
+  isSearching: false
 };
 
 export const DocumentSlice = createSlice({
   name: "documents",
   initialState,
-  reducers: {},
+  reducers: {
+    clearDocumentSearch: (state)=>{
+      state.DocumentsSearch = [];
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(getDocumentByIDAction.pending, (state) => {
@@ -286,14 +307,14 @@ export const DocumentSlice = createSlice({
           action.error.message || "error when calling api get all documents";
       })
       .addCase(getDocumentByTitle.pending, (state) => {
-        state.loading = true;
+        state.isSearching = true;
       })
       .addCase(getDocumentByTitle.fulfilled, (state, action) => {
-        state.loading = false;
-        state.DocumentDetail = action.payload;
+        state.isSearching = false;
+        state.DocumentsSearch = action.payload;
       })
       .addCase(getDocumentByTitle.rejected, (state, action) => {
-        state.loading = false;
+        state.isSearching = false;
         state.Error =
           action.error.message ||
           "error when calling api get document by title";
@@ -398,8 +419,22 @@ export const DocumentSlice = createSlice({
       .addCase(DelectDocumentStogeAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to delete document";
-      });
+      })
+      .addCase(getPopularDocuments.pending, (state) => {
+        state.loading = true;
+    })
+    .addCase(getPopularDocuments.fulfilled, (state, action) => {
+        state.loading = false;
+        state.Documents = action.payload;
+    })
+    .addCase(getPopularDocuments.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+            action.error.message ||
+            "error when calling api get all documents";
+    });
   },
 });
 
+export const {clearDocumentSearch} = DocumentSlice.actions;
 export default DocumentSlice.reducer;

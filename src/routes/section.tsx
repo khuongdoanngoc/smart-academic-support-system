@@ -105,8 +105,8 @@ export default function Router() {
           element: <Notification />,
         },
         {
-          path: ":majorSlug/:folderSlug/id",
-          // path: ":id",
+        //   path: ":majorSlug/:folderSlug/id",
+          path: ":id",
           element: <DocumentDetailPage />,
         },
         {
@@ -149,9 +149,11 @@ export default function Router() {
     {
       path: "/admin",
       element: (
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Outlet />
+          </DashboardLayout>
+        </ProtectedRoute>
       ),
       children: [
         {

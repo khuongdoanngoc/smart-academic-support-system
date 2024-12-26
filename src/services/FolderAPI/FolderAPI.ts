@@ -23,7 +23,7 @@ export const CreateFolder = async (folderName: string, description: string) => {
 
 export const GetFolderById = async (id: number) => {
     try {
-        const res = await axiosInstance.get(`${baseUrl}/folder/${id}`);
+        const res = await axiosInstance.get(`${baseUrl}/folder/${id}?`);
         return res;
     } catch (error: any) {
         throw Error(error.message);
@@ -57,5 +57,16 @@ export const DeleteFolder = async (folderId: number) => {
         return res;
     } catch (error: any) {
         throw Error(error.message);
+    }
+};
+
+export const GetPopularFolders = async (size: number) => {
+    try {
+        const res = await axiosInstance.get(
+            `/folder/top-folders?size=${size}`
+        );
+        return res;
+    } catch (err: any) {
+        throw Error(err.message);
     }
 };

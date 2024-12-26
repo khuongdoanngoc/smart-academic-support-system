@@ -6,15 +6,18 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 interface ICensorDropdown {
     censor: string;
     onDropdownChange: (value: string) => void;
+    values: any[];
 }
 
 export default function CensorDropdown({
     censor,
     onDropdownChange,
+    values,
 }: ICensorDropdown) {
     const handleChange = (event: SelectChangeEvent) => {
         onDropdownChange(event.target.value);
     };
+
     return (
         <div>
             <FormControl sx={{ m: 1, minWidth: 190 }}>
@@ -31,11 +34,11 @@ export default function CensorDropdown({
                     <MenuItem value="">
                         <em>None</em>
                     </MenuItem>
-                    <MenuItem value={"subject"}>Môn học</MenuItem>
-                    <MenuItem value={"folder"}>Thư mục</MenuItem>
-                    <MenuItem value={"author"}>Tác giả</MenuItem>
-                    <MenuItem value={"createdAt"}>Ngày đăng</MenuItem>
-                    <MenuItem value={"reviewer"}>Người duyệt</MenuItem>
+                    {values?.map((value, index) => (
+                        <MenuItem key={index} value={value.code}>
+                            {value.title}
+                        </MenuItem>
+                    ))}
                 </Select>
             </FormControl>
         </div>

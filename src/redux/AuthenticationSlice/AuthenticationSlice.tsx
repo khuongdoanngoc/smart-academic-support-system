@@ -116,7 +116,6 @@ export const LogoutAction = createAsyncThunk(
   async () => {
     try {
       const response = await LogoutApi(); //logout api
-
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError<{ message?: string }>;
@@ -314,13 +313,35 @@ const AuthenticationSlice = createSlice({
       })
       .addCase(AutoLoginAction.fulfilled, (state, action:PayloadAction<ILoginS>) => {
         state.loading = false;
-        state.isLogined = true;
-        state.username = action.payload.username;
-        state.listRoles = action.payload.listRoles;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
-        state.accountId = action.payload.accountId;
-        state.ilogins=action.payload
+        if(window.location.pathname.startsWith("/admin")){
+          if(action.payload.listRoles && action.payload.listRoles.length>0 && action.payload.listRoles[0]!=="ADMIN"){
+            toast.error("Bạn không có quyền truy cập vào trang này");
+            setTimeout(()=>{
+              window.location.href = "/document";
+            },2000);
+          }else{
+            state.isLogined = true;
+            state.username = action.payload.username;
+            state.listRoles = action.payload.listRoles;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+            state.accountId = action.payload.accountId;
+          }
+        }else{
+          if(action.payload.listRoles && action.payload.listRoles.length>0 && action.payload.listRoles[0]==="ADMIN"){
+            toast.error("Bạn không có quyền truy cập vào trang này");
+            setTimeout(()=>{
+              window.location.href = "/admin/dashboard";
+            },2000);
+          }else{
+            state.isLogined = true;
+            state.username = action.payload.username;
+            state.listRoles = action.payload.listRoles;
+            state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
+            state.accountId = action.payload.accountId;
+          }
+        }
       })
       .addCase(ChangePasswordAction.fulfilled, (state) => {
         state.loading = false;

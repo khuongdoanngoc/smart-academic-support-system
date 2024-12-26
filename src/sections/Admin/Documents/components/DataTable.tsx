@@ -9,18 +9,29 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import EditICON from "../../../../assets/images/icons/EditIcon.png";
+import { customFormatDate } from "../../../../utils/formatDate";
 
 interface IDataTable {
     columns: any[];
     rows: any[];
+    page: number;
+    setPage: any;
+    topic: string;
+    selectedDocuments: number[];
+    setSelectedDocuments: any;
 }
 
-export default function DataTable({ columns, rows }: IDataTable) {
-    const [page, setPage] = React.useState(0);
+export default function DataTable({
+    columns,
+    rows,
+    page,
+    setPage,
+    topic,
+    selectedDocuments,
+    setSelectedDocuments,
+}: IDataTable) {
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [selectedDocuments, setSelectedDocuments] = React.useState<number[]>(
-        []
-    );
+
     const allSelected = selectedDocuments.length === rows.length;
 
     const handleChangePage = (_: unknown, newPage: number) => {
@@ -31,13 +42,18 @@ export default function DataTable({ columns, rows }: IDataTable) {
         if (allSelected) {
             setSelectedDocuments([]);
         } else {
-            setSelectedDocuments(rows.map((doc) => doc.id));
+            setSelectedDocuments(
+                rows.map((item) =>
+                    topic === "user" ? item.accountId : item.docId
+                )
+            );
         }
     };
+
     const handleCheckboxChange = (id: number) => {
         if (selectedDocuments.includes(id)) {
             setSelectedDocuments(
-                selectedDocuments.filter((docId) => docId !== id)
+                selectedDocuments.filter((accountId) => accountId !== id)
             );
         } else {
             setSelectedDocuments([...selectedDocuments, id]);
@@ -57,7 +73,7 @@ export default function DataTable({ columns, rows }: IDataTable) {
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            <TableCell align="center" style={{ minWidth: 100 }}>
+                            <TableCell align="center" style={{ minWidth: 30 }}>
                                 Tất cả
                                 <Checkbox
                                     checked={allSelected}
@@ -93,15 +109,21 @@ export default function DataTable({ columns, rows }: IDataTable) {
                                         <TableCell align="center">
                                             <Checkbox
                                                 checked={selectedDocuments.includes(
-                                                    row.id
+                                                    topic === "user"
+                                                        ? row.accountId
+                                                        : row.docId
                                                 )}
                                                 onChange={() =>
-                                                    handleCheckboxChange(row.id)
+                                                    handleCheckboxChange(
+                                                        topic === "user"
+                                                            ? row.accountId
+                                                            : row.docId
+                                                    )
                                                 }
                                             />
                                         </TableCell>
                                         {columns.map((column, index) => {
-                                            const value = row[column.id];
+                                            let value = row[column.id];
                                             if (typeof value === "boolean") {
                                                 return (
                                                     <TableCell
@@ -113,6 +135,10 @@ export default function DataTable({ columns, rows }: IDataTable) {
                                                     </TableCell>
                                                 );
                                             } else {
+                                                if (index === 4) {
+                                                    value =
+                                                        customFormatDate(value);
+                                                }
                                                 return (
                                                     <TableCell
                                                         key={index}

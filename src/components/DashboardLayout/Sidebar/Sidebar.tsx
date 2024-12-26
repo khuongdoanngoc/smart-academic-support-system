@@ -20,45 +20,41 @@ import ChecklistRtlOutlinedIcon from "@mui/icons-material/ChecklistRtlOutlined";
 
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAppSelector } from "../../../redux/store";
+import { toast } from "react-toastify";
 const resourceItems = [
     {
         title: "Tài liệu",
         icon: InsertDriveFileOutlinedIcon,
         pathAcitve: "/admin/documents",
     },
-    { title: "Môn học", icon: StickyNote2OutlinedIcon, pathAcitve: "#unknown" },
+    // { title: "Môn học", icon: StickyNote2OutlinedIcon, pathAcitve: "#unknown" },
     {
         title: "Người dùng",
         icon: PermIdentityOutlinedIcon,
         pathAcitve: "/admin/users",
-    },
-    { title: "Thư viện", icon: BookOutlinedIcon, pathAcitve: "/admin/library" },
-    {
-        title: "Sách",
-        icon: AutoStoriesOutlinedIcon,
-        pathAcitve: "/admin/books",
     },
 ];
 const supportItems = [
     {
         title: "Thông báo",
         icon: NotificationsOutlinedIcon,
-        pathAcitve: "/admin/notifications",
+        pathAcitve: "/comingsoon",
     },
     {
         title: "Phân loại",
         icon: SearchOutlinedIcon,
-        pathAcitve: "/admin/classify",
+        pathAcitve: "/comingsoon",
     },
     {
         title: "Báo cáo",
         icon: ReportGmailerrorredOutlinedIcon,
-        pathAcitve: "/admin/reports",
+        pathAcitve: "/comingsoon",
     },
     {
         title: "Hỗ trợ AI",
         icon: SmartToyOutlinedIcon,
-        pathAcitve: "/document/ai-support",
+        pathAcitve: "/comingsoon",
     },
 ];
 
@@ -66,18 +62,21 @@ const authorizationItems = [
     {
         title: "Quản trị viên",
         icon: AdminPanelSettingsOutlinedIcon,
-        pathAcitve: "/admin/administrators",
+        pathAcitve: "/comingsoon",
     },
     {
         title: "Kiểm duyệt",
         icon: ChecklistRtlOutlinedIcon,
-        pathAcitve: "/admin/censor",
+        pathAcitve: "/comingsoon",
     },
 ];
 
 export default function Sidebar() {
     const [isOpen, setIsOpen] = useState<boolean>(true);
     const pathName = useLocation().pathname;
+    const { username } = useAppSelector((state) => state.authentication);
+
+    console.log(username);
 
     return (
         <div className={cx("sidebar", { open: isOpen, closed: !isOpen })}>
@@ -85,7 +84,7 @@ export default function Sidebar() {
                 <img src={Avatar} alt="avatar" />
                 {isOpen && (
                     <div>
-                        <h3>Name user</h3>
+                        <h3>{username ? username : "Name User"}</h3>
                         <span>Admin</span>
                     </div>
                 )}
@@ -134,8 +133,12 @@ export default function Sidebar() {
                 {supportItems.map((item, index) => (
                     <a
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        onClick={() => {
+                            toast.info("coming soon!");
+                        }}
+                        className={cx(
+                            pathName === item.pathAcitve && "active"
+                        )}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
                     </a>
@@ -150,8 +153,12 @@ export default function Sidebar() {
                 {authorizationItems.map((item, index) => (
                     <a
                         key={index}
-                        className={cx(pathName === item.pathAcitve && "active")}
-                        href={item.pathAcitve}>
+                        onClick={() => {
+                            toast.info("coming soon!");
+                        }}
+                        className={cx(
+                            pathName === item.pathAcitve && "active"
+                        )}>
                         <item.icon sx={{ width: "22px", height: "22px" }} />
                         {isOpen && <h3>{item.title}</h3>}
                     </a>
