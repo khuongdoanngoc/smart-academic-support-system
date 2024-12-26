@@ -36,7 +36,7 @@ function Content({ url, id }: IDetailDoc) {
     const dispatch = useAppDispatch();
 
     const handleDownload = () => {
-        dispatch(DownloadDocumentAction({ docId: id, username }));
+        dispatch(DownloadDocumentAction({ documentId: id, username }));
     };
 
     const handleSave = () => {
