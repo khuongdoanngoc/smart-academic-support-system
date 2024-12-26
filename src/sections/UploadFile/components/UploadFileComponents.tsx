@@ -70,6 +70,7 @@ const UploadFileComponents = () => {
   const [subjectFile, setSubjectFile] = useState("");
   const [facultyFile, setFacultyFile] = useState("");
   const [folderFile, setFolderFile] = useState("");
+  const [subjectSelected, setSubjectSelected] = useState("");
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -203,7 +204,7 @@ const UploadFileComponents = () => {
           title: titleFile,
           description: descriptionFile,
           type: typeFile,
-          subjectName: subjectFile,
+          subjectCode: subjectFile,
           facultyName: facultyFile,
         };
 
@@ -280,7 +281,7 @@ const UploadFileComponents = () => {
     setTitleFile(value);
   };
   const handleSearchSubject = async (value: string) => {
-    setSubjectFile(value);
+    setSubjectSelected(value);
     if (!value.trim()) {
       debounceClearSubject();
       return;
@@ -310,6 +311,7 @@ const UploadFileComponents = () => {
     setDescriptionFile("");
     setTypeFile("");
     setSubjectFile("");
+    setSubjectSelected("");
     setFacultyFile("");
     setFileDetailLoad(false);
     setmenuCheckItemRow(false);
@@ -433,7 +435,7 @@ const UploadFileComponents = () => {
                       <input
                         type="text"
                         placeholder="Nhập mã hoặc tên môn học"
-                        value={subjectFile}
+                        value={subjectSelected}
                         onChange={(e) => handleSearchSubject(e.target.value)}
                       />
                       {subjectFile.trim() && searchSubject?.length > 0 && (
@@ -443,7 +445,8 @@ const UploadFileComponents = () => {
                               <li
                                 key={index}
                                 onClick={() => {
-                                  setSubjectFile(result.subjectName);
+                                  setSubjectFile(result.subjectCode);
+                                  setSubjectSelected(result.subjectName);
                                   dispatch(clearSearchSubject());
                                 }}
                               >
