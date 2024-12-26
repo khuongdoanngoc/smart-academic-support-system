@@ -151,7 +151,11 @@ export default function DataTable({
                                         <TableCell align="center">
                                             <a
                                                 style={{ color: "#DC4342" }}
-                                                href="/admin/dashboard/user-information">
+                                                href={
+                                                    topic === "user"
+                                                        ? `/user-information/${row.accountId}`
+                                                        : `/chatbot/${row.docId}`
+                                                }>
                                                 {topic === "user" ? (
                                                     <VisibilityOutlinedIcon />
                                                 ) : (

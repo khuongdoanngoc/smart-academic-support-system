@@ -93,6 +93,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
   const pathName = useLocation().pathname;
   const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
   const { username } = useAppSelector((state) => state.authentication);
+  
   const { numberOfNotificationsUnRead } = useAppSelector(
     (state) => state.notication
   );
