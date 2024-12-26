@@ -11,6 +11,7 @@ import {
     approveDocuments,
     checkDocument,
     clearError,
+    clearMessage,
     deleteDocuments,
     getDocumentsForAdmin,
 } from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
@@ -59,7 +60,6 @@ const censorValues: any = [
     { code: "title", title: "Tên tài liệu" },
     { code: "subjectName", title: "Môn học" },
     { code: "folderName", title: "Thư mục" },
-    { code: "createdAt", title: "Ngày tạo" },
     { code: "authorName", title: "Tác giả" },
     { code: "isActive", title: "Phê duyệt" },
 ];
@@ -158,7 +158,7 @@ export default function DocumentsView() {
 
     const handleReloadTable = () => {
         try {
-            dispatch(getDocumentsForAdmin(100));
+            dispatch(getDocumentsForAdmin(200));
         } catch (error) {
             console.log(error);
             toast.error("Xảy ra lỗi, vui lòng thử lại sau");
@@ -186,6 +186,7 @@ export default function DocumentsView() {
                 setOpenApproveDialog(false);
             }
             toast.success(successMessage);
+            dispatch(clearMessage());
             setSelectedIds([]);
             handleReloadTable();
         }
@@ -205,6 +206,19 @@ export default function DocumentsView() {
         }
     }, [error]);
 
+    const activeFilter = (
+        <div className={cx("search-container")}>
+            <select
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}>
+                <option defaultChecked value="unchecked">
+                    Chưa phê duyệt
+                </option>
+                <option value="checked">Đã phê duyệt</option>
+            </select>
+        </div>
+    );
+
 
     return (
         <div className={cx("admin-documents-view")}>
@@ -215,7 +229,9 @@ export default function DocumentsView() {
                     onDropdownChange={handleClassifyChange}
                     values={censorValues}
                 />
-                {censor !== "" && (
+                {censor === "isActive" ? (
+                    activeFilter
+                ) : (
                     <div className={cx("search-container")}>
                         <input
                             onChange={(e) => {
