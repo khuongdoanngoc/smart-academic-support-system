@@ -26,6 +26,7 @@ import { useGlobalContextLoin } from "../../../layouts/useContext";
 import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSlice";
 import Loader from "../../../components/Loader/Loader";
 import { Link } from "react-router-dom";
+import { useSharingModal } from "../../../contexts/SharingModalContext";
 
 const cx = classnames.bind(styles);
 
@@ -37,6 +38,13 @@ const ProfilePersonalComponents = () => {
   const [shareAnimation, setShareAnimation] = useState<boolean>(false);
   const [shareCloseAnimation, setShareCloseAnimation] =
     useState<boolean>(false);
+
+    // configs cho nút chia sẻ
+  const { openSharingModal, setUrl } = useSharingModal();
+  const handleOpenModal = (id: number) => {
+    setUrl(`${import.meta.env.VITE_CLIENT_URL}/document/${id}`);
+    openSharingModal();
+  };
 
   const dispatch = useAppDispatch();
   const { viewProfile, isloading } = useAppSelector(
@@ -230,7 +238,7 @@ const ProfilePersonalComponents = () => {
                         <img
                           src={Share}
                           alt="share"
-                          onClick={() => handleOpenShare()}
+                          onClick={() => handleOpenModal(data.docId)}
                         />
                       </div>
                     </div>

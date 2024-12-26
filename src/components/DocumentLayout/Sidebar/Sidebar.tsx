@@ -151,7 +151,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
             <h3 onClick={handleClickProfile}>
               {username !== 'null null' ? username : "N/A"}
             </h3>
-            <a href="#">+ Add information</a>
+            <a href="/document/edit-profile">+ Add information</a>
           </div>
         )}
       </div>

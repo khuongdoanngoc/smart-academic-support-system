@@ -33,6 +33,7 @@ import { DownloadDocumentAction } from "../../../redux/DocumentSlice/documentSli
 import { GetDocument } from "../../../services/DocumentAPI/DocumentAPI";
 import { GetProfileRequest } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
 import Loader from "../../../components/Loader/Loader";
+import { useSharingModal } from "../../../contexts/SharingModalContext";
 const cx = classnames.bind(styles);
 // interface Subject {
 //   id: number;
@@ -151,6 +152,13 @@ const ProfileAuthorComponent = () => {
     }
   }, [getUserProfile]);
 
+
+      // configs cho nút chia sẻ
+      const { openSharingModal, setUrl } = useSharingModal();
+      const handleOpenModal = (id: number) => {
+          setUrl(`${import.meta.env.VITE_CLIENT_URL}/document/${id}`);
+          openSharingModal();
+      };
   
 
   // useEffect(() => {
@@ -336,7 +344,7 @@ const ProfileAuthorComponent = () => {
                         alt="down"
                         onClick={() => handleDownloadDocuments(data.docId)}
                       />
-                      <img src={Share} alt="share" />
+                      <img onClick={() => handleOpenModal(data.docId)} src={Share} alt="share" />
                       <img
                         src={EditIcon}
                         alt="EditIcon"

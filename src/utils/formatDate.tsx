@@ -9,7 +9,7 @@ export function formatDate(dateString: string) {
 
 export function customFormatDate(value: string): string {
     try {
-        if (!value) {
+        if (value === 'N/A') {
             return "";
         }
         // Chuyển đổi chuỗi thành đối tượng Date
