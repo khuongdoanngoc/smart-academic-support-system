@@ -113,7 +113,7 @@ const LoginComponents = () => {
           email: email,
         };
         Promise.all([dispatch(updateOtpState(payload)),dispatch(SendAuthOtpAction(data))]);
-        sessionStorage.setItem('email', email);
+        sessionStorage.setItem('email', email.toLowerCase());
         sessionStorage.setItem('otp', otp);
         if(payload.otpExpires) sessionStorage.setItem('otpExpires', payload.otpExpires);
         await emailjs
@@ -180,7 +180,7 @@ const LoginComponents = () => {
                       id="email"
                       type="text"
                       name="email"
-                      value={formik.values.email}
+                      value={formik.values.email.toLowerCase()}
                       onChange={formik.handleChange}
                       placeholder="Nhập email"
                       style={{ width: "100%" }}

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { sendMessageService } from "../../services/ChatBotAPI/ChatBotAPI";
+import { sendMessageService, TrainChatbotRequest, trainChatbotService } from "../../services/ChatBotAPI/ChatBotAPI";
 import Avatar from "../../assets/images/avatar.png";
+import { toast } from "react-toastify";
 
 
 type MessagesUser = {
@@ -53,6 +54,18 @@ export const sendMessageAction= createAsyncThunk<ChatbotResponse,MessagesUser>(
             throw new Error(error.message);
         }
     }
+);
+
+export const trainChatbotAction= createAsyncThunk<string, TrainChatbotRequest[]>(
+    "trainChatbotAction",
+    async (data: TrainChatbotRequest[])=>{
+        try {
+            const res = await trainChatbotService(data);
+            return res as unknown as string;
+        } catch (error:any) {
+            throw new Error(error.message);
+        }
+    }
 )
 
 const initialState: InitialState = {
@@ -79,6 +92,9 @@ const ChatBotSlice= createSlice({
            .addCase(sendMessageAction.pending, (state) => {
                 state.loading = true;
             })
+            .addCase(trainChatbotAction.pending, (state) => {
+                state.loading = true;
+            })
            .addCase(sendMessageAction.fulfilled, (state, action: PayloadAction<ChatbotResponse>) => {
                 state.loading = false;
                 const data = {
@@ -101,6 +117,10 @@ const ChatBotSlice= createSlice({
                 }
                 state.messages= [...state.messages, data];
             })
+            .addCase(trainChatbotAction.fulfilled, (state, action: PayloadAction<string>) => {
+                state.loading = false;
+                toast.success(action.payload);
+            })
            .addCase(sendMessageAction.rejected, (state, action) => {
                 state.loading = false;
                 const data = {
@@ -112,6 +132,10 @@ const ChatBotSlice= createSlice({
                     sender: "bot",
                 };
                 state.messages= [...state.messages, data];
+                state.error = action.error.message;
+            })
+            .addCase(trainChatbotAction.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.error.message;
             })
     }
