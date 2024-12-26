@@ -1,14 +1,17 @@
 import classNames from "classnames/bind";
 import styles from "./Chart.module.scss";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useAppSelector } from "../../../../../redux/store";
 
 const cx = classNames.bind(styles);
 const colors: string[] = ["#DC4342", "#E6E8EC"];
 export default function Chart() {
+    const { data }: any = useAppSelector((state) => state.adminDashboard);
+
     return (
         <div className={cx("admin-chart-container")}>
             <h3>Tổng số tài liệu</h3>
-            <h2>31.000</h2>
+            <h2>{data.totalDocuments}</h2>
             <h4>
                 <span>2.1% </span> vs last week
             </h4>

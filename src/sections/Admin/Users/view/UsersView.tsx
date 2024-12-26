@@ -242,7 +242,7 @@ export default function UsersView() {
                 </div>
             </div>
             {loading ? (
-                <Loader height={100} />
+                <Loader height={1} />
             ) : (
                 <DataTable
                     page={page}

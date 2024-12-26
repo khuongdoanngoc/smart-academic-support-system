@@ -9,6 +9,7 @@ import DataTable from "../components/DataTable";
 import { useAppDispatch, useAppSelector } from "../../../../redux/store";
 import {
     approveDocuments,
+    checkDocument,
     deleteDocuments,
     getDocumentsForAdmin,
 } from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
@@ -74,7 +75,7 @@ export default function DocumentsView() {
         (state: any) => state.adminDashboard.documents?.content
     );
 
-    const { loading, successMessage } = useAppSelector(
+    const { loading, successMessage, error } = useAppSelector(
         (state) => state.adminDashboard
     );
 
@@ -85,7 +86,7 @@ export default function DocumentsView() {
     }, [documents]);
 
     useEffect(() => {
-        dispatch(getDocumentsForAdmin(100));
+        dispatch(getDocumentsForAdmin(200));
     }, [dispatch]);
 
     const handleClassifyChange = (value: string) => {
@@ -144,7 +145,7 @@ export default function DocumentsView() {
         }
     };
 
-    const handleApproveUsers = () => {
+    const handleApproveDocuments = () => {
         try {
             dispatch(approveDocuments(selectedIds));
         } catch (error) {
@@ -155,6 +156,19 @@ export default function DocumentsView() {
     const handleReloadTable = () => {
         try {
             dispatch(getDocumentsForAdmin(100));
+        } catch (error) {
+            console.log(error);
+            toast.error("Xảy ra lỗi, vui lòng thử lại sau");
+        }
+    };
+
+    const handleCheckDocument = () => {
+        try {
+            if (selectedIds.length !== 1) {
+                toast.error("Chọn duy nhất 1 tài liệu để kiểm tra");
+                return;
+            }
+            dispatch(checkDocument(selectedIds[0]));
         } catch (error) {
             console.log(error);
             toast.error("Xảy ra lỗi, vui lòng thử lại sau");
@@ -173,6 +187,19 @@ export default function DocumentsView() {
             handleReloadTable();
         }
     }, [successMessage]);
+
+    useEffect(() => {
+        if (error !== "") {
+            if (openAlertDialog) {
+                setOpenAlertDialog(false);
+            } else {
+                setOpenApproveDialog(false);
+            }
+            toast.error(error);
+            setSelectedIds([]);
+            handleReloadTable();
+        }
+    }, [error]);
 
     return (
         <div className={cx("admin-documents-view")}>
@@ -208,9 +235,9 @@ export default function DocumentsView() {
                 )}
                 <div className={cx("rightActions")}>
                     <button
-                        onClick={handleReloadTable}
+                        onClick={handleCheckDocument}
                         className={cx("reload-btn")}>
-                        Tải lại
+                        Kiểm tra
                     </button>
                     <button
                         onClick={handleOpenAlertDialog}
@@ -226,7 +253,7 @@ export default function DocumentsView() {
             </div>
 
             {loading ? (
-                <Loader height={100} />
+                <Loader height={1} />
             ) : (
                 <DataTable
                     page={page}
@@ -248,7 +275,7 @@ export default function DocumentsView() {
             <ApproveDialog
                 open={openApproveDialog}
                 onClose={handleCloseApproveDialog}
-                onApprove={handleApproveUsers}
+                onApprove={handleApproveDocuments}
                 ids={selectedIds}
                 title="tài liệu"
             />

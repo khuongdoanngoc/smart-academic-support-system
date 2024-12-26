@@ -9,10 +9,11 @@ import { Docs } from "./Docs";
 
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { Subjects } from "./Subjects";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useEffect, useState } from "react";
-import { getAllDocumentsAction } from "../../../redux/DocumentSlice/documentSlice";
+import {
+    getPopularDocuments,
+} from "../../../redux/DocumentSlice/documentSlice";
 import { DocumentResponse } from "../../../redux/DocumentSlice/InterfaceResponse";
 import { PopularFolders } from "./PopularFolders";
 import { getPopularFolders } from "../../../redux/FolderSlice/folderSlice";
@@ -27,8 +28,7 @@ export default function Content() {
     const [statsData, setStatsData] = useState<any>({});
 
     useEffect(() => {
-        console.log("do call api");
-        dispatch(getAllDocumentsAction(3));
+        dispatch(getPopularDocuments(3));
         dispatch(getPopularFolders(8));
         dispatch(getStatsForUser());
     }, [dispatch]);
@@ -44,9 +44,9 @@ export default function Content() {
 
     const handleLoadMore = (status: string) => {
         if (status === "loadmore") {
-            dispatch(getAllDocumentsAction(9));
+            dispatch(getPopularDocuments(9));
         } else {
-            dispatch(getAllDocumentsAction(3));
+            dispatch(getPopularDocuments(3));
         }
     };
 

@@ -7,7 +7,7 @@ interface ApiPostFile {
   title: string;
   description: string;
   type: string;
-  subjectName: string;
+  subjectCode: string;
   facultyName: string;
 }
 export interface SearchFaculty {
@@ -19,7 +19,7 @@ export interface SearchFolder {
   folderName: string;
 }
 export interface SearchSubject {
-  id: number;
+  subjectCode: string;
   subjectName: string;
 }
 export const postFile = async (data: ApiPostFile) => {
@@ -28,7 +28,7 @@ export const postFile = async (data: ApiPostFile) => {
   formData.append("title", data.title);
   formData.append("description", data.description);
   formData.append("type", data.type);
-  formData.append("subjectName", data.subjectName);
+  formData.append("subjectCode", data.subjectCode);
   formData.append("facultyName", data.facultyName);
   console.log("formData", formData);
 
