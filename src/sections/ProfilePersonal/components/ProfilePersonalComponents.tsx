@@ -6,7 +6,6 @@ import EditIcon from "../../../assets/images/edit-05.png";
 import ImportLight from "../../../assets/images/Import_light.png";
 import Edit from "../../../assets/images/edit-06.png";
 import Share from "../../../assets/images/fi_share-2.png";
-import SearchIcon from "@mui/icons-material/Search";
 import avartar from "../../../assets/images/Frame 8720.png";
 
 // import { Button } from "../../../components/Button";
@@ -15,8 +14,7 @@ import {
   PaginationItem,
   PaginationRenderItemParams,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { debounce } from "lodash";
+import { useEffect, useState } from "react";
 import {
   RootState,
   useAppDispatch,
@@ -26,9 +24,8 @@ import {
 // import { SearchDocProfilePersonalAPI } from "../../../services/ProfilePersonalAPI/ProfilePersonalAPI";
 import {
   GetProFileAction,
-  GetProFilePageAction,
-  SearchDocPersonalAction,
-  ViewProfilePersonalByEmailAction,
+  GetProFilePageAction
+  // ViewProfilePersonalByEmailAction,
 } from "../../../redux/ProfilePersonalSlice/ProfilePersonalSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -123,12 +120,13 @@ const ProfileAuthorComponent = () => {
   // const itemsPerPage = 10;
   // const [currentPage, setCurrentPage] = useState<number>(1);
   const dispatch = useAppDispatch();
+  const [emailUser, setEmailUser] = useState("");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceSearch = useCallback(
-    debounce((name: string) => dispatch(SearchDocPersonalAction(name)), 1000),
-    [dispatch]
-  );
+  // const debounceSearch = useCallback(
+  //   debounce((name: string) => dispatch(SearchDocPersonalAction(name)), 1000),
+  //   [dispatch]
+  // );
   // const filteredDataList = useCallback(
   //   (data: GetDocument[]) => {
   //     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -152,19 +150,17 @@ const ProfileAuthorComponent = () => {
     }
   }, [getUserProfile]);
 
-  const [emailUser, setEmailUser] = useState(
-    sessionStorage.getItem("email") || ""
-  );
+  
 
-  useEffect(() => {
-    if (emailUser) {
-      try {
-        dispatch(ViewProfilePersonalByEmailAction(emailUser));
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [dispatch, emailUser]);
+  // useEffect(() => {
+  //   if (emailUser) {
+  //     try {
+  //       dispatch(ViewProfilePersonalByEmailAction(emailUser));
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // }, [dispatch, emailUser]);
 
   // const [dataList, setDataList] = useState<GetDocument[]>(
   //   getUserProfile?.documentDtos || []
@@ -197,14 +193,14 @@ const ProfileAuthorComponent = () => {
 
   // const totalFile = dataList.length;
 
-  const handleSearchDoc = async (name: string) => {
-    try {
-      debounceSearch(name);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  console.log(getUserProfile);
+  // const handleSearchDoc = async (name: string) => {
+  //   try {
+  //     debounceSearch(name);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+  // console.log(getUserProfile);
 
   // const username = `${getUserProfile?.firstName}${getUserProfile?.lastName}`;
   const username = useAppSelector((state) => state.authentication.username);
@@ -272,21 +268,21 @@ const ProfileAuthorComponent = () => {
                 <p>Chuyên ngành: {getUserProfile?.major || "Chưa cập nhật"}</p>
                 <p>
                   Khóa:
-                  {getUserProfile?.classNumber
+                  {getUserProfile?.classNumber && getUserProfile.classNumber!=="null"
                     ? `K${getUserProfile.classNumber}`
                     : "Chưa cập nhật"}
                 </p>
               </div>
             </div>
           </div>
-          <div className={cx("information-right-search")}>
+          {/* <div className={cx("information-right-search")}>
             <input
               type="text"
               placeholder={`Tìm kiếm tài liệu của ${getUserProfile?.lastName} `}
               onChange={(e) => handleSearchDoc(e.target.value)}
             />
             <SearchIcon className={cx("search-icon")} />
-          </div>
+          </div> */}
         </div>
       </div>
       {loading ? (

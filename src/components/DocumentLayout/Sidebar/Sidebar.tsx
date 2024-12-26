@@ -93,7 +93,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
   const [dropdownToggle, setDropdownToggle] = useState<boolean>(false);
-  const { username } = useAppSelector((state) => state.authentication);
+  const { username,profilePicture } = useAppSelector((state) => state.authentication);
   
   const { numberOfNotificationsUnRead } = useAppSelector(
     (state) => state.notication
@@ -146,7 +146,7 @@ export default function Sidebar({ isModal, isOpen, setIsOpen }: ISidebar) {
       className={cx("sidebar", { open: isOpen, closed: !isOpen })}
     >
       <div className={cx("account")}>
-        <img src={ilogins?.profilePicture || Avatar} alt="avatar" />
+        <img src={profilePicture || Avatar} alt="avatar" />
         {isOpen && (
           <div>
             <h3 onClick={handleClickProfile}>

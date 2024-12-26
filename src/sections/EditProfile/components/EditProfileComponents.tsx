@@ -20,6 +20,7 @@ import {
   SearchFacultyAction,
 } from "../../../redux/UploadFileSlice/uploadFileSlice";
 import avartar from "../../../assets/images/Frame 8720.png";
+import { updateStateUsername } from "../../../redux/AuthenticationSlice/AuthenticationSlice";
 
 const cx = classNames.bind(styles);
 
@@ -30,6 +31,10 @@ const EditProfileComponents = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { useData } = location.state || { useData: null };
+  const { success, loading } = useAppSelector(
+    (state: RootState) => state.editProfile
+  );
+  const {ilogins}= useAppSelector(state=>state.authentication);
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     useData.profilePicture
@@ -140,9 +145,7 @@ const EditProfileComponents = () => {
     }));
   };
 
-  const { success, loading } = useAppSelector(
-    (state: RootState) => state.editProfile
-  );
+  
   // console.log("formData.success", success);
 
   const handleSubmit = () => {
@@ -158,12 +161,17 @@ const EditProfileComponents = () => {
   useEffect(() => {
     if (success) {
       const timeoutId = setTimeout(() => {
+        const user={
+          username:formData.firstName+" "+formData.lastName,
+          profilePicture: formData.profilePicture!==null && formData.profilePicture
+        }
+        dispatch(updateStateUsername(user))
         navigate("/document/profile-personal");
         dispatch(ResetEditProfileSuccess());
       }, 3000);
       return () => clearTimeout(timeoutId);
     }
-  }, [success, navigate, dispatch]);
+  }, [success, navigate, dispatch, formData.profilePicture, formData.firstName, formData.lastName, ilogins]);
 
   return (
     <div className={cx("edit-profile")}>

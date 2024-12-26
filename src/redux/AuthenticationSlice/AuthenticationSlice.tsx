@@ -55,6 +55,7 @@ interface InitialStateStylesLogin {
   refreshToken: string | null;
   otp: string | null;
   otpExpires: string | null;
+  profilePicture: string | null;
   ilogins:ILoginS |null;
 }
 const getStorageItem = (key: string) => {
@@ -77,7 +78,8 @@ const initialState: InitialStateStylesLogin = {
   otp: null,
   otpExpires: null,
   accountId: 0,
-  ilogins:null
+  ilogins: null,
+  profilePicture: null
 };
 
 export const LoginAction = createAsyncThunk<ILoginS, ILogin>(
@@ -253,6 +255,12 @@ const AuthenticationSlice = createSlice({
       state.loading = action.payload;
       state.isRefresh = action.payload;
     },
+    updateStateUsername: (state, action) => {
+      state.username = action.payload.username;
+      if(action.payload.profilePicture){
+        state.profilePicture = action.payload.profilePicture;
+      }
+    },
   },
   extraReducers(builder) {
     builder
@@ -293,6 +301,7 @@ const AuthenticationSlice = createSlice({
           state.refreshToken = action.payload.refreshToken;
           state.accountId = action.payload.accountId;
           state.ilogins=action.payload;
+          state.profilePicture=action.payload.profilePicture;
         }
       )
       .addCase(RegisterAction.fulfilled, (state) => {
@@ -328,6 +337,7 @@ const AuthenticationSlice = createSlice({
             state.refreshToken = action.payload.refreshToken;
             state.accountId = action.payload.accountId;
             state.ilogins=action.payload;
+            state.profilePicture=action.payload.profilePicture;
           }
         }else{
           if(action.payload.listRoles && action.payload.listRoles.length>0 && action.payload.listRoles[0]==="ADMIN"){
@@ -343,6 +353,7 @@ const AuthenticationSlice = createSlice({
             state.refreshToken = action.payload.refreshToken;
             state.accountId = action.payload.accountId;
             state.ilogins=action.payload;
+            state.profilePicture=action.payload.profilePicture;
           }
         }
       })
@@ -425,5 +436,6 @@ export const {
   logout,
   updateOtpState,
   updateStateLoading,
+  updateStateUsername
 } = AuthenticationSlice.actions;
 export default AuthenticationSlice.reducer;
