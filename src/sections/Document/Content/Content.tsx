@@ -7,14 +7,11 @@ import Background from "../../../assets/images/library.background.jpeg";
 import { Statistics } from "./Statistics";
 import { Docs } from "./Docs";
 
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
 import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import { useEffect, useState } from "react";
 import {
     getPopularDocuments,
 } from "../../../redux/DocumentSlice/documentSlice";
-import { DocumentResponse } from "../../../redux/DocumentSlice/InterfaceResponse";
 import { PopularFolders } from "./PopularFolders";
 import { getPopularFolders } from "../../../redux/FolderSlice/folderSlice";
 import { getStatsForUser } from "../../../redux/StatsSlice/statsSlice";
@@ -50,28 +47,9 @@ export default function Content() {
         }
     };
 
-    // configs for pagination
-    const alphabet = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    const [currentPage, setCurrentPage] = useState<string>(alphabet[-1]);
 
-    const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-        setCurrentPage(alphabet[value - 1]);
-    };
 
-    const filteredDataList = (data: DocumentResponse[] | undefined) => {
-        const newListDocuments = [...(data ?? [])];
-        if (currentPage !== undefined) {
-            if (newListDocuments) {
-                console.log(newListDocuments);
-                return newListDocuments.filter((item) =>
-                    item?.title
-                        .toLowerCase()
-                        .startsWith(currentPage.toLowerCase())
-                );
-            }
-        }
-        return newListDocuments;
-    };
+
 
     return (
         <div className={cx("content")}>
@@ -81,28 +59,12 @@ export default function Content() {
                     <Docs
                         title={"Tài liệu phổ biến"}
                         onLoadMore={handleLoadMore}
-                        docs={filteredDataList(documents)}
+                        docs={documents}
                     />
                 </div>
                 <Statistics data={statsData} />
             </div>
-            <Pagination
-                count={alphabet.length}
-                defaultPage={-1}
-                siblingCount={7}
-                onChange={handlePageChange}
-                variant="outlined"
-                renderItem={(item: any) => (
-                    <PaginationItem
-                        sx={{
-                            margin: "0 6px",
-                            fontFamily: "Inter",
-                        }}
-                        {...item}
-                        page={alphabet[item.page - 1]}
-                    />
-                )}
-            />
+            
             <PopularFolders data={dataPopularFolders} />
         </div>
     );
