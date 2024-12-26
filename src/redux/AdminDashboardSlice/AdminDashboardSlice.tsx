@@ -124,15 +124,16 @@ const initialState: InitialStateStyles = {
     successMessage: "",
 };
 
-
-
 export const AdminDashboardSlice = createSlice({
     name: "adminDashboard",
     initialState,
     reducers: {
         clearError: (state) => {
             state.error = "";
-        }
+        },
+        clearMessage: (state) => {
+            state.successMessage = "";
+        },
     },
     extraReducers(builder) {
         builder
@@ -207,7 +208,6 @@ export const AdminDashboardSlice = createSlice({
             .addCase(approveUsers.fulfilled, (state) => {
                 state.loading = false;
                 state.successMessage = "Phê duyệt tài khoản thành công!";
-                console.log(state);
             })
             .addCase(approveUsers.rejected, (state, action) => {
                 state.loading = false;
@@ -243,4 +243,4 @@ export const AdminDashboardSlice = createSlice({
 
 export default AdminDashboardSlice.reducer;
 
-export const { clearError } = AdminDashboardSlice.actions;
+export const { clearError, clearMessage } = AdminDashboardSlice.actions;

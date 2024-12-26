@@ -11,6 +11,7 @@ import {
     approveDocuments,
     checkDocument,
     clearError,
+    clearMessage,
     deleteDocuments,
     getDocumentsForAdmin,
 } from "../../../../redux/AdminDashboardSlice/AdminDashboardSlice";
@@ -157,7 +158,7 @@ export default function DocumentsView() {
 
     const handleReloadTable = () => {
         try {
-            dispatch(getDocumentsForAdmin(100));
+            dispatch(getDocumentsForAdmin(200));
         } catch (error) {
             console.log(error);
             toast.error("Xảy ra lỗi, vui lòng thử lại sau");
@@ -185,6 +186,7 @@ export default function DocumentsView() {
                 setOpenApproveDialog(false);
             }
             toast.success(successMessage);
+            dispatch(clearMessage());
             setSelectedIds([]);
             handleReloadTable();
         }
